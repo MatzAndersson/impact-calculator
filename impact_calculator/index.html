@@ -1,0 +1,627 @@
+<script>
+const CHARITIES = {
+  'MC': {
+    costPerDeathAvertedUSD: 5000,
+    logo: {
+      src: 'images/malaria-consortium-logo.png',
+      width: 210,
+    },
+    name: 'Malaria Consortium',
+    outputDescription: 'Children protected from malaria for a year with seasonal malaria chemoprevention.',
+  },
+  'AMF': {
+    costPerDeathAvertedUSD: 5500,
+    logo: {
+      src: 'images/against-malaria-foundation-logo.png',
+      width: 106,
+    },
+    name: 'Against Malaria Foundation',
+    outputDescription: 'Bednets purchased, distributed, and monitored',
+  },
+  'NI': {
+    costPerDeathAvertedUSD: 5000,
+    logo: {
+      src: 'images/new-incentives-logo.png',
+      width: 230,
+    },
+    name: 'New Incentives',
+    outputDescription: 'Children vaccinated',
+  },
+  'HKI': {
+    costPerDeathAvertedUSD: 3500,
+    logo: {
+      src: 'images/helen-keller-logo.png',
+      width: 108,
+    },
+    name: 'Helen Keller International',
+    outputDescription: 'Children given a year\'s Vitamin A supplementation, helping prevent early childhood blindness',
+  },
+};
+
+// IMPORTANT: Do not add to this list until a corresponding page has been
+// added for "take the pledge."
+// When currency is USD, it defaults to /take-the-pledge; for other
+// currencies, it assumes e.g. /take-the-pledge-gbp
+const CURRENCIES = ['USD', 'GBP', 'AUD', 'CAD'];
+
+const API_URL = 'https://impact.gieffektivt.no/api/evaluations?charity_abbreviation=HKI&charity_abbreviation=UBI&donation_year=2022&currency=EUR';
+// const TEST_ERROR_API_URL = 'http://httpstat.us/500';
+
+let CTA_ELEMENTS = null;
+
+function getCTAUrl(currency) {
+  const base = 'https://www.1fortheworld.org/take-the-pledge';
+  if (currency === 'USD') {
+    return base;
+  } else {
+    return `${base}-${currency.toLowerCase()}`;
+  }
+}
+
+function setHref(selector, href) {
+  document.querySelector(selector).setAttribute('href', href);
+}
+
+function updateShareLinks({deathsAverted}) {
+  const pledgeMessage = `My pledge to One For the World could avert ${deathsAverted.toFixed(2)} deaths per year`;
+  const cta = `Calculate your impact here`;
+  const url = `https://www.1fortheworld.org/impact-calculator`;
+
+  const withoutUrl = `${pledgeMessage}. ${cta}`;
+  const full = `${withoutUrl}: ${url}`;
+
+  setHref('a.impactCalculator-linkedin',
+    `https://www.linkedin.com/sharing/share-offsite/?url=${url}`);
+  setHref('a.impactCalculator-twitter',
+    `http://twitter.com/share?text=${withoutUrl}&url=${url}&counturl=${url}`);
+  setHref('a.impactCalculator-facebook',
+    `http://facebook.com/sharer.php?s=100&p[url]=${url}`);
+}
+
+function logResponseError(resp, text) {
+  console.error('Unable to fetch charities');
+  console.error({
+    url: response.url,
+    ok: response.ok,
+    status: response.status,
+    statusText: response.statusText,
+    bodyText: text,
+  });
+}
+
+function fetchCharities(charityAbbreviations, currency, cb) {
+  const abbrevs = charityAbbreviations.map(c => `charity_abbreviation=${c}`).join('&');
+  const year = (new Date()).getFullYear();
+  const oneIndexedMonth = (new Date()).getMonth() + 1;
+  const url = `https://impact.gieffektivt.no/api/evaluations?${abbrevs}` +
+    `&donation_year=${year}&donation_month=${oneIndexedMonth}&currency=${currency}`;
+
+  fetch(url).then(response => {
+    if (!response.ok) {
+      response.text().then(text => {
+        logResponseError(response, text);
+      });
+      return;
+    }
+
+    response.json().then(charities => {
+      if (charities.errors != null && charities.errors.length) {
+        console.error('Unable to fetch charities');
+        console.error(charities);
+      } else {
+        // Ensure for sanity that the charities only exist one per abbreviation
+        // I think it has something to do with the time windows, and although my understanding is that
+        // the donation_year and donation_month params we specify should cause that not to happen, it's
+        // worth being defensive.
+        const charityByAbbrev = {};
+        for (const charity of charities.evaluations) {
+          if (charityByAbbrev[charity.charity.abbreviation] != null) {
+            console.warn(`Found duplicate charity "${charity.charity.abbreviation}" in response "${url}"`);
+          }
+          charityByAbbrev[charity.charity.abbreviation] = charity;
+        }
+        for (const charityAbbrev of Object.keys(CHARITIES)) {
+          if (charityByAbbrev[charityAbbrev] == null) {
+            console.warn(`Unable to find charity "${charityAbbrev}" in response "${url}"`);
+          }
+        }
+        cb(Object.values(charityByAbbrev));
+      }
+    });
+  });
+}
+
+function calculateDonations(amount, charitiesForCurrency) {
+  const amountPerCharity = amount / charitiesForCurrency.length;
+  return charitiesForCurrency.map((charity) => ({
+    abbrev: charity.charity.abbreviation,
+    amount: amountPerCharity,
+    charity_name: charity.charity.charity_name,
+    cost: charity.converted_cost_per_output,
+    count: Math.round(amountPerCharity / charity.converted_cost_per_output),
+    short_description: charity.intervention.short_description,
+    long_description: charity.intervention.long_description,
+  }));
+}
+
+function setLogoSources() {
+  const images = document.querySelectorAll('img');
+  images.forEach((image) => {
+    const imgSrc = image.src || image.dataset.src;
+    let url = null;
+    try {
+      url = new URL(imgSrc);
+    } catch (_e) {}
+    const fileName = url != null ? url.pathname.split('/').pop() : null;
+    Object.keys(CHARITIES).forEach((charityKey) => {
+      const charity = CHARITIES[charityKey];
+      const logoFileName = charity.logo.src.split('/').pop();
+      if (fileName != null && fileName === logoFileName) {
+        charity.logo.src = imgSrc;
+      }
+    });
+  });
+}
+setLogoSources();
+
+function renderCalculator() {
+  document.getElementById('impactCalculatorCurrency').innerHTML = CURRENCIES.map((c) =>
+    `<option value="${c}">${c}</option>`).join("");
+  document.getElementById('impactCalculatorCurrency').value = "USD";
+
+  const state = {
+    salary: 150000,
+    currency: 'USD',
+    percent: 1.0,
+    charities: null,
+  };
+
+  function getDeathsAvertedPerCharity() {
+    // This conversion calculation is a little hacky but avoids needing a separate service or
+    // set of hardcoded (thus potentially stale / inconsistent) conversion rates.
+    const conversionRate = state.charities == null ? 1
+      : state.charities[0].converted_cost_per_output / (state.charities[0].cents_per_output / 100);
+
+    const yearlyDonation = state.salary * (state.percent / 100);
+
+    const charityKeys = Object.keys(CHARITIES);
+    const usdPerCharity = (yearlyDonation / conversionRate) / charityKeys.length;
+    return charityKeys.reduce((result, key) => {
+      result[key] = usdPerCharity / CHARITIES[key].costPerDeathAvertedUSD;
+      return result;
+    }, {});
+  }
+
+  function updateMotivationLabels() {
+    const deathsAvertedPerCharity = getDeathsAvertedPerCharity();
+
+    const deathsAverted =
+      Object.values(deathsAvertedPerCharity)
+        .reduce((sum, amount) => sum + amount, 0);
+
+    updateShareLinks({deathsAverted});
+  }
+  updateMotivationLabels();
+
+  function renderResults(donations) {
+    const resultsEl = document.getElementById('impactCalculatorResults');
+    resultsEl.innerHTML = '';
+    const resultRowFragment = document.getElementById('impactCalculatorResultRow').content;
+    const deathsAvertedPerCharity = getDeathsAvertedPerCharity();
+    donations.forEach((donation, i) => {
+      const charity = CHARITIES[donation.abbrev];
+      const newResultRow = resultRowFragment.cloneNode(true);
+
+      const logoImg = newResultRow.querySelector('.results-row__logo');
+      logoImg.src = charity.logo.src;
+      logoImg.width = charity.logo.width;
+      logoImg.setAttribute('alt', `${charity.name} logo`);
+      newResultRow.querySelector('.results-row__output-amount').textContent = donation.count.toLocaleString();
+      newResultRow.querySelector('.results-row__output-description').textContent = charity.outputDescription;
+
+      const numDeathsAverted = deathsAvertedPerCharity[donation.abbrev].toFixed(2);
+      const deathsAvertedEl = newResultRow.querySelector('.results-row__num-deaths-averted');
+      deathsAvertedEl.textContent = numDeathsAverted;
+      deathsAvertedEl.classList.add(i % 2 === 0 ? 'u-color-primary' : 'u-color-secondary');
+
+      resultsEl.appendChild(newResultRow);
+    });
+  }
+
+  function maybeRerender() {
+    updateMotivationLabels();
+    if (state.charities != null) {
+      const donations = calculateDonations(state.salary * state.percent / 100, state.charities);
+      // Handy debug log
+      if (window.location.hostname === 'localhost') {
+        console.log(`Donations for ${state.percent}% of ${state.salary} ${state.currency}`);
+        console.table(donations);
+      }
+      renderResults(donations);
+    }
+  }
+
+  function updateImpactCalculatorPercentLabel(percent) {
+    const html = `${percent.toFixed(1)}%`;
+    document.getElementById('impactCalculatorPercentLabel').innerHTML = html;
+  }
+  updateImpactCalculatorPercentLabel(1.0);
+
+  document.getElementById('impactCalculatorPercent').addEventListener('input', (e) => {
+    const percent = Number.parseFloat(e.target.value);
+    updateImpactCalculatorPercentLabel(percent);
+  });
+  // NB: If the event is `input`, it will change as the user moves the slider rather than on release.
+  // `change` is preferred right now due to the chart animations, but if animations are removed,
+  // it may be preferred to update as the user slides.
+  document.getElementById('impactCalculatorPercent').addEventListener('change', (e) => {
+    state.percent = Number.parseFloat(e.target.value);
+    maybeRerender();
+  });
+
+  document.getElementById('impactCalculatorSalary').addEventListener('change', (e) => {
+    // Assume this is a number given the validation on the HTML element
+    state.salary = Number.parseFloat(e.target.value);
+    maybeRerender();
+  });
+
+  function onCurrencyChanged() {
+    state.charities = null;
+
+    fetchCharities(Object.keys(CHARITIES), state.currency, charities => {
+      state.charities = charities;
+      maybeRerender();
+    });
+
+    if (CTA_ELEMENTS) {
+      for (const el of CTA_ELEMENTS) {
+        el.setAttribute('href', getCTAUrl(state.currency));
+      }
+    }
+  }
+
+  document.getElementById('impactCalculatorCurrency').addEventListener('change', (e) => {
+    state.currency = e.target.value;
+    onCurrencyChanged();
+  });
+
+  onCurrencyChanged(); // Fire initial fetch with default currency (CURRENCIES[0])
+}
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  renderCalculator();
+  // This is potentially finicky but I don't think there's a better way to
+  // retain the styling. Worst case, we update other links on the page.
+  CTA_ELEMENTS = document.querySelectorAll('.impact-calculator-donation-button')
+});
+</script>
+<style>
+  :root {
+    --color-primary: #2675F8;
+    --color-secondary: #FB6A37;
+    --color-tertiary: #e2ff3f;
+  }
+
+  .u-color-primary {
+    color: var(--color-primary);
+  }
+
+  .u-color-secondary {
+    color: var(--color-secondary);
+  }
+
+  .main-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #impactCalculatorDiv input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  #impactCalculatorDiv input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .impactCalculatorHighlight {
+    color: var(--color-secondary);
+    display: inline-block;
+    font-weight: bold;
+    width: 55px;
+  }
+
+  #impactCalculatorDiv input,select {
+    padding: 12px;
+    margin: 6px 0 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    border-radius: 2px;
+  }
+
+  #impactCalculatorDiv input[type="range"] {
+    vertical-align: middle;
+    padding: 0px;
+  }
+
+  #impactCalculatorDiv input:focus,select:focus {
+    outline-width: 0px;
+  }
+
+  .form__fieldset {
+    align-items: center;
+    border-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  .form__legend {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .form__range-input-wrapper {
+    align-items: center;
+    display: flex;
+    margin-top: 5px;
+  }
+
+  .form__range-input-label {
+    margin-bottom: 0;
+    margin-right: 20px;
+    margin-top: 0;
+  }
+
+  .impact-calculator-donation-button {
+    background-color: var(--color-secondary);
+    border-radius: 100px;
+    color: #fff;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    padding: 16px 40px;
+    /* !important because Squarespace default styles use it too */
+    text-decoration: none !important;
+  }
+
+  .impact-calculator-donation-button__label {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .impact-calculator-donation-button__icon {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .results {
+    align-self: stretch;
+  }
+
+  .results-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .results-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .results-row__cell {
+    display: flex;
+    flex-basis: 33%;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+
+  .results-row__output-label {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .results-row__output-value {
+    font-size: 40px;
+    font-weight: 700;
+  }
+
+  .results-row__logo {
+    max-width: 100%;
+  }
+
+  @media (max-width: 710px) {
+    .main-container {
+      max-width: 580px;
+    }
+
+    .results {
+      /*
+      !important to override this rule on Squarespace:
+      .sqs-block-code .sqs-block-content :last-child {
+        margin-bottom: 0;
+      }
+      */
+      margin-bottom: 60px !important;
+    }
+
+    .results-row {
+      margin-bottom: 40px;
+    }
+
+    .results-row__cell {
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (min-width: 710px) {
+    .main-container {
+      max-width: 1000px;
+    }
+
+    .results {
+      /*
+      !important to override this rule on Squarespace:
+      .sqs-block-code .sqs-block-content :last-child {
+        margin-bottom: 0;
+      }
+      */
+      margin-bottom: 72px !important;
+    }
+
+    .results-row {
+      flex-direction: row;
+      margin-bottom: 64px;
+    }
+
+    .results-row__cell:first-child {
+      margin-right: 40px;
+    }
+
+    .results-row__cell:last-child {
+      margin-left: 40px;
+    }
+
+    .results-row__output-label {
+      margin-bottom: 24px;
+    }
+  }
+
+  .impact-calculator-sharing-container {
+    background-color: var(--color-tertiary);
+  }
+
+  .impact-calculator-sharing {
+    align-items: stretch;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .impact-calculator-sharing__title {
+    font-size: 28px;
+    font-weight: normal;
+    margin: 0 0 24px;
+  }
+
+  .impact-calculator-sharing__buttons {
+    display: flex;
+  }
+
+  .impact-calculator-sharing__button {
+    align-items: center;
+    background-color: var(--color-secondary);
+    border-radius: 50%;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    margin-right: 16px;
+    width: 40px;
+  }
+</style>
+
+<div class="main-container" id="impactCalculatorDiv">
+  <fieldset class="form__fieldset">
+    <legend class="form__legend">My annual gross salary is:</legend>
+    <div>
+      <select aria-label="Currency" name="impactCalculatorCurrency" id="impactCalculatorCurrency" value="USD">
+        <option value="USD">USD</option>
+      </select>
+      <input
+        aria-label="Salary"
+        type="number"
+        value="150000"
+        id="impactCalculatorSalary"
+        name="impactCalculatorSalary"
+        onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"
+      >
+    </div>
+    <div class="form__range-input-wrapper">
+      <label for="impactCalculatorPercent" class="sqsrte-large form__range-input-label">
+        I&rsquo;d like to donate <span class="impactCalculatorHighlight" id="impactCalculatorPercentLabel">1.0%</span>
+      </label>
+      <input
+        type="range"
+        id="impactCalculatorPercent"
+        name="impactCalculatorPercent"
+        min="0.1" max="10.0" step="0.1" value="1.0"
+      />
+    </div>
+  </fieldset>
+  <a class="impact-calculator-donation-button" href="/take-the-pledge">
+    <span class="impact-calculator-donation-button__label">
+      Donate this amount
+    </span>
+    <svg class="impact-calculator-donation-button__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 12H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 5L19 12L12 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <div class="results" id="impactCalculatorResults"></div>
+</div>
+<div class="impact-calculator-sharing-container">
+  <div class="main-container impact-calculator-sharing">
+    <h2 class="impact-calculator-sharing__title">Help Us Spread the News of Giving on Social Media</h2>
+    <p>Share YOUR impact on your favorite platforms:</p>
+    <div class="impact-calculator-sharing__buttons">
+      <a
+        aria-label="Share on LinkedIn"
+        class="impact-calculator-sharing__button impactCalculator-linkedin"
+        href="https://www.linkedin.com"
+      >
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.4935 0.484497H2.84012C1.66252 0.484497 0.706787 1.44023 0.706787 2.61783V16.2712C0.706787 17.4488 1.66252 18.4045 2.84012 18.4045H16.4935C17.6711 18.4045 18.6268 17.4488 18.6268 16.2712V2.61783C18.6268 1.44023 17.6711 0.484497 16.4935 0.484497ZM6.25345 7.31116V15.4178H3.69345V7.31116H6.25345ZM3.69345 4.9517C3.69345 4.35436 4.20545 3.89783 4.97345 3.89783C5.74145 3.89783 6.22359 4.35436 6.25345 4.9517C6.25345 5.54903 5.77559 6.03116 4.97345 6.03116C4.20545 6.03116 3.69345 5.54903 3.69345 4.9517ZM15.6401 15.4178H13.0801C13.0801 15.4178 13.0801 11.4669 13.0801 11.1512C13.0801 10.2978 12.6535 9.4445 11.5868 9.42743H11.5527C10.5201 9.42743 10.0935 10.3064 10.0935 11.1512C10.0935 11.5394 10.0935 15.4178 10.0935 15.4178H7.53345V7.31116H10.0935V8.40343C10.0935 8.40343 10.9169 7.31116 12.5724 7.31116C14.2663 7.31116 15.6401 8.47596 15.6401 10.8354V15.4178Z" fill="white"/>
+        </svg>
+      </a>
+      <a
+        aria-label="Share on Facebook"
+        class="impact-calculator-sharing__button impactCalculator-facebook"
+        href="http://facebook.com/"
+      >
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.9999 0.439941C5.16794 0.439941 0.439941 5.16794 0.439941 10.9999C0.439941 16.2943 4.33994 20.6657 9.4217 21.4294V13.7988H6.80906V11.023H9.4217V9.17594C9.4217 6.11786 10.9116 4.7753 13.4532 4.7753C14.6705 4.7753 15.3142 4.86554 15.619 4.90682V7.32986H13.8852C12.8062 7.32986 12.4294 8.35274 12.4294 9.5057V11.023H15.5916L15.1625 13.7988H12.4294V21.4519C17.5836 20.7526 21.5599 16.3457 21.5599 10.9999C21.5599 5.16794 16.8319 0.439941 10.9999 0.439941Z" fill="white"/>
+        </svg>
+      </a>
+      <a
+        aria-label="Share on Twitter"
+        class="impact-calculator-sharing__button impactCalculator-twitter"
+        href="https://twitter.com"
+      >
+        <svg width="24" height="21" viewBox="0 0 24 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24.03 3.01004C23.1432 3.40379 22.1925 3.66816 21.1932 3.78816C22.2132 3.17691 22.9969 2.20941 23.3644 1.05816C22.4119 1.62254 21.3525 2.03316 20.2294 2.25441C19.3294 1.29441 18.0469 0.696289 16.6275 0.696289C13.9013 0.696289 11.6907 2.90504 11.6907 5.63129C11.6907 6.01754 11.7357 6.39441 11.82 6.75629C7.71755 6.55004 4.08192 4.58504 1.6463 1.59816C1.22067 2.32941 0.978799 3.17691 0.978799 4.08066C0.978799 5.79254 1.8488 7.30379 3.17442 8.19066C2.36442 8.16441 1.60317 7.94129 0.937549 7.57191C0.937549 7.59254 0.937549 7.61316 0.937549 7.63379C0.937549 10.0263 2.64005 12.0194 4.89567 12.475C4.48317 12.5875 4.0463 12.6475 3.5963 12.6475C3.27755 12.6475 2.96817 12.6175 2.6663 12.5575C3.2963 14.5169 5.1188 15.9475 7.27692 15.9869C5.58942 17.3107 3.4613 18.0982 1.14755 18.0982C0.748174 18.0982 0.356299 18.0757 -0.0280762 18.0288C2.15442 19.4313 4.74942 20.2469 7.53755 20.2469C16.6163 20.2469 21.5813 12.7263 21.5813 6.20504C21.5813 5.99129 21.5757 5.77566 21.5682 5.56566C22.5319 4.87004 23.3682 4.00004 24.03 3.01004Z" fill="white"/>
+        </svg>
+      </a>
+      <a
+        aria-label="Share on Instagram"
+        class="impact-calculator-sharing__button impactCalculator-instagram"
+        href="https://instagram.com"
+      >
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.67994 0.439941C3.23834 0.439941 0.439941 3.23834 0.439941 6.67994V15.3199C0.439941 18.7615 3.23834 21.5599 6.67994 21.5599H15.3199C18.7615 21.5599 21.5599 18.7615 21.5599 15.3199V6.67994C21.5599 3.23834 18.7615 0.439941 15.3199 0.439941H6.67994ZM16.7599 4.27994C17.2879 4.27994 17.7199 4.71194 17.7199 5.23994C17.7199 5.76794 17.2879 6.19994 16.7599 6.19994C16.2319 6.19994 15.7999 5.76794 15.7999 5.23994C15.7999 4.71194 16.2319 4.27994 16.7599 4.27994ZM10.9999 5.71994C13.9135 5.71994 16.2799 8.08634 16.2799 10.9999C16.2799 13.9135 13.9135 16.2799 10.9999 16.2799C8.08634 16.2799 5.71994 13.9135 5.71994 10.9999C5.71994 8.08634 8.08634 5.71994 10.9999 5.71994ZM10.9999 6.67994C8.61914 6.67994 6.67994 8.61914 6.67994 10.9999C6.67994 13.3807 8.61914 15.3199 10.9999 15.3199C13.3807 15.3199 15.3199 13.3807 15.3199 10.9999C15.3199 8.61914 13.3807 6.67994 10.9999 6.67994Z" fill="white"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<template id="impactCalculatorResultRow">
+  <div class="results-row">
+    <div class="results-row__cell">
+      <img alt="Logo" class="results-row__logo" />
+    </div>
+    <div class="results-row__cell">
+      <div class="results-row__output-description results-row__output-label"></div>
+      <div class="results-row__output-amount results-row__output-value"></div>
+    </div>
+    <div class="results-row__cell">
+      <div class="results-row__output-label">Estimated deaths prevented</div>
+      <div class="results-row__num-deaths-averted results-row__output-value"></div>
+    </div>
+  </div>
+</template>

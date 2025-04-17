@@ -1,0 +1,14 @@
+:root {
+  --color-primary: #2675F8;
+  --color-secondary: #FB6A37;
+  --color-tertiary: #e2ff3f;
+}
+
+/* Global utility classes */
+.u-color-primary {
+  color: var(--color-primary);
+}
+
+.u-color-secondary {
+  color: var(--color-secondary);
+}
