@@ -74,7 +74,10 @@ export function ImpactCalculator() {
   }
 
   return (
-    <div className="main-container" id="impactCalculatorDiv">
+    <section className="ic-wrapper">
+      <div className="ic-panel">
+
+    
       <fieldset className="form__fieldset">
         <legend className="form__legend">My annual gross salary is:</legend>
         <div>
@@ -129,6 +132,7 @@ export function ImpactCalculator() {
           />
         </div>
       </fieldset>
+      </div>
       <a
         className="impact-calculator-donation-button"
         href={getCTAUrl(state.currency)}
@@ -176,8 +180,9 @@ export function ImpactCalculator() {
             </article>
           );
         })}
+        
       </section>
-     </div>
     
+     </section>
   );
 }
