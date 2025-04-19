@@ -1,21 +1,51 @@
 
-ic-wrapper {
+.ic-wrapper {
   background:#fdfdfd;
   padding:40px 20px;
   border-radius:12px;
   margin:40px auto;
   max-width:960px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
 .ic-panel {
-  background:#c6c3c3;
+  background: #edebeb;
+  border-radius: 12px;
+  padding: 32px 24px;
   max-width: 600px;
-  align-items: center;
-  border-radius:12px;
-  box-shadow:0 4px 16px rgba(0,0,0,.06);
-  padding:32px 24px;
-  margin-bottom:40px;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  display: grid;
+  gap: 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+}
+
+.form-row select,
+.form-row input[type="number"] {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.annual-donation {
+  font-weight: 600;
+  margin-top: 4px;
 }
 
 /*.main-container {
@@ -44,24 +74,6 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 55px;
 }
 
-#impactCalculatorDiv input,
-select {
-  padding: 12px;
-  margin: 6px 0 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  border-radius: 2px;
-}
-
-#impactCalculatorDiv input[type="range"] {
-  vertical-align: middle;
-  padding: 0px;
-}
-
-#impactCalculatorDiv input:focus,
-select:focus {
-  outline-width: 0px;
-}
 
 .form__fieldset {
   align-items: center;
@@ -112,125 +124,18 @@ select:focus {
   vertical-align: middle;
 }
 
-.results {
-  align-self: stretch;
-}
-
-.results-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.results-row:last-child {
-  margin-bottom: 0;
-}
-
-.results-row__cell {
-  display: flex;
-  flex-basis: 33%;
-  flex-direction: column;
-  flex-grow: 1;
-  justify-content: space-between;
-}
-
-.results-row__output-label {
-  font-size: 20px;
-  font-weight: 300;
-}
-
-.results-row__output-value {
-  font-size: 40px;
-  font-weight: 700;
-}
-
-.results-row__logo {
-  max-width: 100%;
-}
 
 @media (max-width: 710px) {
-  .main-container {
-    max-width: 580px;
-  }
-
-  .results {
-    /*
-      !important to override this rule on Squarespace:
-      .sqs-block-code .sqs-block-content :last-child {
-        margin-bottom: 0;
-      }
-      */
-    margin-bottom: 60px !important;
-  }
-
-  .results-row {
-    margin-bottom: 40px;
-  }
-
-  .results-row__cell {
-    margin-bottom: 10px;
-  }
+  
 }
-
+  
 @media (min-width: 710px) {
-  .main-container {
-    max-width: 1000px;
-  }
-
-  .results {
-    /*
-      !important to override this rule on Squarespace:
-      .sqs-block-code .sqs-block-content :last-child {
-        margin-bottom: 0;
-      }
-      */
-    margin-bottom: 72px !important;
-  }
-
-  .results-row {
-    flex-direction: row;
-    margin-bottom: 64px;
-  }
-
-  .results-row__cell:first-child {
-    margin-right: 40px;
-  }
-
-  .results-row__cell:last-child {
-    margin-left: 40px;
-  }
-
-  .results-row__output-label {
-    margin-bottom: 24px;
-  }
+  
+ 
 }
 
-.impact-calculator-sharing-container {
-  background-color: var(--color-tertiary);
-}
-
-.impact-calculator-sharing {
-  align-items: stretch;
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
-.impact-calculator-sharing__title {
-  font-size: 28px;
-  font-weight: normal;
-  margin: 0 0 24px;
-}
-
-.impact-calculator-sharing__buttons {
-  display: flex;
-}
-
-.impact-calculator-sharing__button {
-  align-items: center;
-  background-color: var(--color-secondary);
-  border-radius: 50%;
-  display: flex;
-  height: 40px;
-  justify-content: center;
-  margin-right: 16px;
-  width: 40px;
+@media (max-width: 520px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
