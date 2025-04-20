@@ -1,16 +1,14 @@
-
 .ic-wrapper {
-  background:#fdfdfd;
-  padding:40px 20px;
-  border-radius:12px;
-  margin:40px auto;
-  max-width:960px;
+  background: #fdfdfd;
+  padding: 40px 20px;
+  border-radius: 12px;
+  margin: 40px auto;
+  max-width: 960px;
   flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 
 .ic-panel {
   background: #edebeb;
@@ -18,9 +16,24 @@
   padding: 32px 24px;
   max-width: 600px;
   margin: 0 auto;
-  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   display: grid;
   gap: 24px;
+}
+
+.tabs-bar {
+  display: flex;
+  margin-bottom: 24px;
+}
+.tab {
+  border: none;
+  background: none;
+  padding: 8px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tab.active {
+  border-bottom: 3px solid var(--color-secondary);
 }
 
 .form-row {
@@ -48,14 +61,12 @@ input[type="range"] {
   margin-top: 4px;
 }
 
-
 .impactCalculatorHighlight {
   color: var(--color-secondary);
   display: inline-block;
   font-weight: bold;
   width: 55px;
 }
-
 
 .form__fieldset {
   align-items: center;
@@ -106,14 +117,10 @@ input[type="range"] {
   vertical-align: middle;
 }
 
-
 @media (max-width: 710px) {
-  
 }
-  
+
 @media (min-width: 710px) {
-  
- 
 }
 
 @media (max-width: 520px) {

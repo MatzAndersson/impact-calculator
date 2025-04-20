@@ -1,9 +1,9 @@
-import { ImpactCalculator } from "./components/ImpactCalculator";
+import  ImpactCalculatorPage  from "./pages/ImpactCalculatorPage";
 
 function App() {
   return (
     <div className="App">
-      <ImpactCalculator />
+      <ImpactCalculatorPage />
     </div>
   );
 }
