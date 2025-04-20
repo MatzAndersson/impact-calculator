@@ -1,15 +1,16 @@
 import React from "react";
+import styles from "./InputTabs.module.css";
 
 export function InputTabs({ value, onChange, children }) {
   const tabs = React.Children.toArray(children);
 
   return (
     <div>
-      <div className="tabs-bar">
+      <div className={styles.bar}>
         {tabs.map((tab) => (
           <button
             key={tab.props.label}
-            className={value === tab.props.label ? "tab active" : "tab"}
+            className={`${styles.tab} ${value === tab.props.label ? styles.active : ''}`}
             onClick={() => onChange(tab.props.label)}
           >
             {tab.props.label}

@@ -1,31 +1,32 @@
 import React from 'react';
 import { CHARITIES } from '../data/charityData';
+import styles from './CharityCards.module.css';
 
 export function CharityCards({ annualDonation }) {
   // split donation equally among charities
   const perCharity = annualDonation / CHARITIES.length;
 
   return (
-    <section className="results">
+    <section className={styles.results}>
       {CHARITIES.map((c) => {
         const outputs = Math.floor(perCharity / c.costPerUnit);
         const deaths  = (outputs * c.deathsPerUnit).toFixed(2);
 
         return (
-          <article key={c.id} className="charity-card">
+          <article key={c.id} className={styles.card}>
             <img
               src={c.logo.src}
               width={c.logo.width}
               alt={`${c.name} logo`}
             />
-            <h3>{c.name}</h3>
+            <h3 className={styles.cardTitle}>{c.name}</h3>
             <p>{c.output}</p>
-            <div className="charity-card__numbers">
+            <div className={styles.cardNumbers}>
               <strong>{outputs}</strong> outputs
               &nbsp;&nbsp;
-              <strong className="orange">{deaths}</strong> deaths averted
+              <strong className={styles.orange}>{deaths}</strong> deaths averted
             </div>
-            <a className="info-link" href={`/charities/${c.id}`}>
+            <a className={styles.infoLink} href={`/charities/${c.id}`}>
               Info →
             </a>
           </article>

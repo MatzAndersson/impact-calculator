@@ -1,4 +1,4 @@
-.ic-wrapper {
+/*.ic-wrapper {
   background: #fdfdfd;
   padding: 40px 20px;
   border-radius: 12px;
@@ -91,8 +91,8 @@ input[type="range"] {
   margin-bottom: 0;
   margin-right: 20px;
   margin-top: 0;
-}
-
+}*/
+/*
 .impact-calculator-donation-button {
   background-color: var(--color-secondary);
   border-radius: 100px;
@@ -103,7 +103,7 @@ input[type="range"] {
   margin-bottom: 50px;
   padding: 16px 40px;
   /* !important because Squarespace default styles use it too */
-  text-decoration: none !important;
+ /* text-decoration: none !important;
 }
 
 .impact-calculator-donation-button__label {
@@ -127,4 +127,4 @@ input[type="range"] {
   .form-row {
     grid-template-columns: 1fr;
   }
-}
+}*/
