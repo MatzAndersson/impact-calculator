@@ -6,7 +6,7 @@ import { AnnualForm } from "../components/calculator/AnnualForm";
 import { MonthlyForm } from "../components/calculator/MonthlyForm";
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
-import { ImpactSummary } from "../components/ImpactSummary";
+//import { ImpactSummary } from "../components/ImpactSummary";
 
 export default function ImpactCalculatorPage() {
   const { inputs, update } = useCalculatorInputs();
@@ -102,7 +102,7 @@ export default function ImpactCalculatorPage() {
       {calculated && (
         <>
           <CharityCards annualDonation={annualDonation} />
-          <ImpactSummary annualDonation={annualDonation} inputs={inputs} />
+         
         </>
       )}
     </section>
