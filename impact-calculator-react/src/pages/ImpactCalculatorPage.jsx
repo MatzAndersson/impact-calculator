@@ -83,7 +83,7 @@ export default function ImpactCalculatorPage() {
             />
           </div>
         )}
-        /* ---------- live preview (always shown) ---------- */
+        {/* live preview, always shown */}
         <div className="annual-donation">
           {inputs.mode === "monthly"
             ? `Monthly donation: ${fmt(monthlyAmount)}`

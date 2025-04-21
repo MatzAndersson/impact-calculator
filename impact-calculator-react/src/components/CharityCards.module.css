@@ -3,6 +3,7 @@
     gap: 32px;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     margin-top: 40px;
+   
   }
   
   .card {
@@ -25,10 +26,53 @@
     color: var(--color-secondary);
   }
   
-  .infoLink {
-    display: inline-block;
-    margin-top: 8px;
+  .infoButton {
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    margin: 16px 0;       /* space above/below the button */
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    display: block;
+  }
+  .infoButton:hover {
+    background-color: darken(var(--color-secondary), 10%);
+  }
+
+  .cardTitle {
+    font-size: 1.25rem;
+    margin: 0 0 8px;
+  }
+  .description {
+    margin: 0 0 16px;
+    color: #555;
+    flex-shrink: 0;
+  }
+  
+  /* two‑column stats block */
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: auto;  /* push to bottom if space allows */
+  }
+  .stat {
+    flex: 1 1 120px;
+    text-align: center;
+  }
+  .statNumber {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--color-secondary);
-    text-decoration: none;
+  }
+  .statLabel {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: #777;
   }
   

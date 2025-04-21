@@ -11,6 +11,7 @@ export const CHARITIES = [
     deathsPerUnit: 1 / 72000,
     logo: { src: mcLogo, width: 210 },
     output: "Children protected from malaria for a year with SMC.",
+    unitName: "Estimated deaths prevented",
   },
   {
     id: "AMF",
@@ -19,6 +20,7 @@ export const CHARITIES = [
     deathsPerUnit: 1 / 800,
     logo: { src: amfLogo, width: 106 },
     output: "Bednets purchased, distributed, monitored.",
+    unitName: "Estimated deaths prevented",
   },
   {
     id: "NI",
@@ -27,6 +29,7 @@ export const CHARITIES = [
     deathsPerUnit: 1 / 1400,
     logo: { src: niLogo, width: 230 },
     output: "Children vaccinated.",
+    unitName: "Estimated deaths prevented",
   },
   {
     id: "HKI",
@@ -34,6 +37,7 @@ export const CHARITIES = [
     costPerUnit: 3500,
     deathsPerUnit: 1 / 3200,
     logo: { src: hkiLogo, width: 108 },
-    output: "Vitamin A supplementation for a year.",
+    output: "Children given a year's Vitamin A supplementation, helping prevent early childhood blindness",
+    unitName: "Estimated deaths prevented",
   },
 ];
