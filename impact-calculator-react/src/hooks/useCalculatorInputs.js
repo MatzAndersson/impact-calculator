@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 export default function useCalculatorInputs() {
   const [inputs, setInputs] = useState({
     mode: "annual", // 'annual' | 'monthly' | 'lifetime'
-    salaryNow: 120000,
+    salaryNow: "",
     pledgePercent: 0.01, // % – used by annual + lifetime
-    monthlyAmount: 100, // £/$ each month – used by monthly
+    monthlyAmount: "", // £/$ each month – used by monthly
     growthRate: 0.04,
-    currentAge: 30,
-    retirementAge: 65,
+    currentAge: "",
+    retirementAge: "",
     currency: "USD",
   });
 
@@ -18,16 +18,30 @@ export default function useCalculatorInputs() {
    // 1) When slider (pledgePercent) or salary changes, update monthlyAmount
    useEffect(() => {
     if (inputs.mode === "monthly") return;
-    const m = (inputs.salaryNow * inputs.pledgePercent) / 12;
-    update("monthlyAmount", Number(m.toFixed(2)));
-  }, [inputs.pledgePercent, inputs.salaryNow, inputs.mode]);
+
+    const salary = parseFloat(inputs.salaryNow);
+    if (isNaN(salary)) {
+      // user cleared salary → clear monthlyAmount
+      update("monthlyAmount", "");
+      return;
+    }
+    const m = (salary * inputs.pledgePercent) / 12;
+    update("monthlyAmount", m.toFixed(2));
+  }, [inputs.salaryNow, inputs.pledgePercent, inputs.mode]);
 
   // 2) When monthly amount changes in monthly mode, update pledgePercent
   useEffect(() => {
     if (inputs.mode !== "monthly") return;
-    const p = inputs.salaryNow > 0
-      ? (inputs.monthlyAmount * 12) / inputs.salaryNow
-      : 0;
+
+    const salary = parseFloat(inputs.salaryNow);
+    const monthly = parseFloat(inputs.monthlyAmount);
+    if (isNaN(salary) || isNaN(monthly) || salary <= 0) {
+      // user cleared one of the fields → clear pledgePercent
+      update("pledgePercent", "");
+      return;
+    }
+
+    const p = (monthly * 12) / salary;
     update("pledgePercent", Number(p.toFixed(4)));
   }, [inputs.monthlyAmount, inputs.salaryNow, inputs.mode]);
 

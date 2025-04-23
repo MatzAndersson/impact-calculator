@@ -19,7 +19,7 @@ export function MonthlyForm({ inputs, update }) {
           type="number"
           value={inputs.monthlyAmount}
           min="0"
-          onChange={(e) => update("monthlyAmount", Number(e.target.value))}
+          onChange={(e) => update("monthlyAmount", (e.target.value))}
           placeholder="Monthly donation"
         />
       </div>

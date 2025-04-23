@@ -19,7 +19,7 @@ export function LifetimeForm({ inputs, update }) {
           className={styles.inputBase}
           type="number"
           value={inputs.salaryNow}
-          onChange={(e) => update('salaryNow', Number(e.target.value))}
+          onChange={(e) => update('salaryNow', (e.target.value))}
         />
       </div>
 
@@ -29,14 +29,14 @@ export function LifetimeForm({ inputs, update }) {
           className={styles.inputBase}
           type="number"
           value={inputs.currentAge}
-          onChange={(e) => update('currentAge', Number(e.target.value))}
+          onChange={(e) => update('currentAge', (e.target.value))}
           placeholder="Current age"
         />
         <input
           className={styles.inputBase}
           type="number"
           value={inputs.retirementAge}
-          onChange={(e) => update('retirementAge', Number(e.target.value))}
+          onChange={(e) => update('retirementAge', (e.target.value))}
           placeholder="Retirement age"
         />
       </div>

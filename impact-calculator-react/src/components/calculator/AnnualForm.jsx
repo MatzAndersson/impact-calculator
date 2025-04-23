@@ -18,7 +18,8 @@ export function AnnualForm({ inputs, update }) {
         className={styles.inputBase}
           type="number"
           value={inputs.salaryNow}
-          onChange={(e) => update("salaryNow", Number(e.target.value))}
+          placeholder="Annual salary"
+          onChange={(e) => update("salaryNow", (e.target.value))}
         />
       </div>
     </>
