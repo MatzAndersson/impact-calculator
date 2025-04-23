@@ -21,44 +21,46 @@ export default function ImpactCalculatorPage() {
       maximumFractionDigits: 0,
     });
 
-  // Calculate annual donation based on the selected mode
-  const annualDonation = (() => {
+  // 1) Pre-compute all three donation amounts
+  const annualDonation = inputs.salaryNow * inputs.pledgePercent;
+  const monthlyDonation = inputs.monthlyAmount;
+  const lifetimeDonation = (() => {
     if (!calculated) return 0;
 
-    switch (inputs.mode) {
-      case "monthly":
-        // Use the explicit monthlyAmount input
-        return Math.max(0, inputs.monthlyAmount) * 12;
-
-      case "annual":
-        return Math.max(0, inputs.salaryNow * inputs.pledgePercent);
-
-      case "lifetime": {
-        const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-        // prevent division by zero
-        const growthRate = Math.max(0.000001, inputs.growthRate);
-        const totalEarned =
-          (inputs.salaryNow * ((1 + growthRate) ** years - 1)) / growthRate;
-        return Math.max(0, totalEarned * inputs.pledgePercent);
-      }
-
-      default:
-        return 0;
-    }
+    // lifetime = sum over all years with growth
+    const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
+    const r = Math.max(0.000001, inputs.growthRate);
+    const earned = (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
+    return Math.max(0, earned * inputs.pledgePercent);
   })();
 
   const monthlyAmount =
     inputs.mode === "monthly"
-      ? Math.max(0, inputs.monthlyAmount || 0)
+      ? Math.max(0, monthlyDonation)
       : annualDonation / 12;
 
   return (
     <section className={pageStyles.icWrapper}>
       <div className={pageStyles.icPanel}>
         <InputTabs value={inputs.mode} onChange={(val) => update("mode", val)}>
-          <AnnualForm label="annual" inputs={inputs} update={update} />
-          <MonthlyForm label="monthly" inputs={inputs} update={update} />
-          <LifetimeForm label="lifetime" inputs={inputs} update={update} />
+          <AnnualForm
+            value="annual"
+            label="Annual"
+            inputs={inputs}
+            update={update}
+          />
+          <MonthlyForm
+            value="monthly"
+            label="Monthly"
+            inputs={inputs}
+            update={update}
+          />
+          <LifetimeForm
+            value="lifetime"
+            label="Lifetime"
+            inputs={inputs}
+            update={update}
+          />
         </InputTabs>
         {/* ---------- slider OR monthly preview ---------- */}
         {inputs.mode !== "monthly" && (
@@ -84,10 +86,26 @@ export default function ImpactCalculatorPage() {
           </div>
         )}
         {/* live preview, always shown */}
-        <div className="annual-donation">
-          {inputs.mode === "monthly"
-            ? `Monthly donation: ${fmt(monthlyAmount)}`
-            : `Annual donation: ${fmt(annualDonation)}`}
+        <div className={pageStyles.annualDonation}>
+          {inputs.mode === "annual" && (
+            <>Annual donation: {fmt(annualDonation)}</>
+          )}
+
+          {inputs.mode === "monthly" && (
+            <>
+              Monthly donation: {fmt(monthlyAmount)}
+              <br />
+              Equivalent pledge: {(inputs.pledgePercent * 100).toFixed(2)}%
+            </>
+          )}
+
+          {inputs.mode === "lifetime" && (
+            <>
+              Lifetime donation: {fmt(lifetimeDonation)}
+              <br />
+              Over {inputs.retirementAge - inputs.currentAge} years
+            </>
+          )}
         </div>
         <button
           className={pageStyles.calculateBtn}

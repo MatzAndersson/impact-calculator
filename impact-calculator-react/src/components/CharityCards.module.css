@@ -43,7 +43,7 @@
   font-weight: 500;
   transition: background-color 0.2s;
   display: block;
-  font-family: 'Forma DJR Deck';
+  
 }
 .infoButton:hover {
   background-color: darken(var(--color-secondary), 10%);
