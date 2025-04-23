@@ -1,78 +1,84 @@
 .results {
-    display: grid;
-    gap: 32px;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    margin-top: 40px;
-   
-  }
-  
-  .card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  }
-  
-  .cardTitle {
-    margin-top: 0;
-  }
-  
-  .cardNumbers {
-    margin-top: 12px;
-    font-weight: 600;
-  }
-  
-  .orange {
-    color: var(--color-secondary);
-  }
-  
-  .infoButton {
-    background-color: var(--color-secondary);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    margin: 16px 0;       /* space above/below the button */
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    display: block;
-  }
-  .infoButton:hover {
-    background-color: darken(var(--color-secondary), 10%);
-  }
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 40px;
+}
 
-  .cardTitle {
-    font-size: 1.25rem;
-    margin: 0 0 8px;
-  }
-  .description {
-    margin: 0 0 16px;
-    color: #555;
-    flex-shrink: 0;
-  }
-  
-  /* two‑column stats block */
-  .stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-top: auto;  /* push to bottom if space allows */
-  }
-  .stat {
-    flex: 1 1 120px;
-    text-align: center;
-  }
-  .statNumber {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-secondary);
-  }
-  .statLabel {
-    display: block;
-    margin-top: 4px;
-    font-size: 0.875rem;
-    color: #777;
-  }
-  
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cardTitle {
+  margin-top: 16px;
+  font-family: 'Forma DJR Deck';
+  color: var(--color-text);
+}
+
+.cardNumbers {
+  margin-top: auto;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.orange {
+  color: var(--color-secondary);
+}
+
+.infoButton {
+  background-color: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin: 16px 0; /* space above/below the button */
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  display: block;
+  font-family: 'Forma DJR Deck';
+}
+.infoButton:hover {
+  background-color: darken(var(--color-secondary), 10%);
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  margin: 0 0 8px;
+}
+.description {
+  margin: 0 0 16px;
+  color: #555;
+  flex-shrink: 0;
+}
+
+/* two‑column stats block */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: auto; /* push to bottom if space allows */
+}
+.stat {
+  flex: 1 1 120px;
+  text-align: center;
+}
+.statNumber {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+.statLabel {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #777;
+}
