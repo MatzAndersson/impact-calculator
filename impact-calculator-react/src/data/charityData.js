@@ -10,8 +10,10 @@ export const CHARITIES = [
     costPerUnit: 5000,
     deathsPerUnit: 1 / 72000,
     logo: { src: mcLogo, width: 210 },
-    output: "Children protected from malaria for a year with SMC.",
-    unitName: "Estimated deaths prevented",
+    description:
+      "The Seasonal Malaria Chemoprevention program protects children from malaria by distributing preventative medication at times of high transmission.",
+    unitLabel: "Children protected from malaria for a year with SMC.",
+    preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
     id: "AMF",
@@ -19,8 +21,10 @@ export const CHARITIES = [
     costPerUnit: 5500,
     deathsPerUnit: 1 / 800,
     logo: { src: amfLogo, width: 106 },
-    output: "Bednets purchased, distributed, monitored.",
-    unitName: "Estimated deaths prevented",
+    description:
+      "AMF's bed net programs protect people from malaria by distributing and ensuring the use of long-lasting insecticidal bednets in regions with the highest burden of malaria cases.",
+    unitLabel: "Bednets purchased, distributed, and monitored.",
+    preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
     id: "NI",
@@ -28,8 +32,10 @@ export const CHARITIES = [
     costPerUnit: 5000,
     deathsPerUnit: 1 / 1400,
     logo: { src: niLogo, width: 230 },
-    output: "Children vaccinated.",
-    unitName: "Estimated deaths prevented",
+    description:
+      "New Incentives improves childhood immunization rates in Nigeria by providing cash incentives to caregivers.",
+    unitLabel: "Children vaccinated.",
+    preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
     id: "HKI",
@@ -37,7 +43,10 @@ export const CHARITIES = [
     costPerUnit: 3500,
     deathsPerUnit: 1 / 3200,
     logo: { src: hkiLogo, width: 108 },
-    output: "Children given a year's Vitamin A supplementation, helping prevent early childhood blindness",
-    unitName: "Estimated deaths prevented",
+    description:
+      "Helen Keller Intl's Vitamin A Supplementation program Improves child health and survival rates by partnering with governments across Africa to deliver lifesaving vitamin A supplements and complementary activities to millions of children annually.",
+    unitLabel:
+      "Children given a year's Vitamin A supplementation, helping prevent early childhood blindness",
+    preventedDeathsLabel: "Estimated deaths prevented",
   },
 ];

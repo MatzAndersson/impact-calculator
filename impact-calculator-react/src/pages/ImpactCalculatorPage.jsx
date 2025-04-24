@@ -7,12 +7,30 @@ import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
 //import { ImpactSummary } from "../components/ImpactSummary";
 import pageStyles from "./ImpactCalculatorPage.module.css";
+import { CHARITIES } from "../data/charityData";
 
 export default function ImpactCalculatorPage() {
   const { inputs, update } = useCalculatorInputs();
-  const [calculated, setCalculated] = useState(false);
+  const [calculatedDonation, setCalculatedDonation] = useState(0);
 
-  const handleCalculate = () => setCalculated(true);
+  const handleCalculate = () => {
+    let donation = 0;
+
+    if (inputs.mode === "annual") {
+      donation = inputs.salaryNow * inputs.pledgePercent;
+    } else if (inputs.mode === "monthly") {
+      // monthlyAmount is already the user's input per month
+      donation = inputs.monthlyAmount * 12;
+    } else if (inputs.mode === "lifetime") {
+      const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
+      const r = Math.max(0.000001, inputs.growthRate); 
+      const earned =
+        (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
+      donation = earned * inputs.pledgePercent;
+    }
+
+    setCalculatedDonation(donation);
+  };
 
   const fmt = (value) =>
     value.toLocaleString(undefined, {
@@ -22,16 +40,13 @@ export default function ImpactCalculatorPage() {
     });
 
   // 1) Pre-compute all three donation amounts
-  const annualDonation = inputs.salaryNow * inputs.pledgePercent;
-  const monthlyDonation = inputs.monthlyAmount;
-  const lifetimeDonation = (() => {
-    if (!calculated) return 0;
-
-    // lifetime = sum over all years with growth
+  const annualDonation     = inputs.salaryNow * inputs.pledgePercent;
+  const monthlyDonation    = inputs.monthlyAmount;
+  const lifetimeDonation   = (() => {
     const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-    const r = Math.max(0.000001, inputs.growthRate / 100);
-    const earned = (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
-    return Math.max(0, earned * inputs.pledgePercent);
+    const r     = Math.max(0.000001, inputs.growthRate);
+    return ((inputs.salaryNow * ((1 + r) ** years - 1)) / r)
+           * inputs.pledgePercent;
   })();
 
   const monthlyAmount =
@@ -120,11 +135,9 @@ export default function ImpactCalculatorPage() {
         </button>
       </div>
 
-      {calculated && (
-        <>
-          <CharityCards annualDonation={annualDonation} />
-        </>
-      )}
+      <>
+        <CharityCards annualDonation={calculatedDonation} />
+      </>
     </section>
   );
 }

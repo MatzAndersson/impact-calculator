@@ -25,21 +25,19 @@ export function CharityCards({ annualDonation }) {
 
             {/* title + description */}
             <h3 className={styles.cardTitle}>{c.name}</h3>
-            <p className={styles.description}>{c.output}</p>
+            <p className={styles.description}>{c.description}</p>
 
             {/* new two‑column stats */}
             <div className={styles.stats}>
               <div className={styles.stat}>
                 <span className={styles.statNumber}>{units}</span>
-                <span className={styles.statLabel}>{c.unitName}</span>
+                <span className={styles.statLabel}>{c.unitLabel}</span>
               </div>
               <div className={styles.stat}>
                 <span className={styles.statNumber}>
                   {deathsPrevented}
                 </span>
-                <span className={styles.statLabel}>
-                  estimated deaths prevented
-                </span>
+                <span className={styles.statLabel}>{c.preventedDeathsLabel}</span>
               </div>
             </div>
           </article>
