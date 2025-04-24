@@ -60,16 +60,19 @@ export function LifetimeForm({ inputs, update }) {
       {/* growth rate row */}
       <div className={styles.formRow}>
         <div className={styles.formControl}>
-          <label htmlFor="growthRate">Salary growth rate</label>
-          <input
-            id="growthRate"
-            className={styles.inputBase}
-            type="number"
-            step="0.01"
-            value={inputs.growthRate}
-            onChange={(e) => update("growthRate", Number(e.target.value))}
-            placeholder="e.g. 0.04 (4%)"
-          />
+          <label htmlFor="growthRate">Salary growth rate in percentage</label>
+          <div className={styles.suffixInput}>
+            <input
+              id="growthRate"
+              className={styles.inputBase}
+              type="number"
+              step="0.01"
+              value={inputs.growthRate}
+              onChange={(e) => update("growthRate", e.target.value)}
+              placeholder="e.g. 4%"
+            />
+            <span className={styles.suffix}>%</span>
+          </div>
         </div>
       </div>
     </>

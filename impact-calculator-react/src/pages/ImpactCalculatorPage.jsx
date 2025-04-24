@@ -29,7 +29,7 @@ export default function ImpactCalculatorPage() {
 
     // lifetime = sum over all years with growth
     const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-    const r = Math.max(0.000001, inputs.growthRate);
+    const r = Math.max(0.000001, inputs.growthRate / 100);
     const earned = (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
     return Math.max(0, earned * inputs.pledgePercent);
   })();
@@ -63,7 +63,7 @@ export default function ImpactCalculatorPage() {
           />
         </InputTabs>
         {/* ---------- slider OR monthly preview ---------- */}
-        {inputs.mode !== "monthly" && (
+        {(inputs.mode === "annual" || inputs.mode === "lifetime") && (
           <div className={pageStyles.rangeWrapper}>
             <label htmlFor="pledgePercent" className={pageStyles.rangeLabel}>
               I’d like to donate&nbsp;
@@ -85,6 +85,7 @@ export default function ImpactCalculatorPage() {
             />
           </div>
         )}
+
         {/* live preview, always shown */}
         <div className={pageStyles.annualDonation}>
           {inputs.mode === "annual" && (
@@ -93,6 +94,9 @@ export default function ImpactCalculatorPage() {
 
           {inputs.mode === "monthly" && (
             <>
+              Based on annual salary:{" "}
+              <strong>{fmt(Number(inputs.salaryNow) || 0)}</strong>
+              <br />
               Monthly donation: {fmt(monthlyAmount)}
               <br />
               Equivalent pledge: {(inputs.pledgePercent * 100).toFixed(2)}%

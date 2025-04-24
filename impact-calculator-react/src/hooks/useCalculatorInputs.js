@@ -6,7 +6,7 @@ export default function useCalculatorInputs() {
     salaryNow: "",
     pledgePercent: 0.01, // % – used by annual + lifetime
     monthlyAmount: "", // £/$ each month – used by monthly
-    growthRate: 0.04,
+    growthRate: 4,
     currentAge: "",
     retirementAge: "",
     currency: "USD",
@@ -35,14 +35,11 @@ export default function useCalculatorInputs() {
 
     const salary = parseFloat(inputs.salaryNow);
     const monthly = parseFloat(inputs.monthlyAmount);
-    if (isNaN(salary) || isNaN(monthly) || salary <= 0) {
-      // user cleared one of the fields → clear pledgePercent
-      update("pledgePercent", "");
-      return;
+    if (!isNaN(salary) && salary > 0 && !isNaN(monthly)) {
+      const p = (monthly * 12) / salary;
+      update("pledgePercent", Number(p.toFixed(4)));
     }
-
-    const p = (monthly * 12) / salary;
-    update("pledgePercent", Number(p.toFixed(4)));
+    // otherwise do nothing — leave the 0.01 default in state
   }, [inputs.monthlyAmount, inputs.salaryNow, inputs.mode]);
 
   return { inputs, update };

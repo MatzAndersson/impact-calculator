@@ -26,3 +26,24 @@
   font-size: 14px;
   font-style: italic;
 }
+
+.suffixInput {
+  position: relative;
+  display: inline-block; /* shrink-to-content */
+}
+
+/* make space for the % */
+.suffixInput .inputBase {
+  padding-right: 1.5em;
+}
+
+/* absolutely position the % */
+.suffixInput .suffix {
+  position: absolute;
+  top: 50%;
+  right: 0.5em;            /* tweak for perfect centering */
+  transform: translateY(-50%);
+  pointer-events: none;    /* clicks go through to the input */
+  color: var(--color-secondary);
+  font-weight: bold;
+}
