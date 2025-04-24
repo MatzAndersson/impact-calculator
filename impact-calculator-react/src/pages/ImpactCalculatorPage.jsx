@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, } from "react";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
@@ -7,7 +7,7 @@ import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
 //import { ImpactSummary } from "../components/ImpactSummary";
 import pageStyles from "./ImpactCalculatorPage.module.css";
-import { CHARITIES } from "../data/charityData";
+
 
 export default function ImpactCalculatorPage() {
   const { inputs, update } = useCalculatorInputs();
@@ -23,7 +23,7 @@ export default function ImpactCalculatorPage() {
       donation = inputs.monthlyAmount * 12;
     } else if (inputs.mode === "lifetime") {
       const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-      const r = Math.max(0.000001, inputs.growthRate); 
+      const r = Math.max(0.000001, inputs.growthRate / 100); 
       const earned =
         (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
       donation = earned * inputs.pledgePercent;
@@ -44,7 +44,7 @@ export default function ImpactCalculatorPage() {
   const monthlyDonation    = inputs.monthlyAmount;
   const lifetimeDonation   = (() => {
     const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-    const r     = Math.max(0.000001, inputs.growthRate);
+    const r = Math.max(0.000001, inputs.growthRate / 100);
     return ((inputs.salaryNow * ((1 + r) ** years - 1)) / r)
            * inputs.pledgePercent;
   })();

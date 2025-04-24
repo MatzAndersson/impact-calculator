@@ -9,8 +9,10 @@ export function CharityCards({ annualDonation }) {
   return (
     <section className={styles.results}>
       {CHARITIES.map((c) => {
-        const units           = Math.floor(perCharity / c.costPerUnit);
-        const deathsPrevented = (units * c.deathsPerUnit).toFixed(2);
+        const units = Math.round(perCharity / c.costPerOutputUSD);
+        const deathsPrevented = (perCharity / c.costPerDeathAvertedUSD).toFixed(
+          2
+        );
 
         return (
           <article key={c.id} className={styles.card}>
@@ -34,10 +36,10 @@ export function CharityCards({ annualDonation }) {
                 <span className={styles.statLabel}>{c.unitLabel}</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>
-                  {deathsPrevented}
+                <span className={styles.statNumber}>{deathsPrevented}</span>
+                <span className={styles.statLabel}>
+                  {c.preventedDeathsLabel}
                 </span>
-                <span className={styles.statLabel}>{c.preventedDeathsLabel}</span>
               </div>
             </div>
           </article>

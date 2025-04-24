@@ -7,8 +7,8 @@ export const CHARITIES = [
   {
     id: "MC",
     name: "Malaria Consortium",
-    costPerUnit: 5000,
-    deathsPerUnit: 1 / 72000,
+    costPerOutputUSD: 20,
+    costPerDeathAvertedUSD: 5000,
     logo: { src: mcLogo, width: 210 },
     description:
       "The Seasonal Malaria Chemoprevention program protects children from malaria by distributing preventative medication at times of high transmission.",
@@ -18,8 +18,8 @@ export const CHARITIES = [
   {
     id: "AMF",
     name: "Against Malaria Foundation",
-    costPerUnit: 5500,
-    deathsPerUnit: 1 / 800,
+    costPerOutputUSD: 2,
+    costPerDeathAvertedUSD: 5500,
     logo: { src: amfLogo, width: 106 },
     description:
       "AMF's bed net programs protect people from malaria by distributing and ensuring the use of long-lasting insecticidal bednets in regions with the highest burden of malaria cases.",
@@ -29,8 +29,8 @@ export const CHARITIES = [
   {
     id: "NI",
     name: "New Incentives",
-    costPerUnit: 5000,
-    deathsPerUnit: 1 / 1400,
+    costPerOutputUSD: 5,
+    costPerDeathAvertedUSD: 5000,
     logo: { src: niLogo, width: 230 },
     description:
       "New Incentives improves childhood immunization rates in Nigeria by providing cash incentives to caregivers.",
@@ -40,8 +40,8 @@ export const CHARITIES = [
   {
     id: "HKI",
     name: "Helen Keller International",
-    costPerUnit: 3500,
-    deathsPerUnit: 1 / 3200,
+    costPerOutputUSD: 1,
+    costPerDeathAvertedUSD: 3200,
     logo: { src: hkiLogo, width: 108 },
     description:
       "Helen Keller Intl's Vitamin A Supplementation program Improves child health and survival rates by partnering with governments across Africa to deliver lifesaving vitamin A supplements and complementary activities to millions of children annually.",
