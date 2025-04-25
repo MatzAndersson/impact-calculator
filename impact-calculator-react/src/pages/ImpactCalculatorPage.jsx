@@ -1,17 +1,25 @@
-import { useState, } from "react";
+import { useState } from "react";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
 import { MonthlyForm } from "../components/calculator/MonthlyForm";
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
+import { CHARITIES } from "../data/charityData";
 //import { ImpactSummary } from "../components/ImpactSummary";
 import pageStyles from "./ImpactCalculatorPage.module.css";
-
 
 export default function ImpactCalculatorPage() {
   const { inputs, update } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
+
+  const [mode, setMode] = useState("equal");
+  const [allocations, setAllocations] = useState(() =>
+    CHARITIES.reduce(
+      (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
+      {}
+    )
+  );
 
   const handleCalculate = () => {
     let donation = 0;
@@ -23,9 +31,8 @@ export default function ImpactCalculatorPage() {
       donation = inputs.monthlyAmount * 12;
     } else if (inputs.mode === "lifetime") {
       const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-      const r = Math.max(0.000001, inputs.growthRate / 100); 
-      const earned =
-        (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
+      const r = Math.max(0.000001, inputs.growthRate / 100);
+      const earned = (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
       donation = earned * inputs.pledgePercent;
     }
 
@@ -40,13 +47,14 @@ export default function ImpactCalculatorPage() {
     });
 
   // 1) Pre-compute all three donation amounts
-  const annualDonation     = inputs.salaryNow * inputs.pledgePercent;
-  const monthlyDonation    = inputs.monthlyAmount;
-  const lifetimeDonation   = (() => {
+  const annualDonation = inputs.salaryNow * inputs.pledgePercent;
+  const monthlyDonation = inputs.monthlyAmount;
+  const lifetimeDonation = (() => {
     const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
     const r = Math.max(0.000001, inputs.growthRate / 100);
-    return ((inputs.salaryNow * ((1 + r) ** years - 1)) / r)
-           * inputs.pledgePercent;
+    return (
+      ((inputs.salaryNow * ((1 + r) ** years - 1)) / r) * inputs.pledgePercent
+    );
   })();
 
   const monthlyAmount =
@@ -77,6 +85,38 @@ export default function ImpactCalculatorPage() {
             update={update}
           />
         </InputTabs>
+
+        <fieldset className={pageStyles.allocationToggle}>
+          <legend>How should we split your donation?</legend>
+          <label>
+            <input
+              type="radio"
+              value="equal"
+              checked={mode === "equal"}
+              onChange={() => {
+                setMode("equal");
+                setAllocations(
+                  CHARITIES.reduce(
+                    (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
+                    {}
+                  )
+                );
+              }}
+            />{" "}
+            Split equally (25% each)
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              value="custom"
+              checked={mode === "custom"}
+              onChange={() => setMode("custom")}
+            />{" "}
+            Customize my split
+          </label>
+        </fieldset>
+
         {/* ---------- slider OR monthly preview ---------- */}
         {(inputs.mode === "annual" || inputs.mode === "lifetime") && (
           <div className={pageStyles.rangeWrapper}>
@@ -136,7 +176,17 @@ export default function ImpactCalculatorPage() {
       </div>
 
       <>
-        <CharityCards annualDonation={calculatedDonation} />
+        <CharityCards
+          annualDonation={calculatedDonation}
+          allocations={allocations}
+          onAllocationChange={(id, pct) => {
+            setAllocations((prev) => ({
+              ...prev,
+              [id]: pct,
+            }));
+          }}
+          mode={mode}
+        />
       </>
     </section>
   );
