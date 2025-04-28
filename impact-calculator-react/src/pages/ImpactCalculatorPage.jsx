@@ -87,7 +87,7 @@ export default function ImpactCalculatorPage() {
         </InputTabs>
 
         <fieldset className={pageStyles.allocationToggle}>
-          <legend>How should we split your donation?</legend>
+          <legend>How should we split your donation across the top charities?</legend>
           <label>
             <input
               type="radio"
@@ -113,7 +113,7 @@ export default function ImpactCalculatorPage() {
               checked={mode === "custom"}
               onChange={() => setMode("custom")}
             />{" "}
-            Customize my split
+            Customize split (set your own percentages)
           </label>
         </fieldset>
 
