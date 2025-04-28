@@ -6,7 +6,8 @@ import { MonthlyForm } from "../components/calculator/MonthlyForm";
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
 import { CHARITIES } from "../data/charityData";
-//import { ImpactSummary } from "../components/ImpactSummary";
+import { ImpactSummary } from "../components/ImpactSummary";
+
 import pageStyles from "./ImpactCalculatorPage.module.css";
 
 export default function ImpactCalculatorPage() {
@@ -87,7 +88,9 @@ export default function ImpactCalculatorPage() {
         </InputTabs>
 
         <fieldset className={pageStyles.allocationToggle}>
-          <legend>How should we split your donation across the top charities?</legend>
+          <legend>
+            How should we split your donation across the top charities?
+          </legend>
           <label>
             <input
               type="radio"
@@ -188,6 +191,13 @@ export default function ImpactCalculatorPage() {
           mode={mode}
         />
       </>
+      {calculatedDonation > 0 && (
+        <ImpactSummary
+          annualDonation={calculatedDonation}
+          allocations={allocations}
+          mode={mode}
+        />
+      )}
     </section>
   );
 }

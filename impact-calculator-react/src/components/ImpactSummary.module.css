@@ -1,0 +1,44 @@
+.section {
+    margin-top: 3rem;
+  }
+  
+  .heading2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .subHeading {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  /* chart containers inherit width/height from Recharts */
+  .chart {
+    width: 100%;
+    height: 260px;   /* pie */
+  }
+  
+  .barChart {
+    width: 100%;
+    height: 280px;
+  }
+  
+  .bullets {
+    margin-top: 1.5rem;
+    line-height: 1.6;
+    padding-left: 1.25rem;
+  }
+  
+  .validTotal {
+    margin-top: 0.75rem;
+    font-weight: bold;
+    color: green;
+  }
+  
+  .invalidTotal {
+    margin-top: 0.75rem;
+    font-weight: bold;
+    color: red;
+  }

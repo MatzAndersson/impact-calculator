@@ -12,7 +12,7 @@ export const CHARITIES = [
     logo: { src: mcLogo, width: 210 },
     description:
       "The Seasonal Malaria Chemoprevention program protects children from malaria by distributing preventative medication at times of high transmission.",
-    unitLabel: "Children protected from malaria for a year with SMC.",
+    unitLabel: "Children protected from malaria for a year with SMC",
     preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
@@ -23,7 +23,7 @@ export const CHARITIES = [
     logo: { src: amfLogo, width: 106 },
     description:
       "AMF's bed net programs protect people from malaria by distributing and ensuring the use of long-lasting insecticidal bednets in regions with the highest burden of malaria cases.",
-    unitLabel: "Bednets purchased, distributed, and monitored.",
+    unitLabel: "Bednets purchased, distributed, and monitored",
     preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
@@ -34,7 +34,7 @@ export const CHARITIES = [
     logo: { src: niLogo, width: 230 },
     description:
       "New Incentives improves childhood immunization rates in Nigeria by providing cash incentives to caregivers.",
-    unitLabel: "Children vaccinated.",
+    unitLabel: "Children vaccinated",
     preventedDeathsLabel: "Estimated deaths prevented",
   },
   {
