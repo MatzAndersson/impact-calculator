@@ -16,6 +16,19 @@ import styles from "./ImpactSummary.module.css";
 
 const COLORS = ["#26A7FF", "#FB6A37", "#E2FF3E", "#FEDBFD"];
 
+function TwoRowLegend({ payload }) {
+  return (
+    <ul className={styles.legend}>
+      {payload.map((entry) => (
+        <li key={entry.value}>
+          <span className={styles.dot} style={{ background: entry.color }} />
+          {entry.value}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function ImpactSummary({ annualDonation, allocations, mode }) {
   const data = CHARITIES.map((c, idx) => {
     const pct =
@@ -38,15 +51,18 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
     };
   });
 
-  const totalPct = data.reduce((sum, d) => sum + d.pct, 0);
+  const totalPct = data.reduce((s, d) => s + d.pct, 0);
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
+  const totalUnits = data.reduce((s, d) => s + d.units, 0);
+  const costPerDeath =
+    totalPreventedDeaths > 0 ? annualDonation / totalPreventedDeaths : 0;
 
   return (
     <section className={styles.section}>
       <h2 className={styles.heading2}>Overall Impact</h2>
 
       <p className={styles.kpi}>
-        Estimated deaths prevented in total:{" "}
+        Estimated deaths prevented in total:&nbsp;
         <strong>
           {totalPreventedDeaths.toLocaleString(undefined, {
             maximumFractionDigits: 1,
@@ -69,59 +85,46 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
               <Cell key={d.id} fill={d.color} />
             ))}
           </Pie>
-          <Tooltip formatter={(v) => `$${v.toLocaleString()}`} />
-          <Legend />
+          <Tooltip
+            formatter={(v) =>
+              `$${v.toLocaleString(undefined, {
+                maximumFractionDigits: 0, // 👈 0 decimals
+                minimumFractionDigits: 0,
+              })}`
+            }
+          />
+          <Legend content={TwoRowLegend} />
         </PieChart>
       </ResponsiveContainer>
 
-      {/* Bar - units */}
-      <h3 className={styles.subHeading}>Tangible results (units)</h3>
-      <ResponsiveContainer
-        width="100%"
-        height={280}
-        className={styles.barChart}
-      >
-        <BarChart data={data}>
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="units">
-            {data.map((d) => (
-              <Cell key={d.id} fill={d.color} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-
-      <h3 className={styles.subHeading}>Estimated deaths prevented</h3>
-      <ResponsiveContainer width="100%" height={260}>
-        <BarChart data={data}>
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <YAxis />
-          <Tooltip formatter={(v) => v.toFixed(2)} />
-          <Bar dataKey="preventedDeaths">
-            {data.map((d) => (
-              <Cell key={d.id} fill={d.color} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-
-      {/* Bullets */}
-      <ul className={styles.bullets}>
-        {data.map((d) => (
-          <li key={d.id}>
-            <strong>{d.units.toLocaleString()}</strong> {d.unitLabel} through{" "}
-            <strong>{d.name}</strong>
-            {mode === "custom" && (
-              <>
-                {" "}
-                (<strong>{d.pct.toFixed(0)}% of total donation</strong>)
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      {/* Compact impact strip */}
+      <div className={styles.kpiStrip}>
+        <div>
+          <strong>{totalUnits.toLocaleString()}</strong>
+          <br />
+          total&nbsp;units
+        </div>
+        <div>
+          <strong>
+            {totalPreventedDeaths.toLocaleString(undefined, {
+              maximumFractionDigits: 1,
+            })}
+          </strong>
+          <br />
+          deaths&nbsp;prevented
+        </div>
+        <div>
+          <strong>
+            {costPerDeath.toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD",
+              maximumFractionDigits: 0,
+            })}
+          </strong>
+          <br />
+          per&nbsp;death&nbsp;averted
+        </div>
+      </div>
 
       {/* Total indicator */}
       {mode === "custom" && (
