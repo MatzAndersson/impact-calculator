@@ -12,7 +12,7 @@ export function CharityCards({ annualDonation, allocations, mode, onAllocationCh
   };
  
   return (
-    <section className={styles.results}>
+    <section className={styles.resultsGrid}>
       {CHARITIES.map((c) => {
         // Determine the percentage allocation
         const percentage =

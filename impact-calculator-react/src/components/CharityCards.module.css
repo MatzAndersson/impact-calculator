@@ -1,4 +1,4 @@
-.results {
+.resultsGrid {
   display: grid;
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -14,6 +14,11 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  min-height: 460px;
+  justify-content: space-between;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .cardTitle {
@@ -49,7 +54,7 @@
 }
 .description {
   margin: 16px 0;
-  flex-grow: 1;        /* push stats down to the bottom */
+  flex-grow: 1; /* push stats down to the bottom */
   color: #555;
 }
 
@@ -97,12 +102,12 @@
   text-align: center;
 }
 
-/* two‑column stats block */
+/* NEW — two-column grid for stats */
 .stats {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-top: auto; /* push to bottom if space allows */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  margin-top: 16px;
 }
 .stat {
   display: flex;
