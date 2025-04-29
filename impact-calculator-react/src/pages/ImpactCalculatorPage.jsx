@@ -47,7 +47,7 @@ export default function ImpactCalculatorPage() {
       maximumFractionDigits: 0,
     });
 
-  // 1) Pre-compute all three donation amounts
+  // 1) Calculate all three donation amounts
   const annualDonation = inputs.salaryNow * inputs.pledgePercent;
   const monthlyDonation = inputs.monthlyAmount;
   const lifetimeDonation = (() => {

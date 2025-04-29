@@ -13,6 +13,12 @@
     font-size: 1.25rem;
     font-weight: 600;
   }
+
+  .kpi {
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 1rem 0 2rem;
+  }
   
   /* chart containers inherit width/height from Recharts */
   .chart {
@@ -42,3 +48,6 @@
     font-weight: bold;
     color: red;
   }
+
+  
+  

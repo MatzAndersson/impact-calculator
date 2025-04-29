@@ -23,6 +23,11 @@
     cursor: pointer;
     font-family: 'Forma DJR Deck';
     margin-top: 16px;
+    transition: opacity 0.15s ease-in-out;
+  }
+
+  .calculateBtn:hover {
+    opacity: 0.8;
   }
 
   .rangeWrapper {
