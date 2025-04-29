@@ -31,11 +31,16 @@
   margin: 16px 0; /* space above/below the button */
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: filter 0.15s, transform 0.05s;
   display: block;
 }
 .infoButton:hover {
-  background-color: darken(var(--color-secondary), 10%);
+  filter: brightness(110%);
+}
+
+.infoButton:active {
+  filter: brightness(90%);
+  transform: translateY(1px);
 }
 
 .cardTitle {

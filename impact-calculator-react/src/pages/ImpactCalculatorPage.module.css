@@ -1,47 +1,55 @@
-.icWrapper {            /* replaces .ic-wrapper */
-    max-width: 730px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    background: var(--color-bg-light);
-  }
-  
-  .icPanel {              /* replaces .ic-panel */
-    background: white;
-    border-radius: 12px;
-    padding: 32px 24px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    margin-bottom: 40px;
-  }
-  
-  .calculateBtn {         
-    background-color: var(--color-secondary);
-    color: white;
-    border: none;
-    border-radius: 100px;
-    font-size: 16px;
-    padding: 16px 40px;
-    cursor: pointer;
-    font-family: 'Forma DJR Deck';
-    margin-top: 16px;
-    transition: opacity 0.15s ease-in-out;
-  }
+.icWrapper {
+  /* replaces .ic-wrapper */
+  max-width: 730px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: var(--color-bg-light);
+}
 
-  .calculateBtn:hover {
-    opacity: 0.8;
-  }
+.icPanel {
+  /* replaces .ic-panel */
+  background: white;
+  border-radius: 12px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  margin-bottom: 40px;
+}
 
-  .rangeWrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  
-  .rangeLabel {
-    margin-right: 20px;
-  }
-  
-  .highlight {
-    color: var(--color-secondary);
-    font-weight: bold;
-  }
-  
+.calculateBtn {
+  background-color: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-size: 16px;
+  padding: 16px 40px;
+  cursor: pointer;
+  font-family: "Forma DJR Deck";
+  margin-top: 16px;
+  transition: filter 0.15s, transform 0.05s;
+}
+
+.calculateBtn:hover {
+  filter: brightness(110%);
+}
+
+.calculateBtn:active {
+  filter: brightness(90%);
+  transform: translateY(1px);
+}
+
+
+
+.rangeWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.rangeLabel {
+  margin-right: 20px;
+}
+
+.highlight {
+  color: var(--color-secondary);
+  font-weight: bold;
+}
