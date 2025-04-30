@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
@@ -11,6 +11,7 @@ import { ImpactSummary } from "../components/ImpactSummary";
 import pageStyles from "./ImpactCalculatorPage.module.css";
 
 export default function ImpactCalculatorPage() {
+  const cardsRef = useRef(null);
   const { inputs, update } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
 
@@ -38,6 +39,10 @@ export default function ImpactCalculatorPage() {
     }
 
     setCalculatedDonation(donation);
+
+    requestAnimationFrame(() => {
+      cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   const fmt = (value) =>
@@ -180,6 +185,7 @@ export default function ImpactCalculatorPage() {
 
       <>
         <CharityCards
+          ref={cardsRef}
           annualDonation={calculatedDonation}
           allocations={allocations}
           onAllocationChange={(id, pct) => {

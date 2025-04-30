@@ -2,12 +2,10 @@ import React from "react";
 import { CHARITIES } from "../data/charityData";
 import styles from "./CharityCards.module.css";
 
-export function CharityCards({
-  annualDonation,
-  allocations,
-  mode,
-  onAllocationChange,
-}) {
+export const CharityCards = React.forwardRef(function CharityCards(
+    { annualDonation, allocations, mode, onAllocationChange },
+     ref
+   ) {
   const totalPercentage = Object.values(allocations).reduce(
     (sum, percentage) => sum + percentage,
     0
@@ -20,7 +18,7 @@ export function CharityCards({
   };
 
   return (
-    <section className={styles.resultsGrid}>
+    <section ref={ref} className={styles.resultsGrid}>
       {mode === "custom" && (
         <div
           className={`${styles.totalPctIndicator} ${
@@ -104,4 +102,4 @@ export function CharityCards({
       )}
     </section>
   );
-}
+});
