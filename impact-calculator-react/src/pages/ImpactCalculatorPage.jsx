@@ -89,7 +89,7 @@ export default function ImpactCalculatorPage() {
 
         <fieldset className={pageStyles.allocationToggle}>
           <legend>
-            How should we split your donation across the top charities?
+            How should we split your donation across the 4 top charities?
           </legend>
           <label>
             <input
@@ -116,7 +116,7 @@ export default function ImpactCalculatorPage() {
               checked={mode === "custom"}
               onChange={() => setMode("custom")}
             />{" "}
-            Customize split (set your own percentages)
+            Customize split (set your own percentages below)
           </label>
         </fieldset>
 

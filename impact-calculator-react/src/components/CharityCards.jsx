@@ -2,17 +2,36 @@ import React from "react";
 import { CHARITIES } from "../data/charityData";
 import styles from "./CharityCards.module.css";
 
-export function CharityCards({ annualDonation, allocations, mode, onAllocationChange }) {
-  const totalPercentage = Object.values(allocations).reduce((sum, percentage) => sum + percentage, 0);
+export function CharityCards({
+  annualDonation,
+  allocations,
+  mode,
+  onAllocationChange,
+}) {
+  const totalPercentage = Object.values(allocations).reduce(
+    (sum, percentage) => sum + percentage,
+    0
+  );
 
   const handleSliderChange = (id, newPct) => {
     const remainingPercentage = 100 - (totalPercentage - allocations[id]);
     const adjustedPercentage = Math.min(newPct, remainingPercentage);
     onAllocationChange(id, adjustedPercentage);
   };
- 
+
   return (
     <section className={styles.resultsGrid}>
+      {mode === "custom" && (
+        <div
+          className={`${styles.totalPctIndicator} ${
+            totalPercentage === 100 ? styles.validTotal : styles.invalidTotal
+          }`}
+          style={{ gridColumn: "1 / -1" }} /* still spans full row */
+        >
+          Total allocation: {totalPercentage}%{" "}
+          {totalPercentage !== 100 && "← adjust to 100 %"}
+        </div>
+      )}
       {CHARITIES.map((c) => {
         // Determine the percentage allocation
         const percentage =
@@ -44,14 +63,16 @@ export function CharityCards({ annualDonation, allocations, mode, onAllocationCh
                   max={100}
                   step={1}
                   value={percentage}
-                  onChange={(e) => handleSliderChange(c.id, Number(e.target.value))}
+                  onChange={(e) =>
+                    handleSliderChange(c.id, Number(e.target.value))
+                  }
                   className={styles.slider}
                 />
                 <span className={styles.sliderLabel}>{percentage}%</span>
               </div>
             ) : (
               <div className={styles.equalBadge}>
-                {percentage.toFixed(0)}%
+                {percentage.toFixed(0)}% of total donation
               </div>
             )}
             {/* new two‑column stats */}
@@ -71,10 +92,16 @@ export function CharityCards({ annualDonation, allocations, mode, onAllocationCh
         );
       })}
       {mode === "custom" && (
-        <div className={styles.totalPctIndicator} style={{ color: totalPercentage === 100 ? 'green' : 'red' }}>
-          Total Allocation: {totalPercentage}%
+        <div
+          className={`${styles.totalPctIndicator} ${
+            totalPercentage === 100 ? styles.validTotal : styles.invalidTotal
+          }`}
+          style={{ gridColumn: "1 / -1" }} /* still spans full row */
+        >
+          Total allocation: {totalPercentage}%{" "}
+          {totalPercentage !== 100 && "← adjust to 100 %"}
         </div>
       )}
-      </section>
-    );
-  }
+    </section>
+  );
+}
