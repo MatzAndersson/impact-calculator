@@ -5,7 +5,7 @@ export function MonthlyForm({ inputs, update }) {
     <>
       <div className={styles.formRow}>
         <div className={styles.formControl}>
-          <label htmlFor="MonthlyCurrency">Currency</label>
+          <label htmlFor="monthlyCurrency">Currency</label>
           <select
             id="monthlyCurrency"
             className={styles.selectBase}
@@ -18,15 +18,15 @@ export function MonthlyForm({ inputs, update }) {
           </select>
         </div>
         <div className={styles.formControl}>
-          <label htmlFor="monthlyAmount">Monthly donation</label>
+          <label htmlFor="monthlySalary">Monthly salary</label>
           <input
-            id="monthlyAmount"
+            id="monthlySalary"
             className={styles.inputBase}
             type="number"
-            value={inputs.monthlyAmount}
+            value={inputs.monthlySalary}
             min="0"
-            onChange={(e) => update("monthlyAmount", e.target.value)}
-            placeholder="e.g. 100"
+            onChange={(e) => update("monthlySalary", parseFloat(e.target.value))}
+            placeholder="e.g. 3000"
           />
         </div>
       </div>

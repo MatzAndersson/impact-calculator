@@ -29,8 +29,8 @@ export default function ImpactCalculatorPage() {
     if (inputs.mode === "annual") {
       donation = inputs.salaryNow * inputs.pledgePercent;
     } else if (inputs.mode === "monthly") {
-      // monthlyAmount is already the user's input per month
-      donation = inputs.monthlyAmount * 12;
+      // monthlySalary is already the user's input per month
+      donation = inputs.monthlySalary * 12 * inputs.pledgePercent;
     } else if (inputs.mode === "lifetime") {
       const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
       const r = Math.max(0.000001, inputs.growthRate / 100);
@@ -53,8 +53,15 @@ export default function ImpactCalculatorPage() {
     });
 
   // 1) Calculate all three donation amounts
-  const annualDonation = inputs.salaryNow * inputs.pledgePercent;
-  const monthlyDonation = inputs.monthlyAmount;
+  const annualDonation =
+    inputs.mode === "monthly"
+      ? inputs.monthlySalary * 12 * inputs.pledgePercent
+      : inputs.salaryNow * inputs.pledgePercent;
+
+  const monthlyDonation =
+    inputs.mode === "monthly"
+      ? inputs.monthlySalary * inputs.pledgePercent
+      : annualDonation / 12; // ← this is what you display in Annual tab
   const lifetimeDonation = (() => {
     const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
     const r = Math.max(0.000001, inputs.growthRate / 100);
@@ -63,10 +70,14 @@ export default function ImpactCalculatorPage() {
     );
   })();
 
-  const monthlyAmount =
-    inputs.mode === "monthly"
-      ? Math.max(0, monthlyDonation)
-      : annualDonation / 12;
+  const salaryFilled =
+    (inputs.mode === "annual" && inputs.salaryNow > 0) ||
+    (inputs.mode === "monthly" && inputs.monthlySalary > 0) ||
+    (inputs.mode === "lifetime" &&
+      inputs.salaryNow > 0 &&
+      inputs.currentAge > 0 &&
+      inputs.retirementAge > inputs.currentAge &&
+      inputs.growthRate > 0);
 
   return (
     <section className={pageStyles.icWrapper}>
@@ -126,43 +137,43 @@ export default function ImpactCalculatorPage() {
         </fieldset>
 
         {/* ---------- slider OR monthly preview ---------- */}
-        {(inputs.mode === "annual" || inputs.mode === "lifetime") && (
-          <div className={pageStyles.rangeWrapper}>
-            <label htmlFor="pledgePercent" className={pageStyles.rangeLabel}>
-              I’d like to donate&nbsp;
-              <span className={pageStyles.highlight}>
-                {(inputs.pledgePercent * 100).toFixed(1)}%
-              </span>
-            </label>
 
-            <input
-              id="pledgePercent"
-              type="range"
-              min={0.1}
-              max={10}
-              step={0.1}
-              value={inputs.pledgePercent * 100}
-              onChange={(e) =>
-                update("pledgePercent", Number(e.target.value) / 100)
-              }
-            />
-          </div>
-        )}
+        <div className={pageStyles.rangeWrapper}>
+          <label htmlFor="pledgePercent" className={pageStyles.rangeLabel}>
+            I’d like to donate&nbsp;
+            <span className={pageStyles.highlight}>
+              {(inputs.pledgePercent * 100).toFixed(1)}%
+            </span>
+          </label>
+
+          <input
+            id="pledgePercent"
+            type="range"
+            min={0.1}
+            max={10}
+            step={0.1}
+            value={inputs.pledgePercent * 100}
+            onChange={(e) =>
+              update("pledgePercent", Number(e.target.value) / 100)
+            }
+          />
+        </div>
 
         {/* live preview, always shown */}
         <div className={pageStyles.annualDonation}>
           {inputs.mode === "annual" && (
-            <>Annual donation: {fmt(annualDonation)}</>
+            <>
+              Annual donation: {fmt(annualDonation)}
+              <br />
+              Monthly donation: {fmt(monthlyDonation)}
+            </>
           )}
 
           {inputs.mode === "monthly" && (
             <>
-              Based on annual salary:{" "}
-              <strong>{fmt(Number(inputs.salaryNow) || 0)}</strong>
+              Monthly donation: {fmt(monthlyDonation)}
               <br />
-              Monthly donation: {fmt(monthlyAmount)}
-              <br />
-              Equivalent pledge: {(inputs.pledgePercent * 100).toFixed(2)}%
+              Annual donation: {fmt(annualDonation)}
             </>
           )}
 
@@ -174,13 +185,18 @@ export default function ImpactCalculatorPage() {
             </>
           )}
         </div>
-        <button
-          className={pageStyles.calculateBtn}
-          onClick={handleCalculate}
-          disabled={inputs.salaryNow <= 0}
+        <div
+          className={pageStyles.tipWrapper}
+          data-tip={!salaryFilled ? "Please fill in all required fields" : ""}
         >
-          Calculate donation
-        </button>
+          <button
+            className={pageStyles.calculateBtn}
+            onClick={handleCalculate}
+            disabled={!salaryFilled}
+          >
+            Calculate donation
+          </button>
+        </div>
       </div>
 
       <>

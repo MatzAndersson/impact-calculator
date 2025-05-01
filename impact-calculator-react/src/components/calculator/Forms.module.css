@@ -47,3 +47,14 @@
   color: var(--color-secondary);
   font-weight: bold;
 }
+
+.periodToggle{
+  display: flex;          /* row */
+  gap: 12px;              /* space between the two labels */
+  align-items: center;
+}
+.radioInline {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+}
