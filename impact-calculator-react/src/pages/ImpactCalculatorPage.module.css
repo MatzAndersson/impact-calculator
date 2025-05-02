@@ -37,45 +37,70 @@
   transform: translateY(1px);
 }
 
-.calculateBtn:disabled{
-  opacity:0.4;           
-  cursor:not-allowed;    /* system “do-not” cursor */
-  filter:grayscale(40%); /* optional: dull the colour */
+.calculateBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed; /* system “do-not” cursor */
+  filter: grayscale(40%); /* optional: dull the colour */
 }
 
-.tipWrapper{
-  position:relative;
-  display:inline-block;              /* shrink to button size */
+.buttonsRow {
+  display: flex;
+  align-items: center;
+  /* push buttons tight and keep them on the same line */
+  gap: 16px; /* distance between Calculate & Reset  */
+  margin-top: 24px;
+}
+
+.resetBtn {
+  background: #eee;
+  color: #444;
+  border: none;
+  border-radius: 100px;
+  font-size: 16px;
+  padding: 16px 32px;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.05s;
+  margin-left: 10px; /* space between Calculate & Reset */
+}
+
+.resetBtn:hover {
+  filter: brightness(95%);
+}
+.resetBtn:active {
+  transform: translateY(1px);
+}
+
+.tipWrapper {
+  position: relative;
+  display: inline-block; /* shrink to button size */
 }
 
 /* show tooltip only when data-tip has content AND button is disabled */
-.tipWrapper:has(button:disabled)[data-tip]:hover::after{
+.tipWrapper:has(button:disabled)[data-tip]:hover::after {
   content: attr(data-tip);
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  bottom: calc(100% - 9px);                      /* 10% above button */
-  background:#333;
-  color:#fff;
-  padding:6px 10px;
-  font-size:12px;
-  border-radius:4px;
-  white-space:nowrap;
-  pointer-events:none;             
-  z-index:5;
-  
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(100% - 9px); /* 10% above button */
+  background: #333;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
 }
 
-.tipWrapper:has(button:disabled)[data-tip]:hover::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
+.tipWrapper:has(button:disabled)[data-tip]:hover::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: calc(100% - 20px);
-  border:6px solid transparent;
-  border-top-color:#333;           
+  border: 6px solid transparent;
+  border-top-color: #333;
 }
-
 
 .rangeWrapper {
   display: flex;

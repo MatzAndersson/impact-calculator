@@ -6,7 +6,7 @@ export function LifetimeForm({ inputs, update }) {
     <>
       {/* ------------- Salary period toggle ------------- */}
       <div className={styles.formRow}>
-      <div className={`${styles.formControl} ${styles.periodToggle}`}>
+        <div className={`${styles.formControl} ${styles.periodToggle}`}>
           <label className={styles.radioInline}>
             <input
               type="radio"
@@ -54,13 +54,27 @@ export function LifetimeForm({ inputs, update }) {
             className={styles.inputBase}
             type="number"
             min="0"
-            value={isAnnual ? inputs.salaryNow : inputs.monthlySalary}
+            value={
+              isAnnual
+                ? inputs.salaryNow === 0
+                  ? ""
+                  : inputs.salaryNow
+                : inputs.monthlySalary === 0
+                ? ""
+                : inputs.monthlySalary
+            }
             placeholder={isAnnual ? "e.g. 50 000" : "e.g. 4 000"}
             onChange={(e) =>
               isAnnual
-                ? update("salaryNow", +e.target.value)
-                : update("monthlySalary", +e.target.value)
-            }
+              ? update(
+                "salaryNow",
+                e.target.value === "" ? "" : +e.target.value   /* "" or Number */
+              )
+            : update(
+                "monthlySalary",
+                e.target.value === "" ? "" : +e.target.value
+              )
+        }
           />
         </div>
       </div>
@@ -72,8 +86,8 @@ export function LifetimeForm({ inputs, update }) {
           <input
             className={styles.inputBase}
             type="number"
-            value={inputs.currentAge}
-            onChange={(e) => update("currentAge", +e.target.value)}
+            value={inputs.currentAge === 0 ? "" : inputs.currentAge}
+            onChange={(e) => update("currentAge", e.target.value === "" ? "" : +e.target.value)}
             placeholder="e.g. 25"
           />
         </div>
@@ -83,8 +97,8 @@ export function LifetimeForm({ inputs, update }) {
             id="retirementAge"
             className={styles.inputBase}
             type="number"
-            value={inputs.retirementAge}
-            onChange={(e) => update("retirementAge", +e.target.value)}
+            value={inputs.retirementAge === 0 ? "" : inputs.retirementAge}
+            onChange={(e) => update("retirementAge", e.target.value === "" ? "" : +e.target.value)}
             placeholder="e.g. 65"
           />
         </div>
@@ -100,8 +114,8 @@ export function LifetimeForm({ inputs, update }) {
               className={styles.inputBase}
               type="number"
               step="0.01"
-              value={inputs.growthRate}
-              onChange={(e) => update("growthRate", e.target.value)}
+              value={inputs.growthRate === 0 ? "" : inputs.growthRate}
+              onChange={(e) => update("growthRate", e.target.value === "" ? "" : +e.target.value)}
               placeholder="e.g. 4%"
             />
             <span className={styles.suffix}>%</span>

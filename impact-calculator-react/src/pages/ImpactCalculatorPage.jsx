@@ -12,7 +12,7 @@ import pageStyles from "./ImpactCalculatorPage.module.css";
 
 export default function ImpactCalculatorPage() {
   const cardsRef = useRef(null);
-  const { inputs, update } = useCalculatorInputs();
+  const { inputs, update, resetAll } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
 
   const [mode, setMode] = useState("equal");
@@ -32,9 +32,14 @@ export default function ImpactCalculatorPage() {
       // monthlySalary is already the user's input per month
       donation = inputs.monthlySalary * 12 * inputs.pledgePercent;
     } else if (inputs.mode === "lifetime") {
+      const annualBase =
+        inputs.salaryPeriod === "annual"
+          ? inputs.salaryNow
+          : inputs.monthlySalary * 12; // convert monthly → annual
+
       const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
       const r = Math.max(0.000001, inputs.growthRate / 100);
-      const earned = (inputs.salaryNow * ((1 + r) ** years - 1)) / r;
+      const earned = (annualBase * ((1 + r) ** years - 1)) / r;
       donation = earned * inputs.pledgePercent;
     }
 
@@ -70,14 +75,22 @@ export default function ImpactCalculatorPage() {
     );
   })();
 
+  const lifetimeBaseSalary =
+    inputs.salaryPeriod === "annual"
+      ? parseFloat(inputs.salaryNow)
+      : parseFloat(inputs.monthlySalary);
+
   const salaryFilled =
-    (inputs.mode === "annual" && inputs.salaryNow > 0) ||
-    (inputs.mode === "monthly" && inputs.monthlySalary > 0) ||
+    (inputs.mode === "annual" && parseFloat(inputs.salaryNow) > 0) ||
+    (inputs.mode === "monthly" && parseFloat(inputs.monthlySalary) > 0) ||
     (inputs.mode === "lifetime" &&
-      inputs.salaryNow > 0 &&
-      inputs.currentAge > 0 &&
-      inputs.retirementAge > inputs.currentAge &&
-      inputs.growthRate > 0);
+      /* salary field that matches the toggle */
+      lifetimeBaseSalary > 0 &&
+      /* both ages present and retirement > current */
+      parseFloat(inputs.currentAge) > 0 &&
+      parseFloat(inputs.retirementAge) > 0 &&
+      parseFloat(inputs.retirementAge) > parseFloat(inputs.currentAge) &&
+      parseFloat(inputs.growthRate) > 0);
 
   return (
     <section className={pageStyles.icWrapper}>
@@ -185,6 +198,7 @@ export default function ImpactCalculatorPage() {
             </>
           )}
         </div>
+        <div className={pageStyles.buttonsRow}></div>
         <div
           className={pageStyles.tipWrapper}
           data-tip={!salaryFilled ? "Please fill in all required fields" : ""}
@@ -197,6 +211,25 @@ export default function ImpactCalculatorPage() {
             Calculate donation
           </button>
         </div>
+
+        <button
+          className={pageStyles.resetBtn}
+          onClick={() => {
+            resetAll(); // clear form state
+            update("mode", inputs.mode);
+            setCalculatedDonation(0); // hide results
+            setMode("equal"); // back to 25 % each
+            setAllocations(
+              CHARITIES.reduce(
+                (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
+                {}
+              )
+            );
+            window.scrollTo({ top: 0, behavior: "smooth" }); // back to top
+          }}
+        >
+          Reset
+        </button>
       </div>
 
       <>
