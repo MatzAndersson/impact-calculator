@@ -3,9 +3,9 @@ import { CHARITIES } from "../data/charityData";
 import styles from "./CharityCards.module.css";
 
 export const CharityCards = React.forwardRef(function CharityCards(
-    { annualDonation, allocations, mode, onAllocationChange },
-     ref
-   ) {
+  { annualDonation, allocations, mode, onAllocationChange },
+  ref
+) {
   const totalPercentage = Object.values(allocations).reduce(
     (sum, percentage) => sum + percentage,
     0
@@ -40,14 +40,10 @@ export const CharityCards = React.forwardRef(function CharityCards(
 
         return (
           <article key={c.id} className={styles.card}>
-            <img src={c.logo.src} width={c.logo.width} alt={`${c.name} logo`} />
-
-            <button
-              className={styles.infoButton}
-              onClick={() => (window.location.href = `/charities/${c.id}`)}
-            >
-              Info →
-            </button>
+            <div className={styles.logoWrapper}>
++              <img src={c.logo.src} alt={`${c.name} logo`} />
++            </div>
+            
 
             {/* title + description */}
             <h3 className={styles.cardTitle}>{c.name}</h3>
@@ -86,6 +82,12 @@ export const CharityCards = React.forwardRef(function CharityCards(
                 </span>
               </div>
             </div>
+            <button
+              className={styles.infoButton}
+              onClick={() => (window.location.href = `/charities/${c.id}`)}
+            >
+              Info →
+            </button>
           </article>
         );
       })}

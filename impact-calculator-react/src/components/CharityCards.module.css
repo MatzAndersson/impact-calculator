@@ -13,23 +13,56 @@
 }
 
 .card {
+  display: grid;
+  grid-template-rows:
+    80px   /* logo */
+    auto   /* info button */
+    auto   /* title */
+    auto   /* badge */
+    1fr    /* description */
+    auto;  /* stats */
+  gap: 12px;
+  padding: 24px;
   background: #fff;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   text-align: center;
-  min-height: 460px;
-  justify-content: space-between;
+  /* ensure all cards in a row have equal height */
 }
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
+.card > img {
+  max-height: 80px;        /* whatever max looks best for your tallest logo */
+  width: auto;             /* preserve aspect ratio */
+  object-fit: contain;     /* make sure it scales down nicely */
+  margin: 0 auto 16px;     /* center + push everything below it down 16px */
+  display: block;
+}
+
+.card > .infoButton,
+.card > .cardTitle,
+.card > .equalBadge,
+.card > .sliderAllocation,
+.card > .stats {
+  justify-self: center;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoWrapper img {
+  max-height: 100%;
+  width: auto;        /* preserve aspect ratio */
+  object-fit: contain;
+}
 
 .cardTitle {
-  margin-top: 16px;
+  margin-top: 0;  
+  margin-bottom: 12px;
   font-family: "Forma DJR Deck";
   color: var(--color-text);
 }
@@ -60,19 +93,19 @@
   margin: 0 0 8px;
 }
 .description {
-  margin: 16px 0;
-  flex-grow: 1; /* push stats down to the bottom */
+  margin: 0;
   color: #555;
 }
 
 .equalBadge {
-  background-color: #e0f7fa;
-  color: #006064;
+  display: inline-block;
+  width: auto;
   padding: 5px 10px;
+  background: #e0f7fa;
   border-radius: 8px;
   font-weight: bold;
-  display: inline-block;
-  margin-top: 10px;
+  justify-self: center;
+  margin: 0; /* reset any leftover margins */
 }
 
 .allocation {
