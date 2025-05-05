@@ -12,6 +12,14 @@
     margin-top: 2rem;
     font-size: 1.25rem;
     font-weight: 600;
+    text-align: center;
+  }
+
+  .kpi{
+    font-size: 20px;
+    color: var(--color-secondary);  
+    font-weight: 600;
+    text-align: center;
   }
 
   .kpiStrip{
@@ -21,6 +29,8 @@
     margin:24px 0 32px;
     text-align:center;
   }
+
+ 
   
   .kpiStrip div{
     font-size:15px;

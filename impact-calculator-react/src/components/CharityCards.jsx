@@ -41,8 +41,8 @@ export const CharityCards = React.forwardRef(function CharityCards(
         return (
           <article key={c.id} className={styles.card}>
             <div className={styles.logoWrapper}>
-+              <img src={c.logo.src} alt={`${c.name} logo`} />
-+            </div>
+              <img src={c.logo.src} alt={`${c.name} logo`} />
+            </div>
             
 
             {/* title + description */}

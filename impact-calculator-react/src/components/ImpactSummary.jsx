@@ -29,7 +29,7 @@ function TwoRowLegend({ payload }) {
   );
 }
 
-export function ImpactSummary({ annualDonation, allocations, mode }) {
+export function ImpactSummary({ annualDonation, allocations, mode, currency }) {
   const data = CHARITIES.map((c, idx) => {
     const pct =
       mode === "equal" ? 100 / CHARITIES.length : allocations[c.id] || 0;
@@ -51,7 +51,8 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
     };
   });
 
-  const totalPct = data.reduce((s, d) => s + d.pct, 0);
+  
+  
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
   const costPerDeath =
@@ -62,7 +63,7 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
       <h2 className={styles.heading2}>Overall Impact</h2>
 
       <p className={styles.kpi}>
-        Estimated deaths prevented in total:&nbsp;
+        Total estimated deaths prevented:&nbsp;
         <strong>
           {totalPreventedDeaths.toLocaleString(undefined, {
             maximumFractionDigits: 1,
@@ -86,11 +87,12 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(v) =>
-              `$${v.toLocaleString(undefined, {
-                maximumFractionDigits: 0, // 👈 0 decimals
-                minimumFractionDigits: 0,
-              })}`
+            formatter={(value) =>
+              value.toLocaleString(undefined, {
+                style: "currency",
+                currency,
+                maximumFractionDigits: 0,
+              })
             }
           />
           <Legend content={TwoRowLegend} />
@@ -117,7 +119,7 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
           <strong>
             {costPerDeath.toLocaleString(undefined, {
               style: "currency",
-              currency: "USD",
+              currency,
               maximumFractionDigits: 0,
             })}
           </strong>
@@ -126,15 +128,7 @@ export function ImpactSummary({ annualDonation, allocations, mode }) {
         </div>
       </div>
 
-      {/* Total indicator */}
-      {mode === "custom" && (
-        <p
-          className={totalPct === 100 ? styles.validTotal : styles.invalidTotal}
-        >
-          Total allocation: {totalPct}%{" "}
-          {totalPct !== 100 && "← adjust to 100 %"}
-        </p>
-      )}
+     
     </section>
   );
 }

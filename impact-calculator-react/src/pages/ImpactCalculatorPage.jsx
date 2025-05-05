@@ -251,6 +251,7 @@ export default function ImpactCalculatorPage() {
           annualDonation={calculatedDonation}
           allocations={allocations}
           mode={mode}
+          currency={inputs.currency}
         />
       )}
     </section>
