@@ -1,7 +1,17 @@
+import useDebounce from "../../hooks/useDebounce";
 import styles from "./Forms.module.css";
 
 export function LifetimeForm({ inputs, update }) {
   const isAnnual = inputs.salaryPeriod === "annual";
+
+  const curr = parseFloat(inputs.currentAge);
+  const ret = parseFloat(inputs.retirementAge);
+  const agesTouched = inputs.currentAge !== "" && inputs.retirementAge !== "";
+  const ageInvalid = agesTouched && ret <= curr;
+
+  // wait 500 ms before showing the error
+  const showError = useDebounce(ageInvalid, 500);
+
   return (
     <>
       {/* ------------- Salary period toggle ------------- */}
@@ -66,15 +76,17 @@ export function LifetimeForm({ inputs, update }) {
             placeholder={isAnnual ? "e.g. 50 000" : "e.g. 4 000"}
             onChange={(e) =>
               isAnnual
-              ? update(
-                "salaryNow",
-                e.target.value === "" ? "" : +e.target.value   /* "" or Number */
-              )
-            : update(
-                "monthlySalary",
-                e.target.value === "" ? "" : +e.target.value
-              )
-        }
+                ? update(
+                    "salaryNow",
+                    e.target.value === ""
+                      ? ""
+                      : +e.target.value /* "" or Number */
+                  )
+                : update(
+                    "monthlySalary",
+                    e.target.value === "" ? "" : +e.target.value
+                  )
+            }
           />
         </div>
       </div>
@@ -87,7 +99,9 @@ export function LifetimeForm({ inputs, update }) {
             className={styles.inputBase}
             type="number"
             value={inputs.currentAge === 0 ? "" : inputs.currentAge}
-            onChange={(e) => update("currentAge", e.target.value === "" ? "" : +e.target.value)}
+            onChange={(e) =>
+              update("currentAge", e.target.value === "" ? "" : +e.target.value)
+            }
             placeholder="e.g. 25"
           />
         </div>
@@ -98,9 +112,19 @@ export function LifetimeForm({ inputs, update }) {
             className={styles.inputBase}
             type="number"
             value={inputs.retirementAge === 0 ? "" : inputs.retirementAge}
-            onChange={(e) => update("retirementAge", e.target.value === "" ? "" : +e.target.value)}
+            onChange={(e) =>
+              update(
+                "retirementAge",
+                e.target.value === "" ? "" : +e.target.value
+              )
+            }
             placeholder="e.g. 65"
           />
+          {showError && (
+            <div className={styles.errorText}>
+              *Retirement age must be greater than current age
+            </div>
+          )}
         </div>
       </div>
 
@@ -115,7 +139,12 @@ export function LifetimeForm({ inputs, update }) {
               type="number"
               step="0.01"
               value={inputs.growthRate === 0 ? "" : inputs.growthRate}
-              onChange={(e) => update("growthRate", e.target.value === "" ? "" : +e.target.value)}
+              onChange={(e) =>
+                update(
+                  "growthRate",
+                  e.target.value === "" ? "" : +e.target.value
+                )
+              }
               placeholder="e.g. 4%"
             />
             <span className={styles.suffix}>%</span>

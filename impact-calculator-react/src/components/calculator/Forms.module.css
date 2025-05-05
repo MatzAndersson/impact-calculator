@@ -6,6 +6,7 @@
 }
 .formControl {
   display: flex;
+  position: relative;
   flex-direction: column;
   gap: 4px;
   font-weight: 600;
@@ -57,4 +58,18 @@
   display: inline-flex;
   align-items: center;
   font-size: 14px;
+}
+
+.errorText {
+  color: #d00;
+  position:absolute;
+  margin-top: 0.25em;
+  font-size: 0.7rem;
+  position: absolute;      
+  left: 0;                 /* line up under the input */
+  bottom: -1.25em;  
+  font-style: italic;   
+  white-space: nowrap;
+  pointer-events: none;    
+  
 }
