@@ -46,7 +46,7 @@ export const CHARITIES = [
     description:
       "",
     unitLabel:
-      "Children given a year's Vitamin A supplementation, helping prevent early childhood blindness",
+      "Children given a year's Vitamin A supplementation",
     preventedDeathsLabel: "Estimated deaths prevented",
   },
 ];

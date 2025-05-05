@@ -10,6 +10,13 @@ import { ImpactSummary } from "../components/ImpactSummary";
 
 import pageStyles from "./ImpactCalculatorPage.module.css";
 
+function getPledgeUrl(currency) {
+  const base = "https://1fortheworld.donational.org/take-the-pledge";
+  return currency === "USD"
+    ? base
+    : `${base}-${currency.toLowerCase()}`;
+}
+
 export default function ImpactCalculatorPage() {
   const cardsRef = useRef(null);
   const { inputs, update, resetAll } = useCalculatorInputs();
@@ -58,22 +65,29 @@ export default function ImpactCalculatorPage() {
     });
 
   // 1) Calculate all three donation amounts
-  const annualDonation =
-    inputs.mode === "monthly"
-      ? inputs.monthlySalary * 12 * inputs.pledgePercent
-      : inputs.salaryNow * inputs.pledgePercent;
+  const annualBase =
+  inputs.salaryPeriod === "annual"
+    ? parseFloat(inputs.salaryNow) || 0
+    : (parseFloat(inputs.monthlySalary) || 0) * 12;
 
-  const monthlyDonation =
-    inputs.mode === "monthly"
-      ? inputs.monthlySalary * inputs.pledgePercent
-      : annualDonation / 12; // ← this is what you display in Annual tab
-  const lifetimeDonation = (() => {
-    const years = Math.max(0, inputs.retirementAge - inputs.currentAge);
-    const r = Math.max(0.000001, inputs.growthRate / 100);
-    return (
-      ((inputs.salaryNow * ((1 + r) ** years - 1)) / r) * inputs.pledgePercent
-    );
-  })();
+  const annualDonation = annualBase * inputs.pledgePercent;
+  const monthlyDonation = annualDonation / 12;
+
+  // figure out how many years – at least 1
+  const currAge = parseFloat(inputs.currentAge);
+  const retAge  = parseFloat(inputs.retirementAge);
+  const lifetimeYears =
+    !isNaN(currAge) &&
+    !isNaN(retAge) &&
+    retAge > currAge
+      ? retAge - currAge
+      : 0;
+
+  // do the standard compound‐growth lifetime formula
+  const r = Math.max(0.000001, inputs.growthRate / 100);
+  const lifetimeDonation =
+  ((annualBase * (Math.pow(1 + r, lifetimeYears) - 1)) / r) *
+  inputs.pledgePercent;
 
   const lifetimeBaseSalary =
     inputs.salaryPeriod === "annual"
@@ -194,7 +208,7 @@ export default function ImpactCalculatorPage() {
             <>
               Lifetime donation: {fmt(lifetimeDonation)}
               <br />
-              Over {inputs.retirementAge - inputs.currentAge} years
+              Over {lifetimeYears} year{lifetimeYears !== 1 && "s"}
             </>
           )}
         </div>
@@ -252,6 +266,7 @@ export default function ImpactCalculatorPage() {
           allocations={allocations}
           mode={mode}
           currency={inputs.currency}
+          pledgeUrl={getPledgeUrl(inputs.currency)}
         />
       )}
     </section>

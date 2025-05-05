@@ -4,10 +4,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
   Tooltip,
   ResponsiveContainer,
   Legend,
@@ -29,7 +25,13 @@ function TwoRowLegend({ payload }) {
   );
 }
 
-export function ImpactSummary({ annualDonation, allocations, mode, currency }) {
+export function ImpactSummary({
+  annualDonation,
+  allocations,
+  mode,
+  currency,
+  pledgeUrl,
+}) {
   const data = CHARITIES.map((c, idx) => {
     const pct =
       mode === "equal" ? 100 / CHARITIES.length : allocations[c.id] || 0;
@@ -51,8 +53,6 @@ export function ImpactSummary({ annualDonation, allocations, mode, currency }) {
     };
   });
 
-  
-  
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
   const costPerDeath =
@@ -127,8 +127,34 @@ export function ImpactSummary({ annualDonation, allocations, mode, currency }) {
           per&nbsp;death&nbsp;averted
         </div>
       </div>
-
-     
+      <div className={styles.ctaWrapper}>
+        <a href={pledgeUrl} target="_blank" rel="noopener noreferrer" className={styles.donateButton}>
+          <span className={styles.donateLabel}>DONATE</span>
+          <svg
+            className={styles.donateIcon}
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 12H19"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M12 5L19 12L12 19"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
     </section>
   );
 }
