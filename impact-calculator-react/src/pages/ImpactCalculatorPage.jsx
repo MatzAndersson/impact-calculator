@@ -61,6 +61,7 @@ export default function ImpactCalculatorPage() {
     value.toLocaleString(undefined, {
       style: "currency",
       currency: inputs.currency,
+      currencyDisplay: "narrowSymbol",
       maximumFractionDigits: 0,
     });
 

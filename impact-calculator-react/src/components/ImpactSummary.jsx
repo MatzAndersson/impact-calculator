@@ -91,6 +91,7 @@ export function ImpactSummary({
               value.toLocaleString(undefined, {
                 style: "currency",
                 currency,
+                currencyDisplay: "narrowSymbol",
                 maximumFractionDigits: 0,
               })
             }
@@ -104,7 +105,7 @@ export function ImpactSummary({
         <div>
           <strong>{totalUnits.toLocaleString()}</strong>
           <br />
-          total&nbsp;units
+          total&nbsp;beneficiaries
         </div>
         <div>
           <strong>
@@ -120,6 +121,7 @@ export function ImpactSummary({
             {costPerDeath.toLocaleString(undefined, {
               style: "currency",
               currency,
+              currencyDisplay: "narrowSymbol",
               maximumFractionDigits: 0,
             })}
           </strong>
@@ -129,7 +131,7 @@ export function ImpactSummary({
       </div>
       <div className={styles.ctaWrapper}>
         <a href={pledgeUrl} target="_blank" rel="noopener noreferrer" className={styles.donateButton}>
-          <span className={styles.donateLabel}>DONATE</span>
+          <span className={styles.donateLabel}>PLEDGE</span>
           <svg
             className={styles.donateIcon}
             width="24"
