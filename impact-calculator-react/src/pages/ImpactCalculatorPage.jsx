@@ -12,9 +12,7 @@ import pageStyles from "./ImpactCalculatorPage.module.css";
 
 function getPledgeUrl(currency) {
   const base = "https://1fortheworld.donational.org/take-the-pledge";
-  return currency === "USD"
-    ? base
-    : `${base}-${currency.toLowerCase()}`;
+  return currency === "USD" ? base : `${base}-${currency.toLowerCase()}`;
 }
 
 export default function ImpactCalculatorPage() {
@@ -67,28 +65,26 @@ export default function ImpactCalculatorPage() {
 
   // 1) Calculate all three donation amounts
   const annualBase =
-  inputs.salaryPeriod === "annual"
-    ? parseFloat(inputs.salaryNow) || 0
-    : (parseFloat(inputs.monthlySalary) || 0) * 12;
+    inputs.salaryPeriod === "annual"
+      ? parseFloat(inputs.salaryNow) || 0
+      : (parseFloat(inputs.monthlySalary) || 0) * 12;
 
   const annualDonation = annualBase * inputs.pledgePercent;
   const monthlyDonation = annualDonation / 12;
 
   // figure out how many years – at least 1
   const currAge = parseFloat(inputs.currentAge);
-  const retAge  = parseFloat(inputs.retirementAge);
+  const retAge = parseFloat(inputs.retirementAge);
   const lifetimeYears =
-    !isNaN(currAge) &&
-    !isNaN(retAge) &&
-    retAge > currAge
+    !isNaN(currAge) && !isNaN(retAge) && retAge > currAge
       ? retAge - currAge
       : 0;
 
   // do the standard compound‐growth lifetime formula
   const r = Math.max(0.000001, inputs.growthRate / 100);
   const lifetimeDonation =
-  ((annualBase * (Math.pow(1 + r, lifetimeYears) - 1)) / r) *
-  inputs.pledgePercent;
+    ((annualBase * (Math.pow(1 + r, lifetimeYears) - 1)) / r) *
+    inputs.pledgePercent;
 
   const lifetimeBaseSalary =
     inputs.salaryPeriod === "annual"
@@ -111,6 +107,12 @@ export default function ImpactCalculatorPage() {
     <section className={pageStyles.icWrapper}>
       <div className={pageStyles.icPanel}>
         <InputTabs value={inputs.mode} onChange={(val) => update("mode", val)}>
+          <LifetimeForm
+            value="lifetime"
+            label="Lifetime"
+            inputs={inputs}
+            update={update}
+          />
           <AnnualForm
             value="annual"
             label="Annual"
@@ -120,12 +122,6 @@ export default function ImpactCalculatorPage() {
           <MonthlyForm
             value="monthly"
             label="Monthly"
-            inputs={inputs}
-            update={update}
-          />
-          <LifetimeForm
-            value="lifetime"
-            label="Lifetime"
             inputs={inputs}
             update={update}
           />
@@ -158,7 +154,12 @@ export default function ImpactCalculatorPage() {
               type="radio"
               value="custom"
               checked={mode === "custom"}
-              onChange={() => setMode("custom")}
+              onChange={() => {
+                setMode("custom");
+                setAllocations(
+                  CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
+                );
+              }}
             />{" "}
             Customize split (set your own percentages below)
           </label>
@@ -248,6 +249,15 @@ export default function ImpactCalculatorPage() {
       </div>
 
       <>
+        {calculatedDonation > 0 && (
+          <ImpactSummary
+            annualDonation={calculatedDonation}
+            allocations={allocations}
+            mode={mode}
+            currency={inputs.currency}
+            pledgeUrl={getPledgeUrl(inputs.currency)}
+          />
+        )}
         <CharityCards
           ref={cardsRef}
           annualDonation={calculatedDonation}
@@ -261,15 +271,6 @@ export default function ImpactCalculatorPage() {
           mode={mode}
         />
       </>
-      {calculatedDonation > 0 && (
-        <ImpactSummary
-          annualDonation={calculatedDonation}
-          allocations={allocations}
-          mode={mode}
-          currency={inputs.currency}
-          pledgeUrl={getPledgeUrl(inputs.currency)}
-        />
-      )}
     </section>
   );
 }

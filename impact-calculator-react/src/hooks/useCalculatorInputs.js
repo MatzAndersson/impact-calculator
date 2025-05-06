@@ -2,7 +2,7 @@ import { useState, } from "react";
 
 function initialInputs() {
   return {
-    mode: "annual", // 'annual' | 'monthly' | 'lifetime'
+    mode: "lifetime", // 'annual' | 'monthly' | 'lifetime'
     salaryNow: "",
     pledgePercent: 0.01, // % – used by annual + lifetime
     monthlySalary: "", // £/$ each month – used by monthly
