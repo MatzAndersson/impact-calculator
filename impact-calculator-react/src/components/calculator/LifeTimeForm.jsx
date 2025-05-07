@@ -39,7 +39,7 @@ export function LifetimeForm({ inputs, update }) {
           </label>
         </div>
       </div>
-      {/* salary + currency row */}
+      {/* salary + currency + growth rate row*/}
       <div className={styles.formRow}>
         <div className={styles.formControl}>
           <label htmlFor="lifetimeCurrency">Currency</label>
@@ -89,6 +89,26 @@ export function LifetimeForm({ inputs, update }) {
             }
           />
         </div>
+        <div className={`${styles.formControl} ${styles.growthControl}`}>
+          <label htmlFor="growthRate">Salary growth rate in percentage</label>
+          <div className={styles.suffixInput}>
+            <input
+              id="growthRate"
+              className={styles.inputBase}
+              type="number"
+              step="0.01"
+              value={inputs.growthRate === 0 ? "" : inputs.growthRate}
+              onChange={(e) =>
+                update(
+                  "growthRate",
+                  e.target.value === "" ? "" : +e.target.value
+                )
+              }
+              placeholder="e.g. 4%"
+            />
+            <span className={styles.suffix}>%</span>
+          </div>
+        </div>
       </div>
 
       {/* ages row */}
@@ -128,29 +148,7 @@ export function LifetimeForm({ inputs, update }) {
         </div>
       </div>
 
-      {/* growth rate row */}
-      <div className={styles.formRow}>
-        <div className={styles.formControl}>
-          <label htmlFor="growthRate">Salary growth rate in percentage</label>
-          <div className={styles.suffixInput}>
-            <input
-              id="growthRate"
-              className={styles.inputBase}
-              type="number"
-              step="0.01"
-              value={inputs.growthRate === 0 ? "" : inputs.growthRate}
-              onChange={(e) =>
-                update(
-                  "growthRate",
-                  e.target.value === "" ? "" : +e.target.value
-                )
-              }
-              placeholder="e.g. 4%"
-            />
-            <span className={styles.suffix}>%</span>
-          </div>
-        </div>
-      </div>
+      
     </>
   );
 }

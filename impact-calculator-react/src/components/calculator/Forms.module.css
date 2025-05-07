@@ -13,6 +13,16 @@
   font-size: 14px;
 }
 
+.growthControl .suffixInput {
+  max-width: 140px;      /* whatever width you prefer */
+  width: 100%;
+}
+
+/* 2) force the input to fill that wrapper: */
+.growthControl .suffixInput .inputBase {
+  width: 100%;
+  box-sizing: border-box; /* include padding/border in width */
+}
 
 .inputBase,
 .selectBase {
@@ -49,10 +59,13 @@
   font-weight: bold;
 }
 
+
 .periodToggle{
   display: flex;          /* row */
-  gap: 12px;              /* space between the two labels */
+  flex-direction: row;
+  gap: 6px;              /* space between the two labels */
   align-items: center;
+  margin-bottom: 16px;
 }
 .radioInline {
   display: inline-flex;
