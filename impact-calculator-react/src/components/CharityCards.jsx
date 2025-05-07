@@ -3,7 +3,7 @@ import { CHARITIES } from "../data/charityData";
 import styles from "./CharityCards.module.css";
 
 export const CharityCards = React.forwardRef(function CharityCards(
-  { annualDonation, allocations, mode, onAllocationChange },
+  { breakdown, allocations, mode, onAllocationChange },
   ref
 ) {
   const totalPercentage = Object.values(allocations).reduce(
@@ -30,24 +30,30 @@ export const CharityCards = React.forwardRef(function CharityCards(
           {totalPercentage !== 100 && "← adjust to 100 %"}
         </div>
       )}
-      {CHARITIES.map((c) => {
-        // Determine the percentage allocation
+
+      {/* Loop over the computed breakdown data */}
+      {breakdown.map((item) => {
+        // Static info from CHARITIES (logo, labels)
+        const staticData = CHARITIES.find((c) => c.id === item.id);
+
         const percentage =
-          mode === "equal" ? 100 / CHARITIES.length : allocations[c.id] || 0;
-        const money = annualDonation * (percentage / 100);
-        const units = Math.round(money / c.costPerOutputUSD);
-        const deathsPrevented = (money / c.costPerDeathAvertedUSD).toFixed(2);
+          mode === "equal"
+            ? 100 / breakdown.length // total charities
+            : allocations[item.id] || 0;
 
         return (
-          <article key={c.id} className={styles.card}>
+          <article key={item.id} className={styles.card}>
             <div className={styles.logoWrapper}>
-              <img src={c.logo.src} alt={`${c.name} logo`} />
+              <img
+                src={staticData.logo.src}
+                width={staticData.logo.width}
+                alt={`${staticData.name} logo`}
+              />
             </div>
-            
 
             {/* title + description */}
-            <h3 className={styles.cardTitle}>{c.name}</h3>
-            <p className={styles.description}>{c.description}</p>
+            <h3 className={styles.cardTitle}>{staticData.name}</h3>
+            <p className={styles.description}>{staticData.outputDescription}</p>
 
             {mode === "custom" ? (
               <div className={styles.sliderAllocation}>
@@ -58,7 +64,7 @@ export const CharityCards = React.forwardRef(function CharityCards(
                   step={1}
                   value={percentage}
                   onChange={(e) =>
-                    handleSliderChange(c.id, Number(e.target.value))
+                    handleSliderChange(item.id, Number(e.target.value))
                   }
                   className={styles.slider}
                 />
@@ -72,19 +78,23 @@ export const CharityCards = React.forwardRef(function CharityCards(
             {/* new two‑column stats */}
             <div className={styles.stats}>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>{units}</span>
-                <span className={styles.statLabel}>{c.unitLabel}</span>
+                <span className={styles.statNumber}>
+                  {item.output.toLocaleString()}
+                </span>
+                <span className={styles.statLabel}>{staticData.unitLabel}</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>{deathsPrevented}</span>
+                <span className={styles.statNumber}>
+                  {item.deaths.toLocaleString()}
+                </span>
                 <span className={styles.statLabel}>
-                  {c.preventedDeathsLabel}
+                  {staticData.preventedDeathsLabel}
                 </span>
               </div>
             </div>
             <button
               className={styles.infoButton}
-              onClick={() => (window.location.href = `/charities/${c.id}`)}
+              onClick={() => (window.location.href = `/charities/${item.id}`)}
             >
               Info →
             </button>
@@ -98,8 +108,7 @@ export const CharityCards = React.forwardRef(function CharityCards(
           }`}
           style={{ gridColumn: "1 / -1" }} /* still spans full row */
         >
-          Total allocation: {totalPercentage}%{" "}
-          {totalPercentage !== 100 && "← adjust to 100 %"}
+          
         </div>
       )}
     </section>

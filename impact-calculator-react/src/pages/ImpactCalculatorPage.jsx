@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { fetchEvaluations } from "../api/Evaluations";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
@@ -20,6 +21,7 @@ export default function ImpactCalculatorPage() {
   const cardsRef = useRef(null);
   const { inputs, update, resetAll } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
+  const [evaluations, setEvaluations] = useState([]);
 
   const [mode, setMode] = useState("equal");
   const [allocations, setAllocations] = useState(() =>
@@ -28,6 +30,16 @@ export default function ImpactCalculatorPage() {
       {}
     )
   );
+
+  useEffect(() => {
+    const abbrevs = CHARITIES.map((c) => c.id);
+    fetchEvaluations(abbrevs, inputs.currency)
+      .then(setEvaluations)
+      .catch((err) => {
+        console.error("API failed:", err.message);
+        setEvaluations([]);
+      });
+  }, [inputs.currency]);
 
   const handleCalculate = () => {
     let donation = 0;
@@ -106,6 +118,29 @@ export default function ImpactCalculatorPage() {
       parseFloat(inputs.retirementAge) > 0 &&
       parseFloat(inputs.retirementAge) > parseFloat(inputs.currentAge) &&
       parseFloat(inputs.growthRate) > 0);
+
+  // Rebuild the per-charity breakdown whenever donation or evaluation data changes
+  const breakdown = useMemo(() => {
+    if (!evaluations.length || calculatedDonation <= 0) return [];
+
+    const amountPerCharity = calculatedDonation / evaluations.length;
+    return evaluations.map((ev) => {
+      const id = ev.charity.abbreviation;
+      const costPerOutput = ev.converted_cost_per_output; // from API
+      const costPerDeath = CHARITIES.find(
+        (c) => c.id === id
+      ).costPerDeathAvertedUSD;
+
+      return {
+        id,
+        name: ev.charity.charity_name,
+        output: Math.round(amountPerCharity / costPerOutput),
+        deaths: +(amountPerCharity / costPerDeath).toFixed(2),
+        shortDesc: ev.intervention.short_description,
+        longDesc: ev.intervention.long_description,
+      };
+    });
+  }, [evaluations, calculatedDonation]);
 
   return (
     <section className={pageStyles.icWrapper}>
@@ -271,6 +306,7 @@ export default function ImpactCalculatorPage() {
 
         <CharityCards
           ref={cardsRef}
+          breakdown={breakdown}
           annualDonation={calculatedDonation}
           allocations={allocations}
           onAllocationChange={(id, pct) => {
