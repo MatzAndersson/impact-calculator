@@ -16,6 +16,7 @@ function getPledgeUrl(currency) {
 }
 
 export default function ImpactCalculatorPage() {
+  const summaryRef = useRef(null);
   const cardsRef = useRef(null);
   const { inputs, update, resetAll } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
@@ -51,7 +52,10 @@ export default function ImpactCalculatorPage() {
     setCalculatedDonation(donation);
 
     requestAnimationFrame(() => {
-      cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      summaryRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     });
   };
 
@@ -159,6 +163,12 @@ export default function ImpactCalculatorPage() {
                 setAllocations(
                   CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
                 );
+                requestAnimationFrame(() => {
+                  cardsRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                });
               }}
             />{" "}
             Customize split (set your own percentages below)
@@ -249,7 +259,7 @@ export default function ImpactCalculatorPage() {
       </div>
 
       <>
-        {calculatedDonation > 0 && (
+        <div ref={summaryRef}>
           <ImpactSummary
             annualDonation={calculatedDonation}
             allocations={allocations}
@@ -257,7 +267,8 @@ export default function ImpactCalculatorPage() {
             currency={inputs.currency}
             pledgeUrl={getPledgeUrl(inputs.currency)}
           />
-        )}
+        </div>
+
         <CharityCards
           ref={cardsRef}
           annualDonation={calculatedDonation}
