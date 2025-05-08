@@ -105,15 +105,56 @@
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  margin-top: 10px;
+  gap: 0.5rem;
 }
-
 .rangeLabel {
-  margin-right: 20px;
+  color: var(--color-text);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  
 }
 
-.highlight {
+.slider{
+  margin-left: 12px;
+}
+
+.sliderNumberInput {
+  width: 3ch;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
   color: var(--color-secondary);
-  font-weight: bold;
+  text-align: right;
+  cursor: text;
+  font-weight: 700;
+  margin-left: -0.4rem;
+  
+}
+.sliderNumberInput:focus {
+  outline: none;
 }
 
+.sliderNumberInput,
+.percentageSymbol {
+  color: var(--color-secondary);
+  
+}
+
+.sliderNumberInput::-webkit-outer-spin-button,
+.sliderNumberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sliderNumberInput {
+  -moz-appearance: textfield;
+}
+
+.percentageSymbol {
+  color: var(--color-secondary);
+  font-weight: 700px;
+}
 

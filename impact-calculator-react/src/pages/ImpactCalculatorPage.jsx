@@ -71,7 +71,7 @@ export default function ImpactCalculatorPage() {
     });
   };
 
-  const fmt = (value) =>
+  const formatCurrency = (value) =>
     value.toLocaleString(undefined, {
       style: "currency",
       currency: inputs.currency,
@@ -85,8 +85,18 @@ export default function ImpactCalculatorPage() {
       ? parseFloat(inputs.salaryNow) || 0
       : (parseFloat(inputs.monthlySalary) || 0) * 12;
 
-  const annualDonation = annualBase * inputs.pledgePercent;
-  const monthlyDonation = annualDonation / 12;
+  const mSalary = parseFloat(inputs.monthlySalary) || 0;
+  const aSalary = parseFloat(inputs.salaryNow) || 0;
+
+  const annualDonation =
+    inputs.mode === "monthly"
+      ? mSalary * 12 * inputs.pledgePercent
+      : aSalary * inputs.pledgePercent;
+
+  const monthlyDonation =
+    inputs.mode === "monthly"
+      ? mSalary * inputs.pledgePercent
+      : annualDonation / 12;
 
   // figure out how many years – at least 1
   const currAge = parseFloat(inputs.currentAge);
@@ -213,12 +223,22 @@ export default function ImpactCalculatorPage() {
         {/* ---------- slider OR monthly preview ---------- */}
 
         <div className={pageStyles.rangeWrapper}>
-          <label htmlFor="pledgePercent" className={pageStyles.rangeLabel}>
+          <span className={pageStyles.rangeLabel}>
             I’d like to donate&nbsp;
-            <span className={pageStyles.highlight}>
-              {(inputs.pledgePercent * 100).toFixed(1)}%
-            </span>
-          </label>
+            <input
+              type="number"
+              min={0.1}
+              max={10}
+              step={0.1}
+              value={(inputs.pledgePercent * 100).toFixed(1)}
+              onChange={(e) =>
+                update("pledgePercent", Number(e.target.value) / 100)
+              }
+              onFocus={(e) => e.target.select()}
+              className={pageStyles.sliderNumberInput}
+            />
+            <span className={pageStyles.percentageSymbol}>%</span>
+          </span>
 
           <input
             id="pledgePercent"
@@ -230,6 +250,7 @@ export default function ImpactCalculatorPage() {
             onChange={(e) =>
               update("pledgePercent", Number(e.target.value) / 100)
             }
+            className={pageStyles.slider}
           />
         </div>
 
@@ -237,23 +258,23 @@ export default function ImpactCalculatorPage() {
         <div className={pageStyles.annualDonation}>
           {inputs.mode === "annual" && (
             <>
-              Annual donation: {fmt(annualDonation)}
+              Annual donation: {formatCurrency(annualDonation)}
               <br />
-              Monthly donation: {fmt(monthlyDonation)}
+              Monthly donation: {formatCurrency(monthlyDonation)}
             </>
           )}
 
           {inputs.mode === "monthly" && (
             <>
-              Monthly donation: {fmt(monthlyDonation)}
+              Monthly donation: {formatCurrency(monthlyDonation)}
               <br />
-              Annual donation: {fmt(annualDonation)}
+              Annual donation: {formatCurrency(annualDonation)}
             </>
           )}
 
           {inputs.mode === "lifetime" && (
             <>
-              Lifetime donation: {fmt(lifetimeDonation)}
+              Lifetime donation: {formatCurrency(lifetimeDonation)}
               <br />
               Over {lifetimeYears} year{lifetimeYears !== 1 && "s"}
             </>

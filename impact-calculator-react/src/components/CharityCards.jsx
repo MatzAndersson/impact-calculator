@@ -68,7 +68,21 @@ export const CharityCards = React.forwardRef(function CharityCards(
                   }
                   className={styles.slider}
                 />
-                <span className={styles.sliderLabel}>{percentage}%</span>
+                <div className={styles.sliderValue}>
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={percentage}
+                    onChange={(e) =>
+                      handleSliderChange(item.id, Number(e.target.value))
+                    }
+                    onFocus={(e) => e.target.select()}
+                    className={styles.sliderNumberInput}
+                  />
+                  <span className={styles.percentageSymbol}>%</span>
+                </div>
               </div>
             ) : (
               <div className={styles.equalBadge}>
@@ -107,9 +121,7 @@ export const CharityCards = React.forwardRef(function CharityCards(
             totalPercentage === 100 ? styles.validTotal : styles.invalidTotal
           }`}
           style={{ gridColumn: "1 / -1" }} /* still spans full row */
-        >
-          
-        </div>
+        ></div>
       )}
     </section>
   );
