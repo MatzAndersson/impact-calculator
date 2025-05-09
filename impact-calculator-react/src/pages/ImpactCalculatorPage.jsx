@@ -22,6 +22,7 @@ export default function ImpactCalculatorPage() {
   const { inputs, update, resetAll } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
   const [evaluations, setEvaluations] = useState([]);
+  const [conversionRate, setConversionRate] = useState(1);
 
   const [mode, setMode] = useState("equal");
   const [allocations, setAllocations] = useState(() =>
@@ -33,12 +34,37 @@ export default function ImpactCalculatorPage() {
 
   useEffect(() => {
     const abbrevs = CHARITIES.map((c) => c.id);
-    fetchEvaluations(abbrevs, inputs.currency)
-      .then(setEvaluations)
-      .catch((err) => {
-        console.error("API failed:", err.message);
+    let isMounted = true;
+    async function loadEvaluationsAndRate() {
+      try {
+        // 1) fetch the API data
+        const evs = await fetchEvaluations(abbrevs, inputs.currency);
+        if (!isMounted) return;
+
+        // 2) store the raw evaluations
+        setEvaluations(evs);
+
+        // 3) derive USD→local conversion from the first charity
+        if (evs.length > 0) {
+          const sample = evs[0];
+          const centsPerUnit = sample.cents_per_output; // e.g. 500 (cents)
+          const localPerUnit = sample.converted_cost_per_output; // e.g. 400 (local)
+          const rate = localPerUnit / (centsPerUnit / 100);
+          setConversionRate(rate);
+        }
+      } catch (err) {
+        console.error("API failed:", err);
+        if (!isMounted) return;
         setEvaluations([]);
-      });
+        setConversionRate(1); // fallback to 1:1
+      }
+    }
+
+    loadEvaluationsAndRate();
+
+    return () => {
+      isMounted = false;
+    };
   }, [inputs.currency]);
 
   const handleCalculate = () => {
@@ -133,7 +159,6 @@ export default function ImpactCalculatorPage() {
   const breakdown = useMemo(() => {
     if (!evaluations.length || calculatedDonation <= 0) return [];
 
-    
     return evaluations.map((ev) => {
       const id = ev.charity.abbreviation;
 
@@ -141,20 +166,23 @@ export default function ImpactCalculatorPage() {
       const amount = calculatedDonation * pct;
 
       const costPerOutput = ev.converted_cost_per_output; // from API
-      const costPerDeath = CHARITIES.find(
+
+      const usdCostPerDeath = CHARITIES.find(
         (c) => c.id === id
       ).costPerDeathAvertedUSD;
+      const localCostPerDeath = usdCostPerDeath * conversionRate;
 
       return {
         id,
         name: ev.charity.charity_name,
         output: Math.round(amount / costPerOutput),
-        deaths: +(amount / costPerDeath).toFixed(2),
+        deaths:
+          localCostPerDeath > 0 ? +(amount / localCostPerDeath).toFixed(2) : 0,
         shortDesc: ev.intervention.short_description,
         longDesc: ev.intervention.long_description,
       };
     });
-  }, [evaluations, calculatedDonation, allocations]);
+  }, [evaluations, calculatedDonation, allocations, conversionRate]);
 
   return (
     <section className={pageStyles.icWrapper}>
@@ -322,6 +350,7 @@ export default function ImpactCalculatorPage() {
         <div ref={summaryRef}>
           <ImpactSummary
             annualDonation={calculatedDonation}
+            conversionRate={conversionRate}
             allocations={allocations}
             mode={mode}
             currency={inputs.currency}

@@ -31,25 +31,25 @@ export function ImpactSummary({
   mode,
   currency,
   pledgeUrl,
+  conversionRate,
 }) {
   const data = CHARITIES.map((c, idx) => {
     const pct =
       mode === "equal" ? 100 / CHARITIES.length : allocations[c.id] || 0;
-    const money = (annualDonation * pct) / 100;
-    const units = Math.round(money / c.costPerOutputUSD);
+    const moneyLocal = (annualDonation * pct) / 100;
+    const localCostPerOutput = c.costPerOutputUSD * conversionRate;
+    const units = Math.round(moneyLocal / localCostPerOutput);
+    const localCostPerDeath = c.costPerDeathAvertedUSD * conversionRate;
     const preventedDeaths =
-      c.costPerDeathAvertedUSD && c.costPerDeathAvertedUSD > 0
-        ? money / c.costPerDeathAvertedUSD
-        : 0;
+      localCostPerDeath > 0 ? moneyLocal / localCostPerDeath : 0;
     return {
       id: c.id,
       name: c.name,
       pct,
-      money,
+      moneyLocal,
       units,
       preventedDeaths,
       color: COLORS[idx % COLORS.length],
-      unitLabel: c.unitLabel.toLowerCase(),
     };
   });
 
@@ -77,7 +77,7 @@ export function ImpactSummary({
         <PieChart>
           <Pie
             data={data}
-            dataKey="money"
+            dataKey="moneyLocal"
             nameKey="name"
             innerRadius={60}
             outerRadius={90}
@@ -130,7 +130,12 @@ export function ImpactSummary({
         </div>
       </div>
       <div className={styles.ctaWrapper}>
-        <a href={pledgeUrl} target="_blank" rel="noopener noreferrer" className={styles.donateButton}>
+        <a
+          href={pledgeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.donateButton}
+        >
           <span className={styles.donateLabel}>PLEDGE</span>
           <svg
             className={styles.donateIcon}

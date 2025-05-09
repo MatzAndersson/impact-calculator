@@ -31,63 +31,60 @@ export const CharityCards = React.forwardRef(function CharityCards(
         </div>
       )}
 
-      {/* Loop over the computed breakdown data */}
-      {breakdown.map((item) => {
-        // Static info from CHARITIES (logo, labels)
-        const staticData = CHARITIES.find((c) => c.id === item.id);
-
-        const percentage =
-          mode === "equal"
-            ? 100 / breakdown.length // total charities
-            : allocations[item.id] || 0;
+{breakdown.map((item) => {
+        // 1️⃣ pull out the static metadata once
+        const charity = CHARITIES.find(c => c.id === item.id);
+//compute this charity’s share %
+        const percentage = mode === "equal"
+                ? 100 / CHARITIES.length
+                : allocations[item.id] || 0;
 
         return (
           <article key={item.id} className={styles.card}>
             <div className={styles.logoWrapper}>
               <img
-                src={staticData.logo.src}
-                width={staticData.logo.width}
-                alt={`${staticData.name} logo`}
+                src={charity.logo.src}
+                width={charity.logo.width}
+                alt={`${charity.name} logo`}
               />
             </div>
 
-            {/* title + description */}
-            <h3 className={styles.cardTitle}>{staticData.name}</h3>
-            <p className={styles.description}>{staticData.outputDescription}</p>
+            <h3 className={styles.cardTitle}>{charity.name}</h3>
+            <p className={styles.description}>{item.shortDesc}</p>
 
             {mode === "custom" ? (
               <div className={styles.sliderAllocation}>
                 <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={percentage}
-                  onChange={(e) =>
-                    handleSliderChange(item.id, Number(e.target.value))
-                  }
-                  className={styles.slider}
-                />
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={percentage}
+          onChange={(e) =>
+            handleSliderChange(item.id, +e.target.value)
+          }
+          className={styles.slider}
+        />
                 <div className={styles.sliderValue}>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={percentage}
-                    onChange={(e) =>
-                      handleSliderChange(item.id, Number(e.target.value))
-                    }
-                    onFocus={(e) => e.target.select()}
-                    className={styles.sliderNumberInput}
-                  />
+                <input
+            type="number"
+            min={0}
+            max={100}
+            step={1}
+            value={percentage}
+            onChange={(e) =>
+              handleSliderChange(item.id, +e.target.value)
+            }
+            onFocus={(e) => e.target.select()}
+            className={styles.sliderNumberInput}
+          />
                   <span className={styles.percentageSymbol}>%</span>
                 </div>
               </div>
             ) : (
               <div className={styles.equalBadge}>
-                {percentage.toFixed(0)}% of total donation
-              </div>
+              {percentage.toFixed(0)}% of total donation
+            </div>
             )}
             {/* new two‑column stats */}
             <div className={styles.stats}>
@@ -95,17 +92,17 @@ export const CharityCards = React.forwardRef(function CharityCards(
                 <span className={styles.statNumber}>
                   {item.output.toLocaleString()}
                 </span>
-                <span className={styles.statLabel}>{staticData.unitLabel}</span>
+                <span className={styles.statLabel}>{charity.unitLabel}</span>
               </div>
               <div className={styles.stat}>
-                <span className={styles.statNumber}>
-                  {item.deaths.toLocaleString()}
-                </span>
-                <span className={styles.statLabel}>
-                  {staticData.preventedDeathsLabel}
-                </span>
-              </div>
+             <span className={styles.statNumber}>
+                {item.deaths.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              </span>
+              <span className={styles.statLabel}>
+                Estimated deaths prevented
+              </span>
             </div>
+          </div>
             <button
               className={styles.infoButton}
               onClick={() => (window.location.href = `/charities/${item.id}`)}
@@ -113,8 +110,8 @@ export const CharityCards = React.forwardRef(function CharityCards(
               Info →
             </button>
           </article>
-        );
-      })}
+          );
+        })}
       {mode === "custom" && (
         <div
           className={`${styles.totalPctIndicator} ${
@@ -123,6 +120,6 @@ export const CharityCards = React.forwardRef(function CharityCards(
           style={{ gridColumn: "1 / -1" }} /* still spans full row */
         ></div>
       )}
-    </section>
-  );
-});
+      </section>
+    );
+  });
