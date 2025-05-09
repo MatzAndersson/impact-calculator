@@ -133,9 +133,13 @@ export default function ImpactCalculatorPage() {
   const breakdown = useMemo(() => {
     if (!evaluations.length || calculatedDonation <= 0) return [];
 
-    const amountPerCharity = calculatedDonation / evaluations.length;
+    
     return evaluations.map((ev) => {
       const id = ev.charity.abbreviation;
+
+      const pct = (allocations[id] || 0) / 100;
+      const amount = calculatedDonation * pct;
+
       const costPerOutput = ev.converted_cost_per_output; // from API
       const costPerDeath = CHARITIES.find(
         (c) => c.id === id
@@ -144,13 +148,13 @@ export default function ImpactCalculatorPage() {
       return {
         id,
         name: ev.charity.charity_name,
-        output: Math.round(amountPerCharity / costPerOutput),
-        deaths: +(amountPerCharity / costPerDeath).toFixed(2),
+        output: Math.round(amount / costPerOutput),
+        deaths: +(amount / costPerDeath).toFixed(2),
         shortDesc: ev.intervention.short_description,
         longDesc: ev.intervention.long_description,
       };
     });
-  }, [evaluations, calculatedDonation]);
+  }, [evaluations, calculatedDonation, allocations]);
 
   return (
     <section className={pageStyles.icWrapper}>
