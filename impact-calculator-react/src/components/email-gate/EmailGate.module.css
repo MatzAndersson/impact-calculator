@@ -1,0 +1,54 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 400px;     /* or whatever you like */
+  width: 90%;
+  padding: 2rem;        /* this creates equal padding on L+R */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.logo {
+  max-width: 170px;
+  margin: 0 auto 1rem;  
+  background-color: var(--color-primary);
+}
+
+.heading {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  margin-top: 0px;
+}
+
+.input {
+  width: 100%;                     /* fill the modal’s content width */
+  box-sizing: border-box;          /* include your padding/border in that 100% */
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+

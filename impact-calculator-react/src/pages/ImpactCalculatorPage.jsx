@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { fetchEvaluations } from "../api/Evaluations";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
+import { EmailGate } from "../components/email-gate/EmailGate";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
 import { MonthlyForm } from "../components/calculator/MonthlyForm";
@@ -23,6 +24,18 @@ export default function ImpactCalculatorPage() {
   const [calculatedDonation, setCalculatedDonation] = useState(0);
   const [evaluations, setEvaluations] = useState([]);
   const [conversionRate, setConversionRate] = useState(1);
+  const [email, setEmail] = useState(null);
+  const [showGate, setShowGate] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("gatedEmail");
+    if (saved) {
+      setEmail(saved);
+      handleCalculate();
+      setShowResults(true);
+    }
+  }, []);
 
   const [mode, setMode] = useState("equal");
   const [allocations, setAllocations] = useState(() =>
@@ -95,6 +108,23 @@ export default function ImpactCalculatorPage() {
         block: "start",
       });
     });
+  };
+
+  const handleGateSuccess = (userEmail) => {
+    setEmail(userEmail);
+    setShowGate(false);
+    handleCalculate(); // recompute with current inputs
+    setShowResults(true); // now show the summary/cards
+  };
+
+  const handleCalculateClick = () => {
+    if (!email) {
+      setShowGate(true);
+    } else {
+      // they already passed the gate
+      handleCalculate();
+      setShowResults(true);
+    }
   };
 
   const formatCurrency = (value) =>
@@ -185,193 +215,220 @@ export default function ImpactCalculatorPage() {
   }, [evaluations, calculatedDonation, allocations, conversionRate]);
 
   return (
-    <section className={pageStyles.icWrapper}>
-      <div className={pageStyles.icPanel}>
-        <InputTabs value={inputs.mode} onChange={(val) => update("mode", val)}>
-          <LifetimeForm
-            value="lifetime"
-            label="Lifetime"
-            inputs={inputs}
-            update={update}
+    <>
+      {showGate && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+        >
+          <EmailGate
+            formId="1FAIpQLSe2kLjDMR5sKbH9mouHCt70V9RsGac8rD_4rAAA9bSeF6GWiQ"
+            entryKey="entry.738971177"
+            onSuccess={handleGateSuccess}
           />
-          <AnnualForm
-            value="annual"
-            label="Annual"
-            inputs={inputs}
-            update={update}
-          />
-          <MonthlyForm
-            value="monthly"
-            label="Monthly"
-            inputs={inputs}
-            update={update}
-          />
-        </InputTabs>
+        </div>
+      )}
 
-        <fieldset className={pageStyles.allocationToggle}>
-          <legend>
-            How should we split your donation across the 4 top charities?
-          </legend>
-          <label>
-            <input
-              type="radio"
-              value="equal"
-              checked={mode === "equal"}
-              onChange={() => {
-                setMode("equal");
-                setAllocations(
-                  CHARITIES.reduce(
-                    (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
-                    {}
-                  )
-                );
-              }}
-            />{" "}
-            Split equally (25% each)
-          </label>
+      <section className={pageStyles.icWrapper}>
+        <div className={pageStyles.icPanel}>
+          <InputTabs
+            value={inputs.mode}
+            onChange={(val) => update("mode", val)}
+          >
+            <LifetimeForm
+              value="lifetime"
+              label="Lifetime"
+              inputs={inputs}
+              update={update}
+            />
+            <AnnualForm
+              value="annual"
+              label="Annual"
+              inputs={inputs}
+              update={update}
+            />
+            <MonthlyForm
+              value="monthly"
+              label="Monthly"
+              inputs={inputs}
+              update={update}
+            />
+          </InputTabs>
 
-          <label>
-            <input
-              type="radio"
-              value="custom"
-              checked={mode === "custom"}
-              onChange={() => {
-                setMode("custom");
-                setAllocations(
-                  CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
-                );
-                requestAnimationFrame(() => {
-                  cardsRef.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
+          <fieldset className={pageStyles.allocationToggle}>
+            <legend>
+              How should we split your donation across the 4 top charities?
+            </legend>
+            <label>
+              <input
+                type="radio"
+                value="equal"
+                checked={mode === "equal"}
+                onChange={() => {
+                  setMode("equal");
+                  setAllocations(
+                    CHARITIES.reduce(
+                      (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
+                      {}
+                    )
+                  );
+                }}
+              />{" "}
+              Split equally (25% each)
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                value="custom"
+                checked={mode === "custom"}
+                onChange={() => {
+                  setMode("custom");
+                  setAllocations(
+                    CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
+                  );
+                  requestAnimationFrame(() => {
+                    cardsRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
                   });
-                });
-              }}
-            />{" "}
-            Customize split (set your own percentages below)
-          </label>
-        </fieldset>
+                }}
+              />{" "}
+              Customize split (set your own percentages below)
+            </label>
+          </fieldset>
 
-        {/* ---------- slider OR monthly preview ---------- */}
+          {/* ---------- slider OR monthly preview ---------- */}
 
-        <div className={pageStyles.rangeWrapper}>
-          <span className={pageStyles.rangeLabel}>
-            I’d like to donate&nbsp;
+          <div className={pageStyles.rangeWrapper}>
+            <span className={pageStyles.rangeLabel}>
+              I’d like to donate&nbsp;
+              <input
+                type="number"
+                min={0.1}
+                max={10}
+                step={0.1}
+                value={(inputs.pledgePercent * 100).toFixed(1)}
+                onChange={(e) =>
+                  update("pledgePercent", Number(e.target.value) / 100)
+                }
+                onFocus={(e) => e.target.select()}
+                className={pageStyles.sliderNumberInput}
+              />
+              <span className={pageStyles.percentageSymbol}>%</span>
+            </span>
+
             <input
-              type="number"
+              id="pledgePercent"
+              type="range"
               min={0.1}
               max={10}
               step={0.1}
-              value={(inputs.pledgePercent * 100).toFixed(1)}
+              value={inputs.pledgePercent * 100}
               onChange={(e) =>
                 update("pledgePercent", Number(e.target.value) / 100)
               }
-              onFocus={(e) => e.target.select()}
-              className={pageStyles.sliderNumberInput}
+              className={pageStyles.slider}
             />
-            <span className={pageStyles.percentageSymbol}>%</span>
-          </span>
+          </div>
 
-          <input
-            id="pledgePercent"
-            type="range"
-            min={0.1}
-            max={10}
-            step={0.1}
-            value={inputs.pledgePercent * 100}
-            onChange={(e) =>
-              update("pledgePercent", Number(e.target.value) / 100)
-            }
-            className={pageStyles.slider}
-          />
-        </div>
+          {/* live preview, always shown */}
+          <div className={pageStyles.annualDonation}>
+            {inputs.mode === "annual" && (
+              <>
+                Annual donation: {formatCurrency(annualDonation)}
+                <br />
+                Monthly donation: {formatCurrency(monthlyDonation)}
+              </>
+            )}
 
-        {/* live preview, always shown */}
-        <div className={pageStyles.annualDonation}>
-          {inputs.mode === "annual" && (
-            <>
-              Annual donation: {formatCurrency(annualDonation)}
-              <br />
-              Monthly donation: {formatCurrency(monthlyDonation)}
-            </>
-          )}
+            {inputs.mode === "monthly" && (
+              <>
+                Monthly donation: {formatCurrency(monthlyDonation)}
+                <br />
+                Annual donation: {formatCurrency(annualDonation)}
+              </>
+            )}
 
-          {inputs.mode === "monthly" && (
-            <>
-              Monthly donation: {formatCurrency(monthlyDonation)}
-              <br />
-              Annual donation: {formatCurrency(annualDonation)}
-            </>
-          )}
-
-          {inputs.mode === "lifetime" && (
-            <>
-              Lifetime donation: {formatCurrency(lifetimeDonation)}
-              <br />
-              Over {lifetimeYears} year{lifetimeYears !== 1 && "s"}
-            </>
-          )}
-        </div>
-        <div className={pageStyles.buttonsRow}></div>
-        <div
-          className={pageStyles.tipWrapper}
-          data-tip={!salaryFilled ? "Please fill in all required fields" : ""}
-        >
-          <button
-            className={pageStyles.calculateBtn}
-            onClick={handleCalculate}
-            disabled={!salaryFilled}
+            {inputs.mode === "lifetime" && (
+              <>
+                Lifetime donation: {formatCurrency(lifetimeDonation)}
+                <br />
+                Over {lifetimeYears} year{lifetimeYears !== 1 && "s"}
+              </>
+            )}
+          </div>
+          <div className={pageStyles.buttonsRow}></div>
+          <div
+            className={pageStyles.tipWrapper}
+            data-tip={!salaryFilled ? "Please fill in all required fields" : ""}
           >
-            Calculate donation
+            <button
+              className={pageStyles.calculateBtn}
+              onClick={handleCalculateClick}
+              disabled={!salaryFilled}
+            >
+              Calculate donation
+            </button>
+          </div>
+
+          <button
+            className={pageStyles.resetBtn}
+            onClick={() => {
+              resetAll(); // clear form state
+              update("mode", inputs.mode);
+              setCalculatedDonation(0); // hide results
+              setMode("equal"); // back to 25 % each
+              setAllocations(
+                CHARITIES.reduce(
+                  (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
+                  {}
+                )
+              );
+              window.scrollTo({ top: 0, behavior: "smooth" }); // back to top
+            }}
+          >
+            Reset
           </button>
         </div>
 
-        <button
-          className={pageStyles.resetBtn}
-          onClick={() => {
-            resetAll(); // clear form state
-            update("mode", inputs.mode);
-            setCalculatedDonation(0); // hide results
-            setMode("equal"); // back to 25 % each
-            setAllocations(
-              CHARITIES.reduce(
-                (acc, c) => ({ ...acc, [c.id]: 100 / CHARITIES.length }),
-                {}
-              )
-            );
-            window.scrollTo({ top: 0, behavior: "smooth" }); // back to top
-          }}
-        >
-          Reset
-        </button>
-      </div>
+        {showResults && (
+          <>
+            <div ref={summaryRef}>
+              <ImpactSummary
+                annualDonation={calculatedDonation}
+                conversionRate={conversionRate}
+                allocations={allocations}
+                mode={mode}
+                currency={inputs.currency}
+                pledgeUrl={getPledgeUrl(inputs.currency)}
+              />
+            </div>
 
-      <>
-        <div ref={summaryRef}>
-          <ImpactSummary
-            annualDonation={calculatedDonation}
-            conversionRate={conversionRate}
-            allocations={allocations}
-            mode={mode}
-            currency={inputs.currency}
-            pledgeUrl={getPledgeUrl(inputs.currency)}
-          />
-        </div>
-
-        <CharityCards
-          ref={cardsRef}
-          breakdown={breakdown}
-          annualDonation={calculatedDonation}
-          allocations={allocations}
-          onAllocationChange={(id, pct) => {
-            setAllocations((prev) => ({
-              ...prev,
-              [id]: pct,
-            }));
-          }}
-          mode={mode}
-        />
-      </>
-    </section>
+            <CharityCards
+              ref={cardsRef}
+              breakdown={breakdown}
+              annualDonation={calculatedDonation}
+              allocations={allocations}
+              onAllocationChange={(id, pct) => {
+                setAllocations((prev) => ({
+                  ...prev,
+                  [id]: pct,
+                }));
+              }}
+              mode={mode}
+            />
+          </>
+        )}
+      </section>
+    </>
   );
 }
