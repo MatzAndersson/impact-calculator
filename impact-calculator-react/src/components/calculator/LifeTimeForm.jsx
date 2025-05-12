@@ -1,4 +1,5 @@
 import useDebounce from "../../hooks/useDebounce";
+import { Tooltip } from "react-tooltip";
 import styles from "./Forms.module.css";
 
 export function LifetimeForm({ inputs, update }) {
@@ -90,7 +91,12 @@ export function LifetimeForm({ inputs, update }) {
           />
         </div>
         <div className={`${styles.formControl} ${styles.growthControl}`}>
-          <label htmlFor="growthRate">Salary growth rate in percentage</label>
+          <label htmlFor="growthRate">
+            Salary growth rate
+            <span data-tooltip-id="growthTip" className={styles.helpIcon}>
+              ?
+            </span>
+          </label>
           <div className={styles.suffixInput}>
             <input
               id="growthRate"
@@ -108,6 +114,15 @@ export function LifetimeForm({ inputs, update }) {
             />
             <span className={styles.suffix}>%</span>
           </div>
+          <Tooltip
+            id="growthTip"
+            place="top"
+            className={styles.growthTooltip}
+            content={`We assume your salary will grow ~4% per year—typical long-term wage growth
+    in the U.S. and much of Western Europe. If you expect faster promotions or
+    higher inflation, you can bump this up; if you’re in a slower-growth job
+    or region (e.g. 2–3% annual), feel free to lower it.`}
+          />
         </div>
       </div>
 
@@ -147,8 +162,6 @@ export function LifetimeForm({ inputs, update }) {
           )}
         </div>
       </div>
-
-      
     </>
   );
 }
