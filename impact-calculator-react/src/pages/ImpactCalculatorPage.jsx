@@ -19,7 +19,7 @@ function getPledgeUrl(currency) {
 
 export default function ImpactCalculatorPage() {
   const summaryRef = useRef(null);
-  const cardsRef = useRef(null);
+  const cardsRef = useRef();
   const { inputs, update, resetAll } = useCalculatorInputs();
   const [calculatedDonation, setCalculatedDonation] = useState(0);
   const [evaluations, setEvaluations] = useState([]);

@@ -51,6 +51,7 @@
   padding: 0.5em !important;
   /* optional: make the arrow still point correctly */
   --react-tooltip-arrow-size: 6px;
+  z-index: 1000; /* make sure it’s on top of everything */
 }
 
 .inputBase,
