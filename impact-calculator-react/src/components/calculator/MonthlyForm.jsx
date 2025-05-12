@@ -18,7 +18,7 @@ export function MonthlyForm({ inputs, update }) {
           </select>
         </div>
         <div className={styles.formControl}>
-          <label htmlFor="monthlySalary">Monthly salary</label>
+          <label htmlFor="monthlySalary">Monthly gross salary</label>
           <input
             id="monthlySalary"
             className={styles.inputBase}

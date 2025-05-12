@@ -58,7 +58,7 @@ export function LifetimeForm({ inputs, update }) {
 
         <div className={styles.formControl}>
           <label htmlFor="lifetimeSalary">
-            {isAnnual ? "Annual salary" : "Monthly salary"}
+            {isAnnual ? "Annual gross salary" : "Monthly gross salary"}
           </label>
           <input
             id="lifetimeSalary"

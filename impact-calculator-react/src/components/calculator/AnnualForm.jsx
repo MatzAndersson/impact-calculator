@@ -18,7 +18,7 @@ export function AnnualForm({ inputs, update }) {
           </select>
         </div>
         <div className={styles.formControl}>
-          <label htmlFor="annualSalary">Annual salary</label>
+          <label htmlFor="annualSalary">Annual gross salary</label>
           <input
             id="annualSalary"
             className={styles.inputBase}
