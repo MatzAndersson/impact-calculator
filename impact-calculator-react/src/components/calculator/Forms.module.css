@@ -26,8 +26,8 @@
 
 .helpIcon {
   display: inline-flex;              /* treat like an inline icon */
-  align-items: center;               /* center the “?” vertically */
-  justify-content: center;           /* center horizontally */
+  align-items: center;               /* center  “?” vertically */
+  justify-content: center;           /* center “?” horizontally */
   width: 1.2em;                      /* make a square */
   height: 1.2em;
   margin-left: 0.8em; 
