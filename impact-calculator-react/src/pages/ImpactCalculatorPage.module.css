@@ -15,6 +15,17 @@
   margin-bottom: 40px;
 }
 
+.allocationToggle label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;      /* space between the radio and its text */
+  flex-wrap: wrap;  /* allow the text to flow to the next line */
+  margin-bottom: 0.2rem; /* small breathing room under each line */
+}
+
+.allocationToggle label input[type="radio"] {
+  margin-left : 0.5rem; /* space between radio and text */
+}
 .calculateBtn {
   background-color: var(--color-secondary);
   color: white;
@@ -157,5 +168,12 @@
 .percentageSymbol {
   color: var(--color-secondary);
   font-weight: 700px;
+}
+
+@media (max-width: 700px) {
+  .allocationToggle label {
+    flex-direction: column;
+    align-items: flex-start; /* keep radio + text left-aligned */
+  }
 }
 

@@ -33,3 +33,12 @@
 .tabLabel {
   font-family: "Forma DJR Deck", inherit;
 }
+
+@media (max-width: 420px) {
+  /* 1) stack the tabs */
+  .bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

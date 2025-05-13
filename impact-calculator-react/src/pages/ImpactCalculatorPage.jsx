@@ -17,6 +17,9 @@ function getPledgeUrl(currency) {
   return currency === "USD" ? base : `${base}-${currency.toLowerCase()}`;
 }
 
+const FORM_ID   = '1FAIpQLSc0CJ_l39-agUbTZOJhiWJRDi_RkOm19qa69wveXtgYIdTWEA';
+const ENTRY_KEY = 'entry.1634121982';
+
 export default function ImpactCalculatorPage() {
   const summaryRef = useRef(null);
   const cardsRef = useRef();
@@ -29,7 +32,7 @@ export default function ImpactCalculatorPage() {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("gatedEmail");
+    const saved = localStorage.getItem("gatedEmail");
     if (saved) {
       setEmail(saved);
       handleCalculate();
@@ -109,6 +112,7 @@ export default function ImpactCalculatorPage() {
       });
     });
   };
+  
 
   const handleGateSuccess = (userEmail) => {
     setEmail(userEmail);
@@ -123,6 +127,7 @@ export default function ImpactCalculatorPage() {
     } else {
       // they already passed the gate
       handleCalculate();
+      //todo: window.dataLayer.push({ event: 'calculate_clicked' });
       setShowResults(true);
     }
   };
@@ -229,8 +234,8 @@ export default function ImpactCalculatorPage() {
           }}
         >
           <EmailGate
-            formId="1FAIpQLSe2kLjDMR5sKbH9mouHCt70V9RsGac8rD_4rAAA9bSeF6GWiQ"
-            entryKey="entry.738971177"
+            formId={FORM_ID}
+            entryKey={ENTRY_KEY}
             onSuccess={handleGateSuccess}
           />
         </div>

@@ -198,3 +198,11 @@
   filter: brightness(90%);
   transform: translateY(1px);
 }
+
+@media (max-width: 600px) {
+  .resultsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    margin: 20px auto;
+  }
+}

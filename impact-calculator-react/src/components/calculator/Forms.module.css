@@ -1,6 +1,6 @@
 .formRow {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -14,29 +14,28 @@
 }
 
 .growthControl .suffixInput {
-  max-width: 140px;      /* whatever width you prefer */
-  width: 100%;
+  margin-top: auto;
 }
 
-/* 2) force the input to fill that wrapper: */
+/*force the input to fill that wrapper: */
 .growthControl .suffixInput .inputBase {
   width: 100%;
   box-sizing: border-box; /* include padding/border in width */
 }
 
 .helpIcon {
-  display: inline-flex;              /* treat like an inline icon */
-  align-items: center;               /* center  “?” vertically */
-  justify-content: center;           /* center “?” horizontally */
-  width: 1.2em;                      /* make a square */
+  display: inline-flex; /* treat like an inline icon */
+  align-items: center; /* center  “?” vertically */
+  justify-content: center; /* center “?” horizontally */
+  width: 1.2em; /* make a square */
   height: 1.2em;
-  margin-left: 0.8em; 
-  margin-bottom: 0.1em;              /* a bit of breathing room */
+  margin-left: 0.8em;
+  margin-bottom: 0.1em; /* a bit of breathing room */
   background-color: var(--color-secondary);
   color: white;
-  font-size: 1em;                  /* scale the “?” inside */
-  border-radius: 50%;                /* circle */
-  vertical-align: text-bottom;       /* keep it aligned with the text baseline */
+  font-size: 1em; /* scale the “?” inside */
+  border-radius: 50%; /* circle */
+  vertical-align: text-bottom; /* keep it aligned with the text baseline */
   cursor: help;
   font-weight: 600;
 }
@@ -44,7 +43,7 @@
 .growthTooltip {
   /* force wrapping */
   white-space: normal !important;
-  overflow-wrap: break-word; 
+  overflow-wrap: break-word;
   /* constrain the width */
   max-width: 280px !important;
   /* optional: add some padding */
@@ -62,15 +61,17 @@
   font-size: 16px;
 }
 
-.inputBase::placeholder{
+.inputBase::placeholder {
   font-weight: 500;
   font-size: 14px;
   font-style: italic;
 }
 
 .suffixInput {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
   position: relative;
-  display: inline-block; /* shrink-to-content */
 }
 
 /* make space for the % */
@@ -82,18 +83,17 @@
 .suffixInput .suffix {
   position: absolute;
   top: 50%;
-  right: 0.5em;            /* tweak for perfect centering */
+  right: 0.5em; /* tweak for perfect centering */
   transform: translateY(-50%);
-  pointer-events: none;    /* clicks go through to the input */
+  pointer-events: none; /* clicks go through to the input */
   color: var(--color-secondary);
   font-weight: bold;
 }
 
-
-.periodToggle{
-  display: flex;          /* row */
+.periodToggle {
+  display: flex; /* row */
   flex-direction: row;
-  gap: 6px;              /* space between the two labels */
+  gap: 6px; /* space between the two labels */
   align-items: center;
   margin-bottom: 16px;
 }
@@ -105,14 +105,33 @@
 
 .errorText {
   color: #d00;
-  position:absolute;
+  position: absolute;
   margin-top: 0.25em;
   font-size: 0.7rem;
-  position: absolute;      
-  left: 0;                 /* line up under the input */
-  bottom: -1.25em;  
-  font-style: italic;   
+  position: absolute;
+  left: 0; /* line up under the input */
+  bottom: -1.25em;
+  font-style: italic;
   white-space: nowrap;
-  pointer-events: none;    
-  
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .formRow {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space between each control */
+  }
+
+  .formControl {
+    width: 90%; /* each control takes full width */
+    min-width: 0; /* avoid overflow from inputs */
+  }
+
+  /* And make sure the % suffix stays glued to its input */
+  .suffixInput {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
 }

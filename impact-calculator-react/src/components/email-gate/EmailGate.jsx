@@ -4,8 +4,8 @@ import logo from "../../assets/OFTW-Secondary-Logo-RGB-White-4k.png";
 import pageStyles from '../../pages/ImpactCalculatorPage.module.css';
 
 export function EmailGate({
-  formId = "1FAIpQLSe2kLjDMR5sKbH9mouHCt70V9RsGac8rD_4rAAA9bSeF6GWiQ",
-  entryKey = "entry.738971177",
+  formId,
+  entryKey,
   onSuccess,
   onClose,
 }) {
@@ -16,8 +16,8 @@ export function EmailGate({
 
     if (formId && entryKey) {
       // only do the fetch once we have those values
-      const url = `https://docs.google.com/forms/d/e/1FAIpQLSe2kLjDMR5sKbH9mouHCt70V9RsGac8rD_4rAAA9bSeF6GWiQ/formResponse`;
-      console.log("Posting to Google Forms URL:", url);
+      const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+      console.log("Posting to:", url);
       const fd = new FormData();
       fd.append(entryKey, email);
       await fetch(url, { method: "POST", mode: "no-cors", body: fd });
@@ -25,8 +25,9 @@ export function EmailGate({
       console.warn("EmailGate: no formId/entryKey provided—skipping POST");
     }
 
-    sessionStorage.setItem("gatedEmail", email);
+    localStorage.setItem("gatedEmail", email);
     onSuccess(email);
+    //TODO: window.dataLayer.push({ event: 'email_gate_submit' });
   };
 
   return (
