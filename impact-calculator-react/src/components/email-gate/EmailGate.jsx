@@ -46,7 +46,7 @@ export function EmailGate({
         />
 
         <h2 className={styles.heading}>
-          Enter your email to see your Impact results
+          Enter your email to view your impact results
         </h2>
 
         <form onSubmit={handleSubmit}>
