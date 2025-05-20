@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { fetchEvaluations } from "../api/Evaluations";
+import { Tooltip } from "react-tooltip";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { EmailGate } from "../components/email-gate/EmailGate";
 import { InputTabs } from "../components/calculator/InputTabs";
@@ -7,6 +8,8 @@ import { AnnualForm } from "../components/calculator/AnnualForm";
 import { MonthlyForm } from "../components/calculator/MonthlyForm";
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCards } from "../components/CharityCards";
+import { InlineSplitSliders } from "../components/InlineSplitSliders";
+import { TotalAllocationIndicator } from "../components/TotalAllocationIndicator";
 import { CHARITIES } from "../data/charityData";
 import { ImpactSummary } from "../components/ImpactSummary";
 
@@ -17,8 +20,8 @@ function getPledgeUrl(currency) {
   return currency === "USD" ? base : `${base}-${currency.toLowerCase()}`;
 }
 
-const FORM_ID   = '1FAIpQLSc0CJ_l39-agUbTZOJhiWJRDi_RkOm19qa69wveXtgYIdTWEA';
-const ENTRY_KEY = 'entry.1634121982';
+const FORM_ID = "1FAIpQLSc0CJ_l39-agUbTZOJhiWJRDi_RkOm19qa69wveXtgYIdTWEA";
+const ENTRY_KEY = "entry.1634121982";
 
 export default function ImpactCalculatorPage() {
   const summaryRef = useRef(null);
@@ -47,6 +50,24 @@ export default function ImpactCalculatorPage() {
       {}
     )
   );
+  const totalPercentage = useMemo(
+    () => Object.values(allocations).reduce((sum, pct) => sum + pct, 0),
+    [allocations]
+  );
+
+  function handleAllocationChange(id, rawPct) {
+    setAllocations((prev) => {
+      // 1) sum of everybody except the one we’re changing:
+      const othersSum = Object.entries(prev)
+        .filter(([key]) => key !== id)
+        .reduce((sum, [, val]) => sum + val, 0);
+
+      // 2) clamp rawPct to [0, 100 - othersSum]
+      const clamped = Math.max(0, Math.min(rawPct, 100 - othersSum));
+
+      return { ...prev, [id]: clamped };
+    });
+  }
 
   useEffect(() => {
     const abbrevs = CHARITIES.map((c) => c.id);
@@ -112,7 +133,6 @@ export default function ImpactCalculatorPage() {
       });
     });
   };
-  
 
   const handleGateSuccess = (userEmail) => {
     setEmail(userEmail);
@@ -299,17 +319,27 @@ export default function ImpactCalculatorPage() {
                   setAllocations(
                     CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
                   );
-                  requestAnimationFrame(() => {
+                  /* requestAnimationFrame(() => {
                     cardsRef.current?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
                     });
-                  });
+                  });*/
                 }}
               />{" "}
               Customize split (set your own percentages below)
             </label>
           </fieldset>
+
+          <InlineSplitSliders
+            charities={CHARITIES}
+            allocations={allocations}
+            onAllocationChange={handleAllocationChange}
+            isOpen={mode === "custom"}
+          />
+          {mode === "custom" && (
+            <TotalAllocationIndicator total={totalPercentage} />
+          )}
 
           {/* ---------- slider OR monthly preview ---------- */}
 
@@ -372,19 +402,25 @@ export default function ImpactCalculatorPage() {
             )}
           </div>
           <div className={pageStyles.buttonsRow}></div>
-          <div
-            className={pageStyles.tipWrapper}
-            data-tip={!salaryFilled ? "Please fill in all required fields" : ""}
+
+          <span
+            data-tooltip-id="calculateTip"
+            data-tooltip-content="Please fill in all required fields and/or allocate 100% of the donation"
           >
             <button
               className={pageStyles.calculateBtn}
               onClick={handleCalculateClick}
-              disabled={!salaryFilled}
+              disabled={
+                !salaryFilled || (mode === "custom" && totalPercentage !== 100)
+              }
             >
               Calculate donation
             </button>
-          </div>
-
+          </span>
+          {(!salaryFilled ||
+            (mode === "custom" && totalPercentage !== 100)) && (
+            <Tooltip id="calculateTip" place="top" className="growthTooltip" />
+          )}
           <button
             className={pageStyles.resetBtn}
             onClick={() => {
@@ -417,18 +453,15 @@ export default function ImpactCalculatorPage() {
                 pledgeUrl={getPledgeUrl(inputs.currency)}
               />
             </div>
-
+            {mode === "custom" && (
+              <TotalAllocationIndicator total={totalPercentage} />
+            )}
             <CharityCards
               ref={cardsRef}
               breakdown={breakdown}
               annualDonation={calculatedDonation}
               allocations={allocations}
-              onAllocationChange={(id, pct) => {
-                setAllocations((prev) => ({
-                  ...prev,
-                  [id]: pct,
-                }));
-              }}
+              onAllocationChange={handleAllocationChange}
               mode={mode}
             />
           </>

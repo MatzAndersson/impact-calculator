@@ -22,17 +22,7 @@ export function CharityCards({
 
   return (
     <section ref={ref} className={styles.resultsGrid}>
-      {mode === "custom" && (
-        <div
-          className={`${styles.totalPctIndicator} ${
-            totalPercentage === 100 ? styles.validTotal : styles.invalidTotal
-          }`}
-          style={{ gridColumn: "1 / -1" }} /* still spans full row */
-        >
-          Total allocation: {totalPercentage}%{" "}
-          {totalPercentage !== 100 && "← adjust to 100 %"}
-        </div>
-      )}
+     
 
       {breakdown.map((item) => {
         // 1️⃣ pull out the static metadata once

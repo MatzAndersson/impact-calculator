@@ -18,13 +18,13 @@
 .allocationToggle label {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;      /* space between the radio and its text */
-  flex-wrap: wrap;  /* allow the text to flow to the next line */
+  gap: 0.5rem; /* space between the radio and its text */
+  flex-wrap: wrap; /* allow the text to flow to the next line */
   margin-bottom: 0.2rem; /* small breathing room under each line */
 }
 
 .allocationToggle label input[type="radio"] {
-  margin-left : 0.5rem; /* space between radio and text */
+  margin-left: 0.5rem; /* space between radio and text */
 }
 .calculateBtn {
   background-color: var(--color-secondary);
@@ -35,7 +35,7 @@
   padding: 16px 40px;
   cursor: pointer;
   font-family: "Forma DJR Deck";
-  margin-top: 16px;
+  margin-top: 0px;
   transition: filter 0.15s, transform 0.05s;
 }
 
@@ -66,7 +66,9 @@
   background: #eee;
   color: #444;
   border: none;
+  font-family: "Forma DJR Deck";
   border-radius: 100px;
+  font-weight: 500;
   font-size: 16px;
   padding: 16px 32px;
   cursor: pointer;
@@ -81,38 +83,14 @@
   transform: translateY(1px);
 }
 
-.tipWrapper {
-  position: relative;
-  display: inline-block; /* shrink to button size */
+.growthTooltip {
+  max-width: 280px !important;
+  padding: 0.5em !important;
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  --react-tooltip-arrow-size: 6px;
+  z-index: 1000;
 }
-
-/* show tooltip only when data-tip has content AND button is disabled */
-.tipWrapper:has(button:disabled)[data-tip]:hover::after {
-  content: attr(data-tip);
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(100% - 9px); /* 10% above button */
-  background: #333;
-  color: #fff;
-  padding: 6px 10px;
-  font-size: 12px;
-  border-radius: 4px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.tipWrapper:has(button:disabled)[data-tip]:hover::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(100% - 20px);
-  border: 6px solid transparent;
-  border-top-color: #333;
-}
-
 .rangeWrapper {
   display: flex;
   align-items: center;
@@ -126,7 +104,6 @@
   display: inline-flex;
   align-items: center;
   gap: 0;
-  
 }
 
 .slider {
@@ -134,7 +111,6 @@
   width: 100%;
   max-width: 150px;
   margin: 0 10px;
-  
 }
 
 .sliderNumberInput {
@@ -147,8 +123,7 @@
   text-align: right;
   cursor: text;
   font-weight: 700;
-  margin-left: -0.0rem;
-  
+  margin-left: -0rem;
 }
 .sliderNumberInput:focus {
   outline: none;
@@ -157,7 +132,6 @@
 .sliderNumberInput,
 .percentageSymbol {
   color: var(--color-secondary);
-  
 }
 
 .sliderNumberInput::-webkit-outer-spin-button,
@@ -180,4 +154,3 @@
     align-items: flex-start; /* keep radio + text left-aligned */
   }
 }
-

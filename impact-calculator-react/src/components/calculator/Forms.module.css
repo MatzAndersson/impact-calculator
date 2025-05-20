@@ -2,7 +2,7 @@
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .formControl {
   display: flex;
@@ -86,7 +86,6 @@
   right: 0.5em; /* tweak for perfect centering */
   transform: translateY(-50%);
   pointer-events: none; /* clicks go through to the input */
-  color: var(--color-secondary);
   font-weight: bold;
 }
 
@@ -95,7 +94,7 @@
   flex-direction: row;
   gap: 6px; /* space between the two labels */
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 }
 .radioInline {
   display: inline-flex;
