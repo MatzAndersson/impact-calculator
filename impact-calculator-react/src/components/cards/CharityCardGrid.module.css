@@ -1,0 +1,32 @@
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 40px auto;
+  max-width: 800px;
+  margin-top: 0;
+}
+
+/* indicator below the grid when in “custom” mode */
+.totalPctIndicator {
+  margin-top: 0px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* valid/invalid text color for that indicator */
+.validTotal {
+  color: green;
+}
+.invalidTotal {
+  color: red;
+}
+
+@media (max-width: 600px) {
+  .resultsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    margin: 20px auto;
+  }
+}

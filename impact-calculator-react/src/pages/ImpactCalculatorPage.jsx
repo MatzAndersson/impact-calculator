@@ -7,7 +7,7 @@ import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
 import { MonthlyForm } from "../components/calculator/MonthlyForm";
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
-import { CharityCards } from "../components/CharityCards";
+import { CharityCardGrid } from "../components/cards/CharityCardGrid";
 import { InlineSplitSliders } from "../components/InlineSplitSliders";
 import { TotalAllocationIndicator } from "../components/TotalAllocationIndicator";
 import { CHARITIES } from "../data/charityData";
@@ -456,13 +456,12 @@ export default function ImpactCalculatorPage() {
             {mode === "custom" && (
               <TotalAllocationIndicator total={totalPercentage} />
             )}
-            <CharityCards
+            <CharityCardGrid
               ref={cardsRef}
               breakdown={breakdown}
-              annualDonation={calculatedDonation}
               allocations={allocations}
-              onAllocationChange={handleAllocationChange}
               mode={mode}
+              onAllocationChange={handleAllocationChange}
             />
           </>
         )}

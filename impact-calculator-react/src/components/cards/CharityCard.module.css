@@ -1,0 +1,177 @@
+/* 3D container + flip animation */
+.cardContainer {
+  perspective: 800px;
+  min-height: 320px;
+}
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease, box-shadow 0.2s ease;
+  border-radius: 12px; /* match your faces */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+.flipped {
+  transform: rotateY(180deg);
+}
+.cardSide {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.cardBack {
+  transform: rotateY(180deg);
+}
+
+/* logo */
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.logoWrapper img {
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* title & description */
+.cardTitle {
+  margin: 0 0 6px;
+  font-family: "Forma DJR Deck";
+  color: var(--color-text);
+  font-size: 1.25rem;
+}
+.description {
+  margin: 0 0 8px;
+  color: #555;
+}
+
+/* equal-split badge */
+.equalBadge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #e0f7fa;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* slider row */
+.sliderAllocation {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 6px;
+}
+.slider {
+  flex-grow: 1;
+  margin-right: 2px;
+}
+.sliderValue {
+  display: inline-flex;
+  align-items: center;
+}
+.sliderNumberInput {
+  border: none;
+  background: transparent;
+  width: 2.5ch;
+  font: inherit;
+  text-align: right;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+.sliderNumberInput:focus {
+  outline: none;
+}
+/* hide default spinner buttons */
+.sliderNumberInput::-webkit-outer-spin-button,
+.sliderNumberInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sliderNumberInput {
+  -moz-appearance: textfield;
+}
+.percentageSymbol {
+  margin-left: 0.25rem;
+  font-size: 1rem;
+}
+
+/* two-column stats */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  margin: 8px 0;
+  width: 100%;
+  justify-items: center;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.statNumber {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.statLabel {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #777;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Info & Back buttons */
+.infoButton,
+.backButton {
+  margin-top: auto;
+  padding: 8px 16px;
+  border: none;
+  background-color: var(--color-secondary);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.05s;
+}
+.infoButton:hover,
+.backButton:hover {
+  filter: brightness(110%);
+}
+.infoButton:active,
+.backButton:active {
+  filter: brightness(90%);
+  transform: translateY(1px);
+}
+
+/* back side specific link */
+.learnMore {
+  margin: 0.75rem 0;
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+/* long description scroll if needed */
+.longDesc {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  text-align: center;
+}
