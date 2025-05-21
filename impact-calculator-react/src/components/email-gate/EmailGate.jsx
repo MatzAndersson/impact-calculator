@@ -1,14 +1,9 @@
 import { useState } from "react";
 import styles from "./EmailGate.module.css";
 import logo from "../../assets/OFTW-Secondary-Logo-RGB-White-4k.png";
-import pageStyles from '../../pages/ImpactCalculatorPage.module.css';
+import pageStyles from "../../pages/ImpactCalculatorPage.module.css";
 
-export function EmailGate({
-  formId,
-  entryKey,
-  onSuccess,
-  onClose,
-}) {
+export function EmailGate({ formId, entryKey, onSuccess }) {
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e) => {
@@ -33,17 +28,8 @@ export function EmailGate({
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        {onClose && (
-          <button className={styles.closeButton} onClick={onClose}>
-            ✕
-          </button>
-        )}
         {/* Example logo at top */}
-        <img
-          src={logo}
-          alt="OFTW Logo"
-          className={styles.logo}
-        />
+        <img src={logo} alt="OFTW Logo" className={styles.logo} />
 
         <h2 className={styles.heading}>
           Enter your email to view your impact results
@@ -59,11 +45,11 @@ export function EmailGate({
             className={styles.input}
           />
           <button
-  type="submit"
-  className={`${styles.button} ${pageStyles.calculateBtn}`}
->
-  Continue
-</button>
+            type="submit"
+            className={`${styles.button} ${pageStyles.calculateBtn}`}
+          >
+            Continue
+          </button>
         </form>
       </div>
     </div>
