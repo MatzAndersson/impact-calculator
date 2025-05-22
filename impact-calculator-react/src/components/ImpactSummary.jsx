@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  LabelList,
 } from "recharts";
 import styles from "./ImpactSummary.module.css";
 
@@ -73,18 +74,39 @@ export function ImpactSummary({
 
       {/* Pie - donation split */}
       <h3 className={styles.subHeading}>Donation split</h3>
-      <ResponsiveContainer width="100%" height={260} className={styles.chart}>
-        <PieChart>
+      <ResponsiveContainer width="100%" height={300} className={styles.chart}>
+        {/* give ourselves breathing room so nothing clips */}
+        <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
           <Pie
             data={data}
             dataKey="moneyLocal"
             nameKey="name"
             innerRadius={60}
             outerRadius={90}
+            // turn off the default label & connector
+            label={false}
+            labelLine={false}
           >
             {data.map((d) => (
               <Cell key={d.id} fill={d.color} />
             ))}
+
+            {/* render our own outside % labels from the data.pct field */}
+            <LabelList
+              dataKey="pct"
+              position="outside"
+              distance={20} // push labels 20px beyond the outer radius
+              formatter={(val) => (val > 0 ? `${val.toFixed(0)}%` : '')}
+              fill="#333"
+              stroke="#fff" // give each character a white outline
+              strokeWidth={2}
+              paintOrder="stroke"
+              style={{
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                pointerEvents: "none", // labels won’t capture hover
+              }}
+            />
           </Pie>
           <Tooltip
             formatter={(value) =>
