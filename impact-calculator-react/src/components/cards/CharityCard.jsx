@@ -3,8 +3,8 @@ import styles from "./CharityCard.module.css";
 
 export function CharityCard({
   charity, // { id, name, logo:{src,width}, unitLabel, preventedDeathsLabel }
-  breakdownItem, // { output, deaths, shortDesc, longDesc, givewellUrl }
-  allocation, // number 0–100
+  breakdownItem, 
+  allocation, 
   mode, // "equal" | "custom"
   onAllocationChange, // (id, pct) => void
 }) {
@@ -84,16 +84,21 @@ export function CharityCard({
             className={styles.infoButton}
             onClick={() => setFlipped(true)}
           >
-            Info →
+            Learn more
           </button>
         </div>
 
         {/* ─── BACK SIDE ─── */}
         <div className={`${styles.cardSide} ${styles.cardBack}`}>
           <h3 className={styles.cardTitle}>{charity.name}</h3>
-          <p className={styles.longDesc}>{breakdownItem.longDesc}</p>
+          {charity.details.map(({ heading, text }) => (
+            <section key={heading} className={styles.detailSection}>
+              <h4 className={styles.detailHeading}>{heading}</h4>
+              <p className={styles.detailText}>{text}</p>
+            </section>
+          ))}
           <a
-            href={breakdownItem.givewellUrl}
+            href={charity.infoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.learnMore}

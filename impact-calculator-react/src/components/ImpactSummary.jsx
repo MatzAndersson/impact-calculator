@@ -105,7 +105,7 @@ export function ImpactSummary({
         <div>
           <strong>{totalUnits.toLocaleString()}</strong>
           <br />
-          total&nbsp;beneficiaries
+          Total&nbsp;beneficiaries
         </div>
         <div>
           <strong>
@@ -114,7 +114,7 @@ export function ImpactSummary({
             })}
           </strong>
           <br />
-          deaths&nbsp;prevented
+          Deaths&nbsp;prevented
         </div>
         <div>
           <strong>
@@ -126,7 +126,7 @@ export function ImpactSummary({
             })}
           </strong>
           <br />
-          per&nbsp;death&nbsp;averted
+          Per&nbsp;death&nbsp;averted
         </div>
       </div>
       <div className={styles.ctaWrapper}>
