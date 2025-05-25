@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { fetchEvaluations } from "../api/Evaluations";
+import { fetchEvaluations } from "../api/evaluations";
 import { Tooltip } from "react-tooltip";
 import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { EmailGate } from "../components/email-gate/EmailGate";
