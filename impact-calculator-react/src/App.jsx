@@ -4,8 +4,8 @@ import SmallImpactWidget from "./widgets/SmallImpactWidget";
 function App() {
   return (
     <div className="App">
-      <ImpactCalculatorPage />
-      {/* <SmallImpactWidget />*/}
+      {/*<ImpactCalculatorPage />*/}
+       <SmallImpactWidget />
     </div>
   );
 }

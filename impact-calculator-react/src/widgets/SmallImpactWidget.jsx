@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import useCalculatorInputs from '../hooks/useCalculatorInputs'
-import styles from './SmallImpactWidget.module.css'
+import React, { useState } from "react";
+import useLifetimeImpact from "../hooks/useLifetimeImpact";
+import styles from "./SmallImpactWidget.module.css";
 
 /**
  * SmallImpactWidget
@@ -9,70 +9,84 @@ import styles from './SmallImpactWidget.module.css'
  * Props:
  *  - learnMoreUrl: string (URL to full calculator, default 'https://1fortheworld.org/impact-calculator')
  */
-
+const sr = "sr-only";
 export default function SmallImpactWidget({
-  learnMoreUrl = 'https://1fortheworld.org/impact-calculator'
-}){
-  const [salary, setSalary] = useState('')
-  const [currentAge, setCurrentAge] = useState('')
-  const [retirementAge, setRetirementAge] = useState('')
+  learnMoreUrl = "https://1fortheworld.org/impact-calculator",
+}) {
+  const [salary, setSalary] = useState("");
+  const [currentAge, setCurrentAge] = useState("");
+  const [retirementAge, setRetirementAge] = useState("");
 
   // Parse numeric values or fall back to 0
-  const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, '')) || 0
-  const currentAgeNum = parseInt(currentAge, 10) || 0
-  const retirementAgeNum = parseInt(retirementAge, 10) || 0
-
-  // Fixed defaults for small widget
-  const donationRate = 0.01 // 1% donation rate
-  const growthRate = 0.04   // 4% annual growth rate
+  const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
+  const currentAgeNum = parseInt(currentAge, 10) || 0;
+  const retirementAgeNum = parseInt(retirementAge, 10) || 0;
 
   // Calculate results using lifetime inputs
-  const { results } = useCalculatorInputs({
-    salary: salaryNum,
+  const { livesSaved } = useLifetimeImpact({
+    salaryNow: salaryNum,
+    pledgePercent: 0.01, // 1 %
+    growthRate: 0.04, // 4 %
     currentAge: currentAgeNum,
     retirementAge: retirementAgeNum,
-    donationRate,
-    growthRate,
-    period: 'lifetime'
-  })
+  });
 
   // Only show result once all fields are filled
-  const showResult = salaryNum > 0 && currentAgeNum > 0 && retirementAgeNum > currentAgeNum
+  const showResult =
+    salaryNum > 0 && currentAgeNum > 0 && retirementAgeNum > currentAgeNum;
 
   return (
     <div className={styles.widgetBadge}>
-      <input
-        type="number"
-        className={styles.input}
-        placeholder="Annual salary"
-        value={salary}
-        onChange={e => setSalary(e.target.value)}
-      />
-      <input
-        type="number"
-        className={styles.input}
-        placeholder="Current age"
-        value={currentAge}
-        onChange={e => setCurrentAge(e.target.value)}
-      />
-      <input
-        type="number"
-        className={styles.input}
-        placeholder="Retirement age"
-        value={retirementAge}
-        onChange={e => setRetirementAge(e.target.value)}
-      />
+      <h2 className={styles.title}>
+        Calculate your 1% impact
+      </h2>
+      <div className={styles.field}>
+        <label htmlFor="salary" className={sr}>
+          Annual salary (USD)
+        </label>
+        <input
+          type="number"
+          className={styles.input}
+          placeholder="e.g. 50,000"
+          value={salary}
+          onChange={(e) => setSalary(e.target.value)}
+        />
+      </div>
 
+      <div className={styles.field}>
+        <label htmlFor="age-now" className={sr}>
+          Current age
+        </label>
+        <input
+          type="number"
+          className={styles.input}
+          placeholder="e.g. 25"
+          value={currentAge}
+          onChange={(e) => setCurrentAge(e.target.value)}
+        />
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="age-retire" className={sr}>
+          Retirement age
+        </label>
+        <input
+          type="number"
+          className={styles.input}
+          placeholder="e.g. 65"
+          value={retirementAge}
+          onChange={(e) => setRetirementAge(e.target.value)}
+        />
+      </div>
       {showResult && (
-        <>  
-          <div className={styles.value}>{results.livesSaved}</div>
-          <div className={styles.label}>lives saved over your lifetime</div>
+        <>
+          <div className={styles.value}>{livesSaved.toLocaleString()}</div>
+          <div className={styles.label}>Lives saved over your career</div>
         </>
       )}
 
       <a href={learnMoreUrl} className={styles.link}>
-        Learn more →
+        Learn more about your impact
       </a>
     </div>
-  )
-};
+  );
+}
