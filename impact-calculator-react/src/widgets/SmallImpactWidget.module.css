@@ -1,12 +1,14 @@
-
-
+:global(html) {
+  --bg-card: #ffffff;         /* light defaults */
+}
 
 .widgetBadge {
-  background: #FFFFFF;                 /* white card */
-  border: 1px solid #E3E3E3;
+  width: clamp(14rem, 90%, 18rem); /* ≈ 288 px: fits 1×1 tile */
+  background: #ffffff; /* white card */
+  border: 1px solid #e3e3e3;
   border-radius: 0.75rem;
   padding: 1.2rem;
-  width: 18rem;                        /* ≈ 288 px: fits 1×1 tile */
+
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -16,68 +18,93 @@
 .title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: primary;                     /* dark text */
+  color: primary; /* dark text */
   margin-bottom: 0.5rem;
 }
 .sr-only {
   position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0);
-  white-space: nowrap; border: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
-
-/* (optional) wrapper to keep inputs vertically tidy */
-.field { display: flex; flex-direction: column; }
 
 .input {
   width: 100%;
-  box-sizing: border-box;              /* ⬅ fixes the “spilling” */
+  box-sizing: border-box; /* ⬅ fixes the “spilling” */
   padding: 0.6rem 0.8rem;
-  border: 1px solid #D0D0D0;
+  border: 1px solid #d0d0d0;
   border-radius: 0.4rem;
-  background: #FAFAFA;
+  background: #fafafa;
   font: inherit;
-  transition: border-color .15s;
+  transition: border-color 0.15s;
 }
 
 .input:focus {
   outline: none;
-  border-color: primary;            /* brand blue */              
-  box-shadow: 0 0 0 2px rgba(38,117,248,.25);
+  border-color: primary; /* brand blue */
+  box-shadow: 0 0 0 2px rgba(38, 117, 248, 0.25);
 }
-
 
 .value {
   font-size: 2rem;
   font-weight: 700;
-  color: #2675F8;                      /* brand blue */
+  color: #2675f8; /* brand blue */
   margin-top: 0.25rem;
 }
 
 .label {
-  font-size: .9rem;
+  font-size: 0.9rem;
   color: var(--color-caption, #666);
 }
 
 /* CTA */
 .link {
   margin-top: 0.6rem;
-  font-size: .9rem;
-  color: #2675F8;
+  font-size: 0.9rem;
+  color: #2675f8;
   text-decoration: none;
 }
-.link:hover{
+.link:hover {
   color: var(--color-secondary);
 }
 .link:hover,
-.link:focus { text-decoration: underline; }
+.link:focus {
+  text-decoration: underline;
+}
 
+@keyframes pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0.2;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.value {
+  animation: pop 160ms ease-out;
+}
 
-
-@keyframes pop { from{transform:scale(.9);opacity:.2} to{transform:scale(1);opacity:1} }
-.value { animation: pop 160ms ease-out; }
-
+/* ─── Dark theme overrides ────────────────────────────── */
 @media (prefers-color-scheme: dark) {
-  .label { color: #969696; }
+  /* scope-escape so module hash isn’t added */
+  :global(.widgetBadge) {
+    background: #121212;
+    border-color: #343434;
+  }
+
+  :global(.widgetBadge) .input {
+    background: #1e1e1e;
+    border-color: #343434;
+    color: #f1f1f1;
+  }
+
+  /* focus outline still blue; leave as-is */
+  .label { color: #969696; }         /* you already had this line */
 }

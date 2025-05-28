@@ -37,19 +37,26 @@ export default function SmallImpactWidget({
 
   return (
     <div className={styles.widgetBadge}>
-      <h2 className={styles.title}>
-        Calculate your 1% impact
-      </h2>
+      <h2 className={styles.title}>Calculate your 1% impact</h2>
       <div className={styles.field}>
         <label htmlFor="salary" className={sr}>
           Annual salary (USD)
         </label>
+
         <input
-          type="number"
+          type="text"
           className={styles.input}
+          id="salary"
+          min="0"
+          step="1000"
           placeholder="e.g. 50,000"
           value={salary}
           onChange={(e) => setSalary(e.target.value)}
+          onBlur={() =>
+            setSalary(
+              salary.replace(/[^\d]/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            )
+          }
         />
       </div>
 
@@ -58,7 +65,10 @@ export default function SmallImpactWidget({
           Current age
         </label>
         <input
+          id="age-now"
           type="number"
+          min="0"
+          max="100"
           className={styles.input}
           placeholder="e.g. 25"
           value={currentAge}
@@ -70,7 +80,10 @@ export default function SmallImpactWidget({
           Retirement age
         </label>
         <input
+          id="age-retire"
           type="number"
+          min="0"
+          max="100"
           className={styles.input}
           placeholder="e.g. 65"
           value={retirementAge}

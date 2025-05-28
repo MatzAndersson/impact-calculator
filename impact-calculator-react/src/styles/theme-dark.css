@@ -1,0 +1,9 @@
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* token overrides */
+    --bg-card:      #121212;
+    --border-card:  #343434;
+    --bg-input:     #1e1e1e;
+    --text-caption: #9e9e9e;
+  }
+}
