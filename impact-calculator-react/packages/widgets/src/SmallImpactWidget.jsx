@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useLifetimeImpact from "../hooks/useLifetimeImpact";
+import useLifetimeImpact from "./hooks/useLifetimeImpact";
 import styles from "./SmallImpactWidget.module.css";
 
 /**

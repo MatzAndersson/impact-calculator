@@ -1,0 +1,49 @@
+:root {
+  --color-primary: #2675F8;
+  --color-secondary: #FB6A37;
+  --color-tertiary: #e2ff3f;
+  --color-pink:      #FEDBFD;
+  --color-bg-light:  #FFFFFF;
+  --color-text:      #181515;
+}
+
+html {
+  font-family: "Neue Haas Grotesk", "Manrope", sans-serif;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
+  color: var(--color-primary);
+  margin: 1em 0 0.5em;
+}
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Global utility classes */
+.u-color-primary {
+  color: var(--color-primary);
+}
+
+.u-color-secondary {
+  color: var(--color-secondary);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+
