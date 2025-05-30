@@ -14,9 +14,15 @@ import styles from "./ImpactSummary.module.css";
 const COLORS = ["#26A7FF", "#FB6A37", "#E2FF3E", "#FEDBFD"];
 
 function TwoRowLegend({ payload }) {
+
+  const CLOCKWISE = ["MC", "AMF", "NI", "HKI"];
+
+  const ordered = CLOCKWISE
+    .map(id => payload.find(p => p.payload.id === id))
+    .filter(Boolean);
   return (
     <ul className={styles.legend}>
-      {payload.map((entry) => (
+      {ordered.map((entry) => (
         <li key={entry.value}>
           <span className={styles.dot} style={{ background: entry.color }} />
           {entry.value}
@@ -53,6 +59,11 @@ export function ImpactSummary({
       color: COLORS[idx % COLORS.length],
     };
   });
+const PIE_ORDER = ["MC", "AMF", "HKI", "NI"];   // NW → NE → SE → SW
+const pieData = PIE_ORDER
+  .map(id => data.find(d => d.id === id))
+  .filter(Boolean);
+  
 
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
@@ -78,16 +89,18 @@ export function ImpactSummary({
         {/* give ourselves breathing room so nothing clips */}
         <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
           <Pie
-            data={data}
+            data={pieData}
             dataKey="moneyLocal"
             nameKey="name"
             innerRadius={60}
             outerRadius={90}
+            startAngle={180}   // begin at 9 o’clock
+             endAngle={-180}
             // turn off the default label & connector
             label={false}
             labelLine={false}
           >
-            {data.map((d) => (
+            {pieData.map((d) => (
               <Cell key={d.id} fill={d.color} />
             ))}
 
@@ -96,7 +109,7 @@ export function ImpactSummary({
               dataKey="pct"
               position="outside"
               distance={20} // push labels 20px beyond the outer radius
-              formatter={(val) => (val > 0 ? `${val.toFixed(0)}%` : '')}
+              formatter={(val) => (val > 0 ? `${val.toFixed(0)}%` : "")}
               fill="#333"
               stroke="#fff" // give each character a white outline
               strokeWidth={2}
