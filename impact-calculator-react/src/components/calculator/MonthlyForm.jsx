@@ -26,7 +26,7 @@ export function MonthlyForm({ inputs, update }) {
             value={inputs.monthlySalary}
             min="0"
             onChange={(e) => update("monthlySalary", parseFloat(e.target.value))}
-            placeholder="e.g. 3000"
+            placeholder="e.g. 4,000"
           />
         </div>
       </div>

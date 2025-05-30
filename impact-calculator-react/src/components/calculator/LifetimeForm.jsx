@@ -74,7 +74,7 @@ export function LifetimeForm({ inputs, update }) {
                 ? ""
                 : inputs.monthlySalary
             }
-            placeholder={isAnnual ? "e.g. 50 000" : "e.g. 4 000"}
+            placeholder={isAnnual ? "e.g. 50,000" : "e.g. 4,000"}
             onChange={(e) =>
               isAnnual
                 ? update(
