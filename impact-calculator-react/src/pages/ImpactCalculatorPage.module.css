@@ -124,6 +124,7 @@
   cursor: text;
   font-weight: 700;
   margin-left: -0rem;
+  text-decoration: underline 
 }
 .sliderNumberInput:focus {
   outline: none;

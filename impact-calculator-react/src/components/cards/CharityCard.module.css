@@ -94,9 +94,19 @@
   font-weight: 700;
   margin: 0;
   padding: 0;
+  cursor: text;
+  text-decoration: underline #3a3a3a;
+  transition: all 0.15s;
+}
+.sliderNumberInput:hover {
+  text-decoration-color: #121212; /* darker underline on hover */
 }
 .sliderNumberInput:focus {
   outline: none;
+
+  border-radius: 3px;
+  background: #f6fcff;
+  text-decoration: none;
 }
 /* hide default spinner buttons */
 .sliderNumberInput::-webkit-outer-spin-button,
@@ -108,7 +118,7 @@
   -moz-appearance: textfield;
 }
 .percentageSymbol {
-  margin-left: 0.25rem;
+  margin-left: 0.1rem;
   font-size: 1rem;
 }
 
@@ -167,16 +177,15 @@
 .learnMore {
   display: inline-block;
   color: var(--color-secondary);
-  text-decoration: underline;     /* native underline */
-  padding: 0;                     
-  box-shadow: none;               
-  transition: color 0.2s;  
-  margin-bottom: 10px;      
+  text-decoration: underline; /* native underline */
+  padding: 0;
+  box-shadow: none;
+  transition: color 0.2s;
+  margin-bottom: 10px;
 }
 
 .learnMore:hover {
-  color: var(--color-secondary-dark); 
-
+  color: var(--color-secondary-dark);
 }
 
 .detailSection {

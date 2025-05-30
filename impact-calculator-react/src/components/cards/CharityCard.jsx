@@ -51,6 +51,7 @@ export function CharityCard({
                   }
                   onFocus={(e) => e.target.select()}
                   className={styles.sliderNumberInput}
+                  aria-label="Percentage allocation"
                 />
                 <span className={styles.percentageSymbol}>%</span>
               </div>
