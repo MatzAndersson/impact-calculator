@@ -5,7 +5,7 @@ import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { EmailGate } from "../components/email-gate/EmailGate";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
-import { MonthlyForm } from "../components/calculator/MonthlyForm";
+
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCardGrid } from "../components/cards/CharityCardGrid";
 import { InlineSplitSliders } from "../components/InlineSplitSliders";
@@ -294,12 +294,7 @@ export default function ImpactCalculatorPage() {
               inputs={inputs}
               update={update}
             />
-            <MonthlyForm
-              value="monthly"
-              label="Monthly"
-              inputs={inputs}
-              update={update}
-            />
+          
           </InputTabs>
 
           <fieldset className={pageStyles.allocationToggle}>
