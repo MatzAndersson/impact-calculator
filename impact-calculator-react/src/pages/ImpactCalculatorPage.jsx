@@ -189,7 +189,7 @@ export default function ImpactCalculatorPage() {
     inputs.salaryPeriod === "annual"
       ? parseFloat(inputs.salaryNow) || 0
       : (parseFloat(inputs.monthlySalary) || 0) * 12;
-      
+
   const annualDonation = annualSalary * (inputs.pledgePercent || 0.01);
   const monthlyDonation = monthlySalary * (inputs.pledgePercent || 0.01);
 
@@ -213,12 +213,13 @@ export default function ImpactCalculatorPage() {
       : parseFloat(inputs.monthlySalary);
 
   const salaryFilled =
-    (inputs.mode === "annual" && parseFloat(inputs.salaryNow) > 0) ||
+    (inputs.mode === "annual" &&
+      ((inputs.salaryPeriod === "annual" && parseFloat(inputs.salaryNow) > 0) ||
+        (inputs.salaryPeriod === "monthly" &&
+          parseFloat(inputs.monthlySalary) > 0))) ||
     (inputs.mode === "monthly" && parseFloat(inputs.monthlySalary) > 0) ||
     (inputs.mode === "lifetime" &&
-      /* salary field that matches the toggle */
       lifetimeBaseSalary > 0 &&
-      /* both ages present and retirement > current */
       parseFloat(inputs.currentAge) > 0 &&
       parseFloat(inputs.retirementAge) > 0 &&
       parseFloat(inputs.retirementAge) > parseFloat(inputs.currentAge) &&
