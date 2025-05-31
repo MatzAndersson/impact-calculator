@@ -1,16 +1,19 @@
 :root {
-  --color-primary: #2675F8;
-  --color-secondary: #FB6A37;
-  --color-tertiary: #e2ff3f;
-  --color-pink:      #FEDBFD;
-  --color-bg-light:  #FFFFFF;
-  --color-text:      #181515;
+  --color-primary:   #2675F8;   /* Blue Crayola */
+  --color-secondary: #FB6A37;   /* Orange Crayola */
+  --color-tertiary:  #E2FF3E;   /* Chartreuse Traditional */
+  --color-pink:      #FEDBFD;   /* Pink Lace */
+  --color-bg-light:  #FFFFFF;   /* White */
+  --color-text:      #181515;   /* Black */
 }
 
-html {
-  font-family: "Neue Haas Grotesk", "Manrope", sans-serif;
+html, body {
+  font-family: "Neue Haas Grotesk Display Pro", "Manrope", sans-serif;
   color: var(--color-text);
   line-height: 1.5;
+  background-color: var(--color-bg-light);
+  margin: 0;
+  padding: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -19,15 +22,41 @@ h1, h2, h3, h4, h5, h6 {
   margin: 1em 0 0.5em;
 }
 
+button, .button {
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
+  color: var(--color-bg-light);
+  background-color: var(--color-secondary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.05s ease;
+}
+
+button:hover, .button:hover {
+  filter: brightness(110%);
+}
+
+button:active, .button:active {
+  filter: brightness(90%);
+  transform: translateY(1px);
+}
+
+button:disabled, .button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+
 a {
   color: var(--color-secondary);
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
 
-/* Global utility classes */
+/* Utility classes for colors */
 .u-color-primary {
   color: var(--color-primary);
 }
@@ -36,13 +65,20 @@ a:hover {
   color: var(--color-secondary);
 }
 
+.u-color-tertiary {
+  color: var(--color-tertiary);
+}
+
+/* Number input styling (remove default arrows) */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 
