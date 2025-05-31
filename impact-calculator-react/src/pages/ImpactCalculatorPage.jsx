@@ -287,6 +287,8 @@ export default function ImpactCalculatorPage() {
             />
           </InputTabs>
 
+          
+
           <fieldset className={pageStyles.allocationToggle}>
             <legend>
               How should we split your donation across the 4 top charities?

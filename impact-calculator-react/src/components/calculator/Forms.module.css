@@ -13,6 +13,19 @@
   font-size: 14px;
 }
 
+.tabHelper {
+  
+  color: var(--color-secondary); /* your orange, or use #FB6A37 */
+           /* light orange background */
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 6px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255,105,30,0.04);
+  text-align: left;
+}
+
 .growthControl .suffixInput {
   margin-top: auto;
 }
@@ -100,6 +113,9 @@
   display: inline-flex;
   align-items: center;
   font-size: 14px;
+}
+.radioInline input[type="radio"] {
+  cursor: pointer;
 }
 
 .errorText {

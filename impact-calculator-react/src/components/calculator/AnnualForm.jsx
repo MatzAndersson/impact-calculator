@@ -3,6 +3,9 @@ import styles from "./Forms.module.css";
 export function AnnualForm({ inputs, update }) {
   return (
     <>
+      <div className={styles.tabHelper}>
+        See your impact over <strong>1 year</strong>
+      </div>
       <div className={styles.formRow}>
         <div className={styles.formControl}>
           <label htmlFor="annualCurrency">Currency</label>
