@@ -108,10 +108,18 @@ export default function ImpactCalculatorPage() {
     let donation = 0;
 
     if (inputs.mode === "annual") {
-      donation = inputs.salaryNow * inputs.pledgePercent;
+      let annualSalary = 0;
+      if (inputs.salaryPeriod === "annual") {
+        annualSalary = parseFloat(inputs.salaryNow) || 0;
+      } else {
+        annualSalary = (parseFloat(inputs.monthlySalary) || 0) * 12;
+      }
+      donation = annualSalary * (inputs.pledgePercent || 0.01);
     } else if (inputs.mode === "monthly") {
-      // monthlySalary is already the user's input per month
-      donation = inputs.monthlySalary * 12 * inputs.pledgePercent;
+      donation =
+        (parseFloat(inputs.monthlySalary) || 0) *
+        12 *
+        (inputs.pledgePercent || 0.01);
     } else if (inputs.mode === "lifetime") {
       const annualBase =
         inputs.salaryPeriod === "annual"
@@ -161,23 +169,29 @@ export default function ImpactCalculatorPage() {
     });
 
   // 1) Calculate all three donation amounts
+  let annualSalary = 0,
+    monthlySalary = 0;
+
+  if (inputs.mode === "annual") {
+    if (inputs.salaryPeriod === "annual") {
+      annualSalary = parseFloat(inputs.salaryNow) || 0;
+      monthlySalary = annualSalary / 12;
+    } else {
+      monthlySalary = parseFloat(inputs.monthlySalary) || 0;
+      annualSalary = monthlySalary * 12;
+    }
+  } else if (inputs.mode === "monthly") {
+    monthlySalary = parseFloat(inputs.monthlySalary) || 0;
+    annualSalary = monthlySalary * 12;
+  }
+
   const annualBase =
     inputs.salaryPeriod === "annual"
       ? parseFloat(inputs.salaryNow) || 0
       : (parseFloat(inputs.monthlySalary) || 0) * 12;
-
-  const mSalary = parseFloat(inputs.monthlySalary) || 0;
-  const aSalary = parseFloat(inputs.salaryNow) || 0;
-
-  const annualDonation =
-    inputs.mode === "monthly"
-      ? mSalary * 12 * inputs.pledgePercent
-      : aSalary * inputs.pledgePercent;
-
-  const monthlyDonation =
-    inputs.mode === "monthly"
-      ? mSalary * inputs.pledgePercent
-      : annualDonation / 12;
+      
+  const annualDonation = annualSalary * (inputs.pledgePercent || 0.01);
+  const monthlyDonation = monthlySalary * (inputs.pledgePercent || 0.01);
 
   // figure out how many years – at least 1
   const currAge = parseFloat(inputs.currentAge);
@@ -286,8 +300,6 @@ export default function ImpactCalculatorPage() {
               update={update}
             />
           </InputTabs>
-
-          
 
           <fieldset className={pageStyles.allocationToggle}>
             <legend>
