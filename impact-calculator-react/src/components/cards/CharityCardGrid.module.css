@@ -23,10 +23,13 @@
   color: red;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .resultsGrid {
     grid-template-columns: 1fr !important;
     gap: 16px;
     margin: 20px auto;
+    max-width: 480px;    /* NEW: Narrower grid at 1 col! */
+    padding: 0 8px;
   }
 }
+
