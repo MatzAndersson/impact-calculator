@@ -19,6 +19,7 @@ export default defineConfig({
       // bundle React inside; if you want React external, list it here
       external: []
     },
-    minify: "esbuild"
+    minify: "esbuild",
+    cssCodeSplit: false
   }
 });
