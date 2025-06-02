@@ -24,29 +24,17 @@ export default function MediumImpactWidget({
   // Only show result once all fields are filled
   const [mode, setMode] = useState("equal");
   const [allocations, setAllocations] = useState({
-    mc: 25,
-    amf: 25,
-    ni: 25,
-    hki: 25,
+    MC: 25,
+    AMF: 25,
+    NI: 25,
+    HKI: 25,
   });
   const totalPercentage = Object.values(allocations).reduce(
     (sum, pct) => sum + pct,
     0
   );
 
-  const [annualDonation, setAnnualDonation] = useState(0);
-
-  useEffect(() => {
-    if (
-      salaryNum > 0 &&
-      currentAgeNum > 0 &&
-      retirementAgeNum > currentAgeNum
-    ) {
-      setAnnualDonation(salaryNum * 0.01); // 1% for example
-    } else {
-      setAnnualDonation(0);
-    }
-  }, [salaryNum, currentAgeNum, retirementAgeNum]);
+  
 
   function handleAllocationChange(id, rawPct) {
     setAllocations((prev) => {
@@ -93,6 +81,23 @@ export default function MediumImpactWidget({
     };
   }, [currency]);
 
+  const mergedCharities = charities.map((charity) => {
+    const evaluation = evaluations.find(
+      (e) => e.charity.abbreviation === charity.id // both uppercase
+    );
+    return {
+      ...charity,
+      costPerOutputUSD: evaluation ? evaluation.cents_per_output / 100 : 0,
+      costPerDeathAvertedUSD: charity.costPerDeathAvertedUSD,
+    };
+  });
+
+  console.log("Deaths Check", mergedCharities.map(c => ({
+  id: c.id,
+  name: c.name,
+  costPerDeathAvertedUSD: c.costPerDeathAvertedUSD
+})));
+
   return (
     <div className={styles.widgetContainer}>
       <div className={styles.leftSection}>
@@ -114,7 +119,9 @@ export default function MediumImpactWidget({
               >
                 <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
-                <option value="EUR">EUR</option>
+                <option value="EUR">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="AUD">AUD</option>
               </select>
               <input
                 type="text"
@@ -214,14 +221,15 @@ export default function MediumImpactWidget({
       <div className={styles.rightSection}>
         <ImpactSummary
           mode={mode}
-          annualDonation={annualDonation}
+        
           currency={currency}
           conversionRate={conversionRate}
-          salary={salaryNum}
+          salaryNow={salaryNum}
           currentAge={currentAgeNum}
           retirementAge={retirementAgeNum}
           allocations={allocations}
-            evaluations={evaluations}
+          evaluations={evaluations}
+          charities={mergedCharities}
         />
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import { charities } from "./charities";
 import {
   PieChart,
   Pie,
@@ -9,6 +8,7 @@ import {
   Legend,
   LabelList,
 } from "recharts";
+import useLifetimeImpact from "./hooks/useLifetimeImpact";
 import { formatCurrency } from "./utils/formatCurrency";
 import styles from "./ImpactSummary.module.css";
 
@@ -33,20 +33,44 @@ function TwoRowLegend({ payload }) {
 }
 
 export function ImpactSummary({
-  annualDonation,
   allocations,
   mode,
+  salaryNow,
+  currentAge,
+  retirementAge,
   currency,
   conversionRate,
+  charities = [],
 }) {
-  
+  const { lifetimeGiving } = useLifetimeImpact({
+    salaryNow,
+    pledgePercent: 0.01,
+    growthRate: 0.04,
+    currentAge,
+    retirementAge,
+  });
+  console.log(
+    "salaryNow:",
+    salaryNow,
+    "currentAge:",
+    currentAge,
+    "retirementAge:",
+    retirementAge
+  );
+  console.log("lifetimeGiving:", lifetimeGiving);
+
   const data = charities.map((c, idx) => {
     const pct =
       mode === "equal" ? 100 / charities.length : allocations[c.id] || 0;
-    const moneyLocal = (annualDonation * pct) / 100;
-    const localCostPerOutput = c.costPerOutputUSD * conversionRate;
-    const units = Math.round(moneyLocal / localCostPerOutput);
-    const localCostPerDeath = c.costPerDeathAvertedUSD * conversionRate;
+    const moneyLocal = (lifetimeGiving * pct) / 100;
+
+    const localCostPerOutput =
+      Number(c.costPerOutputUSD) * (Number(conversionRate) || 1);
+    const localCostPerDeath =
+      Number(c.costPerDeathAvertedUSD) * (Number(conversionRate) || 1);
+
+    const units =
+      localCostPerOutput > 0 ? Math.round(moneyLocal / localCostPerOutput) : 0;
     const preventedDeaths =
       localCostPerDeath > 0 ? moneyLocal / localCostPerDeath : 0;
     return {
@@ -67,7 +91,7 @@ export function ImpactSummary({
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
   const costPerDeath =
-    totalPreventedDeaths > 0 ? annualDonation / totalPreventedDeaths : 0;
+    totalPreventedDeaths > 0 ? lifetimeGiving / totalPreventedDeaths : 0;
 
   return (
     <section className={styles.section}>

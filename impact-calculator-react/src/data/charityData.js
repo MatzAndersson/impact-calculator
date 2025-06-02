@@ -7,8 +7,8 @@ export const CHARITIES = [
   {
     id: "MC",
     name: "Malaria Consortium",
-    costPerOutputUSD: 20,
-    costPerDeathAvertedUSD: 5000,
+    costPerOutputUSD: 7,
+    costPerDeathAvertedUSD: 4500,
     logo: { src: mcLogo, width: 210 },
     description: "",
     unitLabel: "Children protected from malaria for a year with SMC",
@@ -32,7 +32,7 @@ export const CHARITIES = [
   {
     id: "AMF",
     name: "Against Malaria Foundation",
-    costPerOutputUSD: 2,
+    costPerOutputUSD: 5,
     costPerDeathAvertedUSD: 5500,
     logo: { src: amfLogo, width: 106 },
     description: "",
@@ -57,8 +57,8 @@ export const CHARITIES = [
   {
     id: "NI",
     name: "New Incentives",
-    costPerOutputUSD: 5,
-    costPerDeathAvertedUSD: 5000,
+    costPerOutputUSD: 148,
+    costPerDeathAvertedUSD: 4500,
     logo: { src: niLogo, width: 230 },
     description: "",
     unitLabel: "Children vaccinated",
@@ -82,8 +82,8 @@ export const CHARITIES = [
   {
     id: "HKI",
     name: "Helen Keller International",
-    costPerOutputUSD: 1,
-    costPerDeathAvertedUSD: 3200,
+    costPerOutputUSD: 2,
+    costPerDeathAvertedUSD: 3500,
     logo: { src: hkiLogo, width: 108 },
     description: "",
     unitLabel: "Children given a year's Vitamin A supplementation",
