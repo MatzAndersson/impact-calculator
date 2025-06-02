@@ -1,0 +1,89 @@
+.inlineSliders {
+  display: grid;
+  /* each column is at least 120px, at most 1fr, and auto-fits as many as will fit */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+.inlineSliders.open {
+  max-height: 600px; /* bump this as needed */
+  opacity: 1;
+}
+
+.sliderCard {
+  display: grid;
+  grid-template-rows:
+    auto /* logo */
+    auto /* name */
+    1fr /* slider */
+    auto /* percentage value */;
+  align-items: center;
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sliderLogo {
+  width: 40px;
+  margin-bottom: 0.5rem;
+  justify-self: center;
+}
+
+.sliderName {
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+  justify-self: center;
+  font-weight: 550px;
+}
+
+.sliderCard input[type="range"] {
+  width: 100%;
+  justify-self: stretch;
+  margin: 0;
+}
+
+/* percentage text */
+.sliderValue {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  justify-self: center;
+   display:inline-flex;          /* keep number + % on one line */
+  align-items:center;
+  gap:.15rem;
+  
+}
+.sliderNumberInput{
+  width:3ch;                    /* fits “100” */
+  border:none;
+  background:transparent;
+  font:inherit;
+  font-weight:700;
+  text-align:right;
+  cursor:text;
+  text-decoration:underline  #3d3d3d;
+  transition:all .15s;
+}
+/* darker dotted underline on hover */
+.sliderNumberInput:hover{
+  text-decoration-color:#040404;
+}
+/* turn into a “real” input on focus */
+.sliderNumberInput:focus{
+  outline:none;
+ 
+  border-radius:3px;
+  background:#f6fcff;
+  text-decoration:none;
+}
+
+/* hide ↑↓ spinner controls */
+.sliderNumberInput::-webkit-inner-spin-button,
+.sliderNumberInput::-webkit-outer-spin-button{ -webkit-appearance:none; }
+.sliderNumberInput{ -moz-appearance:textfield; }
+
+/* optional: align the % symbol a hair higher if your font dips */
+.percentSymbol{ line-height:1; }

@@ -1,0 +1,175 @@
+.section {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.heading2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.subHeading {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  
+}
+
+.kpi {
+  font-size: 20px;
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.kpiStrip {
+  display: grid;
+  /* flow items in a row */
+  grid-auto-flow: column;
+  /* size columns to fit their content */
+  grid-auto-columns: auto;
+  /* center the entire strip under the chart */
+  justify-content: center;
+  /* horizontal gap between each KPI */
+  column-gap: 48px;      /* tweak to taste */
+  /* vertical spacing if it ever wraps */
+  row-gap: 8px;
+  /* center strip and constrain width */
+  margin: 24px auto 32px;
+}
+
+.kpiStrip > div {
+  text-align: center;
+}
+
+.kpiStrip strong {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+.legend {
+  list-style: none;
+  padding: 0;
+  margin: 16px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* two columns */
+  gap: 8px 24px; /* row / column spacing */
+  justify-content: center;
+  font-size: 14px;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.chart {
+  margin-top: 0.5rem;
+  min-height: 180px; /* guarantee some vertical space */
+}
+
+.validTotal {
+  margin-top: 0.75rem;
+  font-weight: bold;
+  color: green;
+}
+
+.invalidTotal {
+  margin-top: 0.75rem;
+  font-weight: bold;
+  color: red;
+}
+
+.ctaWrapper {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.recharts-text {
+  paint-order: stroke !important;
+  stroke: #fff !important;
+  stroke-width: 2px !important;
+}
+
+.donateButton {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-secondary);
+  color: white;
+  text-decoration: none;
+  padding: 16px 40px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: filter 0.15s, transform 0.05s;
+}
+
+.donateButton:hover {
+  filter: brightness(110%);
+}
+
+.donateButton:active {
+  filter: brightness(90%);
+  transform: translateY(1px);
+}
+
+.donateLabel {
+  margin-right: 8px;
+}
+
+.donateIcon {
+  display: inline-block;
+}
+
+@media (max-width: 500px) {
+  .kpiStrip {
+    grid-auto-flow: row;          /* stack into rows */
+    grid-template-columns: 1fr 1fr; /* two per row */
+    column-gap: 24px;
+  }
+}
+
+
+@media (max-width: 440px) {
+  /* add space under “Donation split” */
+  .subHeading {
+    margin-bottom: 1.5rem;
+  }
+
+  /* push the chart down */
+  .chart {
+    margin-top: 1.5rem !important;
+  }
+
+  
+  .legend {
+    grid-template-columns: 1fr;
+    gap: 6px 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .chart {
+    margin-top: 1rem;
+    min-height: 140px;
+  }
+}
+
+@media (max-width: 360px) {
+  .kpiStrip {
+    grid-template-columns: 1fr;
+  }
+  .legend {
+    grid-template-columns: 1fr;
+  }
+}
