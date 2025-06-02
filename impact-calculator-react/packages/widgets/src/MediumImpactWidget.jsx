@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import styles from "./MediumImpactWidget.module.css";
-import { ImpactSummary } from "./ImpactSummary";
-import { MediumInlineSplitSliders } from "./MediumInlineSplitSliders";
 import { fetchEvaluations } from "./api/Evaluations";
+import { ImpactSummary } from "./ImpactSummary";
+import { getCharityImpacts } from "./utils/getCharityImpacts";
+import { CharityCardWidget } from "./CharityCardWidget";
 import { charities } from "./charities";
+import styles from "./MediumImpactWidget.module.css";
 
 const sr = "sr-only";
+const allocations = { MC: 25, AMF: 25, NI: 25, HKI: 25 };
 export default function MediumImpactWidget({
   learnMoreUrl = "https://1fortheworld.org/impact-calculator",
 }) {
@@ -20,31 +22,6 @@ export default function MediumImpactWidget({
   const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
   const currentAgeNum = parseInt(currentAge, 10) || 0;
   const retirementAgeNum = parseInt(retirementAge, 10) || 0;
-
-  // Only show result once all fields are filled
-  const [mode, setMode] = useState("equal");
-  const [allocations, setAllocations] = useState({
-    MC: 25,
-    AMF: 25,
-    NI: 25,
-    HKI: 25,
-  });
-  const totalPercentage = Object.values(allocations).reduce(
-    (sum, pct) => sum + pct,
-    0
-  );
-
-  
-
-  function handleAllocationChange(id, rawPct) {
-    setAllocations((prev) => {
-      const othersSum = Object.entries(prev)
-        .filter(([key]) => key !== id)
-        .reduce((sum, [, val]) => sum + val, 0);
-      const clamped = Math.max(0, Math.min(rawPct, 100 - othersSum));
-      return { ...prev, [id]: clamped };
-    });
-  }
 
   useEffect(() => {
     const abbrevs = charities.map((c) => c.id);
@@ -83,20 +60,28 @@ export default function MediumImpactWidget({
 
   const mergedCharities = charities.map((charity) => {
     const evaluation = evaluations.find(
-      (e) => e.charity.abbreviation === charity.id // both uppercase
+      (e) => e.charity.abbreviation === charity.id
     );
     return {
       ...charity,
-      costPerOutputUSD: evaluation ? evaluation.cents_per_output / 100 : 0,
-      costPerDeathAvertedUSD: charity.costPerDeathAvertedUSD,
+      costPerOutputUSD:
+        evaluation && evaluation.cents_per_output
+          ? evaluation.cents_per_output / 100
+          : charity.costPerOutputUSD,
+      costPerDeathAvertedUSD:
+        evaluation && evaluation.cost_per_death_averted
+          ? evaluation.cost_per_death_averted
+          : charity.costPerDeathAvertedUSD,
     };
   });
-
-  console.log("Deaths Check", mergedCharities.map(c => ({
-  id: c.id,
-  name: c.name,
-  costPerDeathAvertedUSD: c.costPerDeathAvertedUSD
-})));
+  const impactData = getCharityImpacts({
+    salaryNow: salaryNum,
+    currentAge: currentAgeNum,
+    retirementAge: retirementAgeNum,
+    allocations,
+    charities,
+    conversionRate,
+  });
 
   return (
     <div className={styles.widgetContainer}>
@@ -119,7 +104,7 @@ export default function MediumImpactWidget({
               >
                 <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
-                <option value="EUR">AUD</option>
+                <option value="EUR">EUR</option>
                 <option value="CAD">CAD</option>
                 <option value="AUD">AUD</option>
               </select>
@@ -174,60 +159,29 @@ export default function MediumImpactWidget({
             onChange={(e) => setRetirementAge(e.target.value)}
           />
         </div>
-        <fieldset className={styles.allocationToggle}>
-          <legend>How should we split your donation?</legend>
-          <label>
-            <input
-              type="radio"
-              checked={mode === "equal"}
-              onChange={() => {
-                setMode("equal");
-                setAllocations({ mc: 25, amf: 25, ni: 25, hki: 25 });
-              }}
-            />
-            Split equally (25% each)
-          </label>
-          <label>
-            <input
-              type="radio"
-              checked={mode === "custom"}
-              onChange={() => setMode("custom")}
-            />
-            Customize split
-          </label>
-        </fieldset>
 
-        {mode === "custom" && (
-          <>
-            <MediumInlineSplitSliders
-              charities={charities}
-              allocations={allocations}
-              onAllocationChange={handleAllocationChange}
-              isOpen={true}
+        <div className={styles.cardsGrid}>
+          {impactData.map((item) => (
+            <CharityCardWidget
+              key={item.id}
+              charity={item}
+              impactAmount={item.impactAmount}
             />
-            <div>
-              Total allocation: {totalPercentage}%
-              {totalPercentage !== 100 && (
-                <span style={{ color: "red" }}> (must be 100%)</span>
-              )}
-            </div>
-          </>
-        )}
+          ))}
+        </div>
 
         <a href={learnMoreUrl} className={styles.link}>
-          Learn more about your impact
+          Learn more about your impact at One For The World
         </a>
       </div>
       <div className={styles.rightSection}>
         <ImpactSummary
-          mode={mode}
-        
+          allocations={allocations}
           currency={currency}
           conversionRate={conversionRate}
           salaryNow={salaryNum}
           currentAge={currentAgeNum}
           retirementAge={retirementAgeNum}
-          allocations={allocations}
           evaluations={evaluations}
           charities={mergedCharities}
         />

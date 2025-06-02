@@ -9,6 +9,7 @@ import {
   LabelList,
 } from "recharts";
 import useLifetimeImpact from "./hooks/useLifetimeImpact";
+import { getCharityImpacts } from "./utils/getCharityImpacts";
 import { formatCurrency } from "./utils/formatCurrency";
 import styles from "./ImpactSummary.module.css";
 
@@ -34,7 +35,6 @@ function TwoRowLegend({ payload }) {
 
 export function ImpactSummary({
   allocations,
-  mode,
   salaryNow,
   currentAge,
   retirementAge,
@@ -59,46 +59,51 @@ export function ImpactSummary({
   );
   console.log("lifetimeGiving:", lifetimeGiving);
 
-  const data = charities.map((c, idx) => {
-    const pct =
-      mode === "equal" ? 100 / charities.length : allocations[c.id] || 0;
-    const moneyLocal = (lifetimeGiving * pct) / 100;
+  
 
-    const localCostPerOutput =
-      Number(c.costPerOutputUSD) * (Number(conversionRate) || 1);
-    const localCostPerDeath =
-      Number(c.costPerDeathAvertedUSD) * (Number(conversionRate) || 1);
-
-    const units =
-      localCostPerOutput > 0 ? Math.round(moneyLocal / localCostPerOutput) : 0;
-    const preventedDeaths =
-      localCostPerDeath > 0 ? moneyLocal / localCostPerDeath : 0;
-    return {
-      id: c.id,
-      name: c.name,
-      pct,
-      moneyLocal,
-      units,
-      preventedDeaths,
-      color: COLORS[idx % COLORS.length],
-    };
-  });
+  const data = getCharityImpacts({
+    salaryNow,
+    currentAge,
+    retirementAge,
+    allocations,
+    charities,
+    conversionRate,
+  }).map((c, idx) => ({
+    ...c,
+    color: COLORS[idx % COLORS.length],
+  }));
   const PIE_ORDER = ["MC", "AMF", "HKI", "NI"]; // NW → NE → SE → SW
   const pieData = PIE_ORDER.map((id) => data.find((d) => d.id === id)).filter(
     Boolean
   );
-
+console.log(
+  data.map(d => ({
+    id: d.id,
+    name: d.name,
+    costPerDeathAvertedUSD: d.costPerDeathAvertedUSD,
+    preventedDeaths: d.preventedDeaths
+  }))
+);
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
   const costPerDeath =
     totalPreventedDeaths > 0 ? lifetimeGiving / totalPreventedDeaths : 0;
+
+    console.log(
+  data.map(d => ({
+    id: d.id,
+    name: d.name,
+    costPerDeathAvertedUSD: d.costPerDeathAvertedUSD,
+    preventedDeaths: d.preventedDeaths
+  }))
+);
 
   return (
     <section className={styles.section}>
       <h2 className={styles.heading2}>Overall Impact</h2>
 
       {/* Pie - donation split */}
-      <h3 className={styles.subHeading}>Donation split</h3>
+
       <ResponsiveContainer width="100%" height={300} className={styles.chart}>
         {/* give ourselves breathing room so nothing clips */}
         <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
@@ -154,7 +159,7 @@ export function ImpactSummary({
             })}
           </strong>
           <br />
-          Total deaths&nbsp;prevented
+          Estimated deaths&nbsp;prevented
         </div>
       </div>
     </section>
