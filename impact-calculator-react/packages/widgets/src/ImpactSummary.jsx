@@ -15,12 +15,11 @@ import styles from "./ImpactSummary.module.css";
 const COLORS = ["#26A7FF", "#FB6A37", "#E2FF3E", "#FEDBFD"];
 
 function TwoRowLegend({ payload }) {
-
   const CLOCKWISE = ["MC", "AMF", "NI", "HKI"];
 
-  const ordered = CLOCKWISE
-    .map(id => payload.find(p => p.payload.id === id))
-    .filter(Boolean);
+  const ordered = CLOCKWISE.map((id) =>
+    payload.find((p) => p.payload.id === id)
+  ).filter(Boolean);
   return (
     <ul className={styles.legend}>
       {ordered.map((entry) => (
@@ -38,9 +37,9 @@ export function ImpactSummary({
   allocations,
   mode,
   currency,
-  pledgeUrl,
   conversionRate,
 }) {
+  
   const data = charities.map((c, idx) => {
     const pct =
       mode === "equal" ? 100 / charities.length : allocations[c.id] || 0;
@@ -60,11 +59,10 @@ export function ImpactSummary({
       color: COLORS[idx % COLORS.length],
     };
   });
-const PIE_ORDER = ["MC", "AMF", "HKI", "NI"];   // NW → NE → SE → SW
-const pieData = PIE_ORDER
-  .map(id => data.find(d => d.id === id))
-  .filter(Boolean);
-  
+  const PIE_ORDER = ["MC", "AMF", "HKI", "NI"]; // NW → NE → SE → SW
+  const pieData = PIE_ORDER.map((id) => data.find((d) => d.id === id)).filter(
+    Boolean
+  );
 
   const totalPreventedDeaths = data.reduce((s, d) => s + d.preventedDeaths, 0);
   const totalUnits = data.reduce((s, d) => s + d.units, 0);
@@ -74,15 +72,6 @@ const pieData = PIE_ORDER
   return (
     <section className={styles.section}>
       <h2 className={styles.heading2}>Overall Impact</h2>
-
-      <p className={styles.kpi}>
-        Total estimated deaths prevented:&nbsp;
-        <strong>
-          {totalPreventedDeaths.toLocaleString(undefined, {
-            maximumFractionDigits: 1,
-          })}
-        </strong>
-      </p>
 
       {/* Pie - donation split */}
       <h3 className={styles.subHeading}>Donation split</h3>
@@ -95,8 +84,8 @@ const pieData = PIE_ORDER
             nameKey="name"
             innerRadius={60}
             outerRadius={90}
-            startAngle={180}   // begin at 9 o’clock
-             endAngle={-180}
+            startAngle={180} // begin at 9 o’clock
+            endAngle={-180}
             // turn off the default label & connector
             label={false}
             labelLine={false}
@@ -122,10 +111,7 @@ const pieData = PIE_ORDER
               }}
             />
           </Pie>
-          <Tooltip
-            formatter={(value) =>
-              formatCurrency(value, currency)}
-          />
+          <Tooltip formatter={(value) => formatCurrency(value, currency)} />
           <Legend content={TwoRowLegend} />
         </PieChart>
       </ResponsiveContainer>
@@ -144,11 +130,9 @@ const pieData = PIE_ORDER
             })}
           </strong>
           <br />
-          Deaths&nbsp;prevented
+          Total deaths&nbsp;prevented
         </div>
-        
       </div>
-      
     </section>
   );
 }

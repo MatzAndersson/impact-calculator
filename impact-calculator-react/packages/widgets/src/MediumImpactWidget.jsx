@@ -5,7 +5,6 @@ import { MediumInlineSplitSliders } from "./MediumInlineSplitSliders";
 import { fetchEvaluations } from "./api/Evaluations";
 import { charities } from "./charities";
 
-
 const sr = "sr-only";
 export default function MediumImpactWidget({
   learnMoreUrl = "https://1fortheworld.org/impact-calculator",
@@ -34,6 +33,20 @@ export default function MediumImpactWidget({
     (sum, pct) => sum + pct,
     0
   );
+
+  const [annualDonation, setAnnualDonation] = useState(0);
+
+  useEffect(() => {
+    if (
+      salaryNum > 0 &&
+      currentAgeNum > 0 &&
+      retirementAgeNum > currentAgeNum
+    ) {
+      setAnnualDonation(salaryNum * 0.01); // 1% for example
+    } else {
+      setAnnualDonation(0);
+    }
+  }, [salaryNum, currentAgeNum, retirementAgeNum]);
 
   function handleAllocationChange(id, rawPct) {
     setAllocations((prev) => {
@@ -85,41 +98,41 @@ export default function MediumImpactWidget({
       <div className={styles.leftSection}>
         <h2 className={styles.title}>Calculate your 1% impact</h2>
         <div className={styles.field}>
-            <div className={styles.inputPairWrapper}>
-          <div className={styles.rowLabels}>
-            <label htmlFor="currency">Currency</label>
-            <label htmlFor="salary" style={{ marginLeft: "12px" }}>
-              Annual salary
-            </label>
-          </div>
-          <div className={styles.inputRow}>
-            <select
-              id="currency"
-              className={styles.currencySelect}
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-            >
-              <option value="USD">USD</option>
-              <option value="GBP">GBP</option>
-              <option value="EUR">EUR</option>
-            </select>
-            <input
-              type="text"
-              className={styles.salaryInput}
-              id="salary"
-              min="0"
-              step="1000"
-              placeholder="e.g. 50,000"
-              value={salary}
-              onChange={(e) => setSalary(e.target.value)}
-              onBlur={() =>
-                setSalary(
-                  salary
-                    .replace(/[^\d]/g, "")
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                )
-              }
-            />
+          <div className={styles.inputPairWrapper}>
+            <div className={styles.rowLabels}>
+              <label htmlFor="currency">Currency</label>
+              <label htmlFor="salary" style={{ marginLeft: "12px" }}>
+                Annual salary
+              </label>
+            </div>
+            <div className={styles.inputRow}>
+              <select
+                id="currency"
+                className={styles.currencySelect}
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+              >
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="EUR">EUR</option>
+              </select>
+              <input
+                type="text"
+                className={styles.salaryInput}
+                id="salary"
+                min="0"
+                step="1000"
+                placeholder="e.g. 50,000"
+                value={salary}
+                onChange={(e) => setSalary(e.target.value)}
+                onBlur={() =>
+                  setSalary(
+                    salary
+                      .replace(/[^\d]/g, "")
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  )
+                }
+              />
             </div>
           </div>
         </div>
@@ -200,11 +213,15 @@ export default function MediumImpactWidget({
       </div>
       <div className={styles.rightSection}>
         <ImpactSummary
+          mode={mode}
+          annualDonation={annualDonation}
+          currency={currency}
+          conversionRate={conversionRate}
           salary={salaryNum}
           currentAge={currentAgeNum}
           retirementAge={retirementAgeNum}
           allocations={allocations}
-          // pass any additional props you need for calculation!
+            evaluations={evaluations}
         />
       </div>
     </div>
