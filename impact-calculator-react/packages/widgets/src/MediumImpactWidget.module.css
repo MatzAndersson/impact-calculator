@@ -1,5 +1,5 @@
 :global(html) {
-  --bg-card: #ffffff;         /* light defaults */
+  --bg-card: #ffffff; /* light defaults */
 }
 
 .widgetContainer {
@@ -8,7 +8,7 @@
   align-items: flex-start;
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(40,40,40,0.06);
+  box-shadow: 0 2px 8px rgba(40, 40, 40, 0.06);
   padding: 2rem 2rem;
 }
 
@@ -39,6 +39,80 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  width: 100%;
+}
+.inputPairWrapper {
+  width: 100%;
+  max-width: 320px; /* Same as .input */
+  box-sizing: border-box;
+}
+
+.rowLabels {
+  display: flex;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 3px;
+  margin-left: 2px;
+}
+.inputRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.input,
+.salaryInput,
+.currencySelect {
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  padding: 8px;
+  background: #fff;
+}
+.salaryInput {
+  flex: 1 1 0;
+}
+
+.currencySelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 0.4rem;
+  background: #fafafa;
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color 0.15s;
+  max-width: 80px;
+}
+
+.salaryInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 0.4rem;
+  background: #fafafa;
+  font: inherit;
+  transition: border-color 0.15s;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.salaryInput:focus,
+.currencySelect:focus {
+  outline: none;
+  border-color: primary;
+  box-shadow: 0 0 0 2px rgba(38, 117, 248, 0.25);
 }
 
 .input {
@@ -115,7 +189,9 @@
   }
 
   /* focus outline still blue; leave as-is */
-  .label { color: #969696; }         /* you already had this line */
+  .label {
+    color: #969696;
+  } /* you already had this line */
 }
 
 @media (max-width: 900px) {
@@ -123,7 +199,8 @@
     flex-direction: column;
     padding: 1rem 0.5rem;
   }
-  .rightSection, .leftSection {
+  .rightSection,
+  .leftSection {
     min-width: 0;
     max-width: 100%;
   }
