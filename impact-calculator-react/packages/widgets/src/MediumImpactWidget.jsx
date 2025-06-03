@@ -170,9 +170,7 @@ export default function MediumImpactWidget({
           ))}
         </div>
 
-        <a href={learnMoreUrl} className={styles.link}>
-          Discover more at One for the World
-        </a>
+        
       </div>
       <div className={styles.rightSection}>
         <ImpactSummary
@@ -185,7 +183,11 @@ export default function MediumImpactWidget({
           evaluations={evaluations}
           charities={mergedCharities}
         />
+        <a href={learnMoreUrl} className={styles.link}>
+          Discover more at One for the World
+        </a>
       </div>
+      
     </div>
   );
 }
