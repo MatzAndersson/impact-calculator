@@ -98,7 +98,7 @@ export default function SmallImpactWidget({
       )}
 
       <a href={learnMoreUrl} className={styles.link}>
-        Learn more about your impact
+        Discover more at One for the World
       </a>
     </div>
   );
