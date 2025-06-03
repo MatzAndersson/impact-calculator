@@ -10,6 +10,7 @@ export default defineConfig({
   plugins: [react()],
   define: { 'process.env.NODE_ENV': JSON.stringify('production') },
   build: {
+    emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, 'src/embed-small.jsx'),
       name: 'OFTWSmallWidget',
