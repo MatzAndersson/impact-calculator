@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build:small": "vite build --config vite.small.config.js",
-  "build:medium": "vite build --config vite.medium.config.js"
+   "build:medium": "vite build --config vite.medium.config.js"
   },
   "dependencies": {
     "react": "^19.0.0",
