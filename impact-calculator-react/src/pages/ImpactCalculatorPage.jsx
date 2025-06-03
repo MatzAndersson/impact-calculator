@@ -294,7 +294,6 @@ export default function ImpactCalculatorPage() {
               inputs={inputs}
               update={update}
             />
-          
           </InputTabs>
 
           <fieldset className={pageStyles.allocationToggle}>
@@ -444,7 +443,6 @@ export default function ImpactCalculatorPage() {
                   {}
                 )
               );
-              window.scrollTo({ top: 0, behavior: "smooth" }); // back to top
             }}
           >
             Reset
