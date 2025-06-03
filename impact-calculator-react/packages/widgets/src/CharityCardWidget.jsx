@@ -2,10 +2,10 @@ import React from "react";
 import styles from "./CharityCardWidget.module.css";
 
 const labels = {
-  MC: "Children protected from malaria for a year with SMC",
-  AMF: "Bednets purchased, distributed, and monitored",
+  MC: "Children protected for 1 year",
+  AMF: "Bednets provided",
   NI: "Children vaccinated",
-  HKI: "Children given a year's Vitamin A supplementation"
+  HKI: "Children given Vitamin A for 1 year",
 };
 
 export function CharityCardWidget({ charity, impactAmount }) {

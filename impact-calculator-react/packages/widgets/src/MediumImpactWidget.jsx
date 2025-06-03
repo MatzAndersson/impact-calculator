@@ -64,10 +64,9 @@ export default function MediumImpactWidget({
     );
     return {
       ...charity,
-      costPerOutputUSD:
-        evaluation && evaluation.cents_per_output
-          ? evaluation.cents_per_output / 100
-          : charity.costPerOutputUSD,
+      costPerOutput: evaluation
+        ? evaluation.converted_cost_per_output
+        : charity.costPerOutputUSD,
       costPerDeathAvertedUSD:
         evaluation && evaluation.cost_per_death_averted
           ? evaluation.cost_per_death_averted
@@ -128,36 +127,37 @@ export default function MediumImpactWidget({
             </div>
           </div>
         </div>
-
-        <div className={styles.field}>
-          <label htmlFor="age-now" className={sr}>
-            Current age
-          </label>
-          <input
-            id="age-now"
-            type="number"
-            min="0"
-            max="100"
-            className={styles.input}
-            placeholder="e.g. 25"
-            value={currentAge}
-            onChange={(e) => setCurrentAge(e.target.value)}
-          />
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="age-retire" className={sr}>
-            Retirement age
-          </label>
-          <input
-            id="age-retire"
-            type="number"
-            min="0"
-            max="100"
-            className={styles.input}
-            placeholder="e.g. 65"
-            value={retirementAge}
-            onChange={(e) => setRetirementAge(e.target.value)}
-          />
+        <div className={styles.horizontalInputs}>
+          <div className={styles.ageInputs}>
+            <label htmlFor="age-now" className={sr}>
+              Current age
+            </label>
+            <input
+              id="age-now"
+              type="number"
+              min="0"
+              max="100"
+              className={styles.input}
+              placeholder="e.g. 25"
+              value={currentAge}
+              onChange={(e) => setCurrentAge(e.target.value)}
+            />
+          </div>
+          <div className={styles.ageInputs}>
+            <label htmlFor="age-retire" className={sr}>
+              Retirement age
+            </label>
+            <input
+              id="age-retire"
+              type="number"
+              min="0"
+              max="100"
+              className={styles.input}
+              placeholder="e.g. 65"
+              value={retirementAge}
+              onChange={(e) => setRetirementAge(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className={styles.cardsGrid}>
@@ -171,7 +171,7 @@ export default function MediumImpactWidget({
         </div>
 
         <a href={learnMoreUrl} className={styles.link}>
-          Learn more about your impact at One For The World
+          Discover more at One for the World
         </a>
       </div>
       <div className={styles.rightSection}>
