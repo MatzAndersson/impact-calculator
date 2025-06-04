@@ -1,7 +1,9 @@
-import amfLogo from "../assets/against-malaria-foundation-logo.png";
-import mcLogo from "../assets/malaria-consortium-logo.png";
-import niLogo from "../assets/new-incentives-logo.png";
-import hkiLogo from "../assets/helen-keller-logo.png";
+import { getAssetUrl } from "../utils/getAssetUrl";
+
+const amfLogo = getAssetUrl("against-malaria-foundation-logo.png");
+const mcLogo = getAssetUrl("malaria-consortium-logo.png");
+const niLogo = getAssetUrl("new-incentives-logo.png");
+const hkiLogo = getAssetUrl("helen-keller-logo.png");
 
 export const CHARITIES = [
   {

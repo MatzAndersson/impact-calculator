@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styles from "./EmailGate.module.css";
-import logo from "../../assets/OFTW-Secondary-Logo-RGB-White-4k.png";
+
+import { getAssetUrl } from "../../utils/getAssetUrl";
 import pageStyles from "../../pages/ImpactCalculatorPage.module.css";
 
 export function EmailGate({ formId, entryKey, onSuccess }) {
   const [email, setEmail] = useState("");
-
+  const logo = getAssetUrl("OFTW-Secondary-Logo-RGB-White-4k.png");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
