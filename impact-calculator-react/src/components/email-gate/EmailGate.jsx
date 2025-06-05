@@ -33,7 +33,7 @@ export function EmailGate({ formId, entryKey, onSuccess }) {
         <img src={logo} alt="OFTW Logo" className={styles.logo} />
 
         <h2 className={styles.heading}>
-          Enter your email to see the results below
+          Enter your email to unlock your impact results below
         </h2>
 
         <form onSubmit={handleSubmit}>
@@ -49,7 +49,7 @@ export function EmailGate({ formId, entryKey, onSuccess }) {
             type="submit"
             className={`${styles.button} ${pageStyles.calculateBtn}`}
           >
-            Continue
+            Show My Results
           </button>
         </form>
       </div>
