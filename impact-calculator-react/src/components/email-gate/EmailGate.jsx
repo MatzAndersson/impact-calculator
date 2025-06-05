@@ -33,7 +33,7 @@ export function EmailGate({ formId, entryKey, onSuccess }) {
         <img src={logo} alt="OFTW Logo" className={styles.logo} />
 
         <h2 className={styles.heading}>
-          Enter your email to view your impact results
+          Enter your email to see the results below
         </h2>
 
         <form onSubmit={handleSubmit}>

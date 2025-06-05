@@ -23,6 +23,7 @@
   gap: 0.5rem; /* space between the radio and its text */
   flex-wrap: wrap; /* allow the text to flow to the next line */
   margin-bottom: 0.5rem; /* small breathing room under each line */
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
   
 }
 
@@ -38,7 +39,7 @@
   font-size: 16px;
   padding: 16px 40px;
   cursor: pointer;
-  font-family: "Forma DJR Deck";
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
   margin-top: 0px;
   transition: filter 0.15s, transform 0.05s;
 }
@@ -70,7 +71,7 @@
   background: #eee;
   color: #444;
   border: none;
-  font-family: "Forma DJR Deck";
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
   border-radius: 100px;
   font-weight: 500;
   font-size: 16px;

@@ -38,8 +38,8 @@ export default function ImpactCalculatorPage() {
     const saved = localStorage.getItem("gatedEmail");
     if (saved) {
       setEmail(saved);
-      handleCalculate();
-      setShowResults(true);
+      //handleCalculate();
+      //setShowResults(true);
     }
   }, []);
 

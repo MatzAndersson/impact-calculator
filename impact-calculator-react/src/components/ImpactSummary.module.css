@@ -112,6 +112,7 @@
   font-size: 16px;
   font-weight: bold;
   transition: filter 0.15s, transform 0.05s;
+  font-family: "Forma DJR Deck", "Manrope", sans-serif;
 }
 
 .donateButton:hover {
