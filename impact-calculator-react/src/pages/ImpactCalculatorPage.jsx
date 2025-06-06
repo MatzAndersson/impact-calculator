@@ -145,8 +145,8 @@ export default function ImpactCalculatorPage() {
   const handleGateSuccess = (userEmail) => {
     setEmail(userEmail);
     setShowGate(false);
-    handleCalculate(); // recompute with current inputs
-    setShowResults(true); // now show the summary/cards
+    handleCalculate(); 
+    setShowResults(true); 
   };
 
   const handleCalculateClick = () => {
@@ -328,12 +328,7 @@ export default function ImpactCalculatorPage() {
                   setAllocations(
                     CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
                   );
-                  /* requestAnimationFrame(() => {
-                    cardsRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  });*/
+                 
                 }}
               />{" "}
               Customize split (set your own percentages below)
