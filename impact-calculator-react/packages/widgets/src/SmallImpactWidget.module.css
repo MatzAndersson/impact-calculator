@@ -2,6 +2,35 @@
   --bg-card: #ffffff;         /* light defaults */
 }
 
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.logoOrange {
+  max-width: 120px; /* shrink slightly */
+  height: auto;
+  margin-bottom: 0;
+}
+
+.logoBlue {
+  max-width: 120px; /* shrink slightly */
+  height: auto;
+  margin-bottom: 0;
+  transition: transform 0.2s ease;
+}
+
+.logoLink {
+  display: inline-block;
+  line-height: 0; /* remove vertical space from inline elements */
+  margin: 0;
+}
+
+.logoLink:hover .logoBlue {
+  transform: scale(1.03); /* subtle feedback effect */
+}
+
 .widgetBadge {
   width: clamp(14rem, 90%, 18rem); /* ≈ 288 px: fits 1×1 tile */
   background: #ffffff; /* white card */
@@ -19,7 +48,8 @@
   font-size: 1.2rem;
   font-weight: 600;
   color: primary; /* dark text */
-  margin-bottom: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .sr-only {
   position: absolute !important;

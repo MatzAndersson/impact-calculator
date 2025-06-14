@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import useLifetimeImpact from "./hooks/useLifetimeImpact";
 import styles from "./SmallImpactWidget.module.css";
+import logoBlue from "./assets/OFTW-Primary-Logo-RGB-Blue-4k.png";
+import logoOrange from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.png";
 
 /**
  * SmallImpactWidget
@@ -16,6 +18,7 @@ export default function SmallImpactWidget({
   const [salary, setSalary] = useState("");
   const [currentAge, setCurrentAge] = useState("");
   const [retirementAge, setRetirementAge] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
 
   // Parse numeric values or fall back to 0
   const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
@@ -37,6 +40,22 @@ export default function SmallImpactWidget({
 
   return (
     <div className={styles.widgetBadge}>
+      <div className={styles.logoWrapper}>
+                <a
+                  href="https://www.1fortheworld.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.logoLink}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  <img
+                    src={isHovered ? logoBlue : logoOrange}
+                    alt="One for the World"
+                    className={styles.logoBlue}
+                  />
+                </a>
+              </div>
       <h2 className={styles.title}>Calculate your 1% impact</h2>
       <div className={styles.field}>
         <label htmlFor="salary" className={sr}>
