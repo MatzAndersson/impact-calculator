@@ -13,6 +13,29 @@
   align-items: stretch;
 }
 
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.logoOrange {
+  max-width: 120px; /* shrink slightly */
+  height: auto;
+  margin-bottom: 0;
+}
+
+.logoBlue {
+  max-width: 120px; /* shrink slightly */
+  height: auto;
+  margin-bottom: 0;
+  transition: transform 0.2s ease;
+}
+
+.logoLink:hover .logoBlue {
+  transform: scale(1.03); /* subtle feedback effect */
+}
+
 .leftSection,
 .rightSection {
   padding: 30px 18px;
@@ -66,8 +89,9 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-primary); /* dark text */
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.1rem;
   text-align: center;
+  margin-top: 0.1rem;
 }
 .sr-only {
   position: absolute !important;

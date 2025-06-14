@@ -4,6 +4,8 @@ import { ImpactSummary } from "./ImpactSummary";
 import { getCharityImpacts } from "./utils/getCharityImpacts";
 import { CharityCardWidget } from "./CharityCardWidget";
 import { charities } from "./charities";
+import logoBlue from "./assets/OFTW-Primary-Logo-RGB-Blue-4k.png";
+import logoOrange from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.png";
 import styles from "./MediumImpactWidget.module.css";
 
 const sr = "sr-only";
@@ -17,6 +19,7 @@ export default function MediumImpactWidget({
   const [evaluations, setEvaluations] = useState([]);
   const [conversionRate, setConversionRate] = useState(1);
   const [currency, setCurrency] = useState("USD");
+  const [isHovered, setIsHovered] = useState(false);
 
   // Parse numeric values or fall back to 0
   const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
@@ -85,6 +88,22 @@ export default function MediumImpactWidget({
   return (
     <div className={styles.widgetContainer}>
       <div className={styles.leftSection}>
+        <div className={styles.logoWrapper}>
+          <a
+            href="https://www.1fortheworld.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.logoLink}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <img
+              src={isHovered ? logoBlue : logoOrange}
+              alt="One for the World"
+              className={styles.logoBlue}
+            />
+          </a>
+        </div>
         <h2 className={styles.title}>Calculate your 1% impact</h2>
         <div className={styles.field}>
           <div className={styles.inputPairWrapper}>
@@ -169,8 +188,6 @@ export default function MediumImpactWidget({
             />
           ))}
         </div>
-
-        
       </div>
       <div className={styles.rightSection}>
         <ImpactSummary
@@ -187,7 +204,6 @@ export default function MediumImpactWidget({
           Discover more at One for the World
         </a>
       </div>
-      
     </div>
   );
 }
