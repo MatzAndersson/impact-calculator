@@ -4,14 +4,13 @@ import { ImpactSummary } from "./ImpactSummary";
 import { getCharityImpacts } from "./utils/getCharityImpacts";
 import { CharityCardWidget } from "./CharityCardWidget";
 import { charities } from "./charities";
-import logoBlue from "./assets/OFTW-Primary-Logo-RGB-Blue-4k.png";
-import logoOrange from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.png";
+import LogoOFTW from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.svg?react";
 import styles from "./MediumImpactWidget.module.css";
 
 const sr = "sr-only";
 const allocations = { MC: 25, AMF: 25, NI: 25, HKI: 25 };
 export default function MediumImpactWidget({
-  learnMoreUrl = "https://1fortheworld.org/impact-calculator",
+  learnMoreUrl = "https://1fortheworld.donational.org/take-the-pledge",
 }) {
   const [salary, setSalary] = useState("");
   const [currentAge, setCurrentAge] = useState("");
@@ -19,7 +18,6 @@ export default function MediumImpactWidget({
   const [evaluations, setEvaluations] = useState([]);
   const [conversionRate, setConversionRate] = useState(1);
   const [currency, setCurrency] = useState("USD");
-  const [isHovered, setIsHovered] = useState(false);
 
   // Parse numeric values or fall back to 0
   const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
@@ -94,14 +92,8 @@ export default function MediumImpactWidget({
             target="_blank"
             rel="noopener noreferrer"
             className={styles.logoLink}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
           >
-            <img
-              src={isHovered ? logoBlue : logoOrange}
-              alt="One for the World"
-              className={styles.logoBlue}
-            />
+            <LogoOFTW className={styles.logoSVG} />
           </a>
         </div>
         <h2 className={styles.title}>Calculate your 1% impact</h2>
@@ -156,10 +148,26 @@ export default function MediumImpactWidget({
               type="number"
               min="0"
               max="100"
+              step="1"
               className={styles.input}
               placeholder="e.g. 25"
               value={currentAge}
-              onChange={(e) => setCurrentAge(e.target.value)}
+              onChange={(e) => {
+                // Only allow whole numbers between 0 and 100
+                const value = e.target.value.replace(/[^\d]/g, "");
+                if (
+                  value === "" ||
+                  (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 100)
+                ) {
+                  setCurrentAge(value);
+                }
+              }}
+              onKeyDown={(e) => {
+                // Block ".", "e", "+", "-"
+                if ([".", "e", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
             />
           </div>
           <div className={styles.ageInputs}>
@@ -171,10 +179,25 @@ export default function MediumImpactWidget({
               type="number"
               min="0"
               max="100"
+              step="1"
               className={styles.input}
               placeholder="e.g. 65"
               value={retirementAge}
-              onChange={(e) => setRetirementAge(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^\d]/g, "");
+                if (
+                  value === "" ||
+                  (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 120)
+                ) {
+                  setRetirementAge(value);
+                }
+              }}
+              onKeyDown={(e) => {
+                // Block ".", "e", "+", "-"
+                if ([".", "e", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
             />
           </div>
         </div>

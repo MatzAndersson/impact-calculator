@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build:small": "vite build --config vite.small.config.js",
-   "build:medium": "vite build --config vite.medium.config.js",
-   "preview": "vite preview"
+    "build:medium": "vite build --config vite.medium.config.js",
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vite-plugin-svgr": "^4.3.0"
   }
 }

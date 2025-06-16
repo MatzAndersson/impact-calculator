@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import useLifetimeImpact from "./hooks/useLifetimeImpact";
 import styles from "./SmallImpactWidget.module.css";
-import logoBlue from "./assets/OFTW-Primary-Logo-RGB-Blue-4k.png";
-import logoOrange from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.png";
+import LogoOFTW from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.svg?react";
 
 /**
  * SmallImpactWidget
@@ -13,12 +12,11 @@ import logoOrange from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.png";
  */
 const sr = "sr-only";
 export default function SmallImpactWidget({
-  learnMoreUrl = "https://1fortheworld.org/impact-calculator",
+  learnMoreUrl = "https://1fortheworld.donational.org/take-the-pledge",
 }) {
   const [salary, setSalary] = useState("");
   const [currentAge, setCurrentAge] = useState("");
   const [retirementAge, setRetirementAge] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
 
   // Parse numeric values or fall back to 0
   const salaryNum = parseFloat(salary.replace(/[^0-9.]/g, "")) || 0;
@@ -41,21 +39,15 @@ export default function SmallImpactWidget({
   return (
     <div className={styles.widgetBadge}>
       <div className={styles.logoWrapper}>
-                <a
-                  href="https://www.1fortheworld.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.logoLink}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  <img
-                    src={isHovered ? logoBlue : logoOrange}
-                    alt="One for the World"
-                    className={styles.logoBlue}
-                  />
-                </a>
-              </div>
+        <a
+          href="https://www.1fortheworld.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.logoLink}
+        >
+          <LogoOFTW className={styles.logoSVG} />
+        </a>
+      </div>
       <h2 className={styles.title}>Calculate your 1% impact</h2>
       <div className={styles.field}>
         <label htmlFor="salary" className={sr}>
@@ -88,10 +80,26 @@ export default function SmallImpactWidget({
           type="number"
           min="0"
           max="100"
+          step="1"
           className={styles.input}
           placeholder="e.g. 25"
           value={currentAge}
-          onChange={(e) => setCurrentAge(e.target.value)}
+          onChange={(e) => {
+            // Only allow whole numbers between 0 and 100
+            const value = e.target.value.replace(/[^\d]/g, "");
+            if (
+              value === "" ||
+              (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 100)
+            ) {
+              setCurrentAge(value);
+            }
+          }}
+          onKeyDown={(e) => {
+            // Block ".", "e", "+", "-"
+            if ([".", "e", "+", "-"].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
         />
       </div>
       <div className={styles.field}>
@@ -103,10 +111,25 @@ export default function SmallImpactWidget({
           type="number"
           min="0"
           max="100"
+          step="1"
           className={styles.input}
           placeholder="e.g. 65"
           value={retirementAge}
-          onChange={(e) => setRetirementAge(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value.replace(/[^\d]/g, "");
+            if (
+              value === "" ||
+              (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 120)
+            ) {
+              setRetirementAge(value);
+            }
+          }}
+          onKeyDown={(e) => {
+            // Block ".", "e", "+", "-"
+            if ([".", "e", "+", "-"].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
         />
       </div>
       {showResult && (
@@ -116,7 +139,7 @@ export default function SmallImpactWidget({
         </>
       )}
 
-      <a href={learnMoreUrl} className={styles.link}>
+      <a href={learnMoreUrl} target="_blank" className={styles.link}>
         Discover more at One for the World
       </a>
     </div>

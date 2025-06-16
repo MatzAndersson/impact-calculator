@@ -19,20 +19,26 @@
   margin-bottom: 0;
 }
 
-.logoOrange {
-  max-width: 120px; /* shrink slightly */
+.logoSVG {
+  width: 120px;
   height: auto;
-  margin-bottom: 0;
+
+  fill: var(--color-primary);
+ 
+  transition: fill 0.2s, filter 0.2s;
+}
+.logoLink:hover .logoSVG {
+  fill: var(--color-secondary);
+  /* brand blue on hover */
 }
 
-.logoBlue {
-  max-width: 120px; /* shrink slightly */
-  height: auto;
-  margin-bottom: 0;
-  transition: transform 0.2s ease;
+.logoLink {
+  display: inline-block;
+  line-height: 0; /* remove vertical space from inline elements */
+  margin: 0;
 }
 
-.logoLink:hover .logoBlue {
+.logoLink:hover {
   transform: scale(1.03); /* subtle feedback effect */
 }
 
