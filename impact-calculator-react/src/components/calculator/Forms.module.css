@@ -14,15 +14,14 @@
 }
 
 .tabHelper {
-  
   color: var(--color-secondary); /* your orange, or use #FB6A37 */
-           /* light orange background */
+  /* light orange background */
   border-radius: 8px;
   padding: 10px 16px;
   margin-bottom: 6px;
   font-size: 1.08rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(255,105,30,0.04);
+  box-shadow: 0 2px 8px rgba(255, 105, 30, 0.04);
   text-align: left;
 }
 
@@ -72,6 +71,9 @@
   border: 1px solid #ccc;
   border-radius: 2px;
   font-size: 16px;
+  max-width: 300px;
+  width: 100%; /* This helps all fields expand! */
+  box-sizing: border-box;
 }
 
 .inputBase::placeholder {
@@ -132,12 +134,12 @@
 }
 
 .ageInput {
-  min-width: 150px;
-  max-width: 200px;
-  /* width: 100%; ← keeps it responsive in its column */
+  min-width: 160px;
+  max-width: 300px;
+  width: 100%;
+  box-sizing: border-box;
   font-size: 1.06rem; /* optional, for balance */
 }
-
 
 @media (max-width: 600px) {
   .formRow {
@@ -158,5 +160,3 @@
     justify-content: space-between;
   }
 }
-
-
