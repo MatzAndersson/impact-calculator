@@ -1,7 +1,20 @@
+import React, { useState, useEffect } from "react";
+import { decimalLimiter } from "../../utils/decimalLimiter";
+import { formatWithCommas } from "../../utils/formatWithCommas";
 import styles from "./Forms.module.css";
 
 export function AnnualForm({ inputs, update }) {
   const isAnnual = inputs.salaryPeriod === "annual";
+  const salaryMax = 100000000; // max salary for annual or monthly
+
+  const [salaryInput, setSalaryInput] = useState("");
+
+  // Keep salaryInput in sync when toggling between annual/monthly or when external changes happen
+  useEffect(() => {
+    const val = isAnnual ? inputs.salaryNow : inputs.monthlySalary;
+    setSalaryInput(val ? formatWithCommas(val) : "");
+    // eslint-disable-next-line
+  }, [isAnnual, inputs.salaryNow, inputs.monthlySalary]);
   return (
     <>
       <div className={styles.tabHelper}>
@@ -53,29 +66,24 @@ export function AnnualForm({ inputs, update }) {
           <input
             id="annualSalary"
             className={styles.inputBase}
-            type="number"
+            type="text"
+            inputMode="decimal"
             min="0"
-            value={
-              isAnnual
-                ? inputs.salaryNow === 0 || inputs.salaryNow === ""
-                  ? ""
-                  : inputs.salaryNow
-                : inputs.monthlySalary === 0 || inputs.monthlySalary === ""
-                ? ""
-                : inputs.monthlySalary
-            }
+            max={salaryMax}
+            value={salaryInput}
             placeholder={isAnnual ? "e.g. 50,000" : "e.g. 4,000"}
-            onChange={(e) =>
+            onChange={(e) => {
+              let val = e.target.value.replace(/,/g, "");
+              val = decimalLimiter(val, 2, 9); // 2 decimals, 9 integer digits
+              let num = val === "" ? 0 : +val;
+              if (num !== "" && num > salaryMax) num = salaryMax;
+              if (num !== "" && num < 0) num = 0;
+              setSalaryInput(val);
               isAnnual
-                ? update(
-                    "salaryNow",
-                    e.target.value === "" ? "" : +e.target.value
-                  )
-                : update(
-                    "monthlySalary",
-                    e.target.value === "" ? "" : +e.target.value
-                  )
-            }
+                ? update("salaryNow", num)
+                : update("monthlySalary", num);
+            }}
+            onBlur={() => setSalaryInput(formatWithCommas(salaryInput))}
           />
         </div>
       </div>

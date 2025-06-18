@@ -223,7 +223,7 @@ export default function MediumImpactWidget({
           evaluations={evaluations}
           charities={mergedCharities}
         />
-        <a href={learnMoreUrl} className={styles.link}>
+        <a href={learnMoreUrl} target="_blank" className={styles.link}>
           Discover more at One for the World
         </a>
       </div>

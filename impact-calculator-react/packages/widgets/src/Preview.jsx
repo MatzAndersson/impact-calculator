@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import MediumImpactWidget from "./MediumImpactWidget";
-//import SmallImpactWidget from "./SmallImpactWidget";
+//import MediumImpactWidget from "./MediumImpactWidget";
+import SmallImpactWidget from "./SmallImpactWidget";
 import "./global.css";
 import "./theme-dark.css";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <MediumImpactWidget/>
+    <SmallImpactWidget/>
   </React.StrictMode>
 );

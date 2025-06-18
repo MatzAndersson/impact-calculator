@@ -1,4 +1,7 @@
+import React, { useState, useEffect } from "react";
 import useDebounce from "../../hooks/useDebounce";
+import { decimalLimiter } from "../../utils/decimalLimiter";
+import { formatWithCommas } from "../../utils/formatWithCommas";
 import { Tooltip } from "react-tooltip";
 import styles from "./Forms.module.css";
 
@@ -12,6 +15,15 @@ export function LifetimeForm({ inputs, update }) {
 
   // wait 500 ms before showing the error
   const showError = useDebounce(ageInvalid, 500);
+  const salaryMax = 100000000; // max salary for annual or monthly
+  const [salaryInput, setSalaryInput] = useState("");
+
+  // Keep salaryInput in sync when toggling between annual/monthly or when external changes happen
+  useEffect(() => {
+    const val = isAnnual ? inputs.salaryNow : inputs.monthlySalary;
+    setSalaryInput(val ? formatWithCommas(val) : "");
+    // eslint-disable-next-line
+  }, [isAnnual, inputs.salaryNow, inputs.monthlySalary]);
 
   return (
     <>
@@ -63,31 +75,25 @@ export function LifetimeForm({ inputs, update }) {
           <input
             id="lifetimeSalary"
             className={styles.inputBase}
-            type="number"
+            type="text"
             min="0"
-            value={
-              isAnnual
-                ? inputs.salaryNow === 0
-                  ? ""
-                  : inputs.salaryNow
-                : inputs.monthlySalary === 0
-                ? ""
-                : inputs.monthlySalary
-            }
+            max={salaryMax}
+            value={salaryInput}
             placeholder={isAnnual ? "e.g. 50,000" : "e.g. 4,000"}
-            onChange={(e) =>
+            onChange={(e) => {
+              let val = e.target.value.replace(/,/g, "");
+              val = decimalLimiter(val, 2, 9); // <-- limit to 9 digits before decimal
+              let num = val === "" ? 0 : +val;
+              if (num !== "" && num > salaryMax) num = salaryMax;
+              if (num !== "" && num < 0) num = 0;
+              setSalaryInput(val);
               isAnnual
-                ? update(
-                    "salaryNow",
-                    e.target.value === ""
-                      ? ""
-                      : +e.target.value /* "" or Number */
-                  )
-                : update(
-                    "monthlySalary",
-                    e.target.value === "" ? "" : +e.target.value
-                  )
-            }
+                ? update("salaryNow", num)
+                : update("monthlySalary", num);
+            }}
+            onBlur={() => {
+              setSalaryInput(formatWithCommas(salaryInput));
+            }}
           />
         </div>
         <div className={`${styles.formControl} ${styles.growthControl}`}>
@@ -102,14 +108,24 @@ export function LifetimeForm({ inputs, update }) {
               id="growthRate"
               className={styles.inputBase}
               type="number"
-              step="0.01"
+              step="0.1"
+              min="0"
+              max="100"
               value={inputs.growthRate === 0 ? "" : inputs.growthRate}
-              onChange={(e) =>
-                update(
-                  "growthRate",
-                  e.target.value === "" ? "" : +e.target.value
-                )
-              }
+              onChange={(e) => {
+                let val = decimalLimiter(e.target.value, 2); // only allow 2 decimals
+                // Clamp to 0–100
+                const asNum = parseFloat(val);
+                if (val === "" || (asNum >= 0 && asNum <= 100)) {
+                  update("growthRate", val === "" ? "" : asNum);
+                }
+              }}
+              onKeyDown={(e) => {
+                // Block e, E, +, -
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               placeholder="e.g. 4%"
             />
             <span className={styles.suffix}>%</span>
@@ -133,10 +149,26 @@ export function LifetimeForm({ inputs, update }) {
           <input
             className={styles.inputBase}
             type="number"
+            min="0"
+            max="100"
+            step="1"
             value={inputs.currentAge === 0 ? "" : inputs.currentAge}
-            onChange={(e) =>
-              update("currentAge", e.target.value === "" ? "" : +e.target.value)
-            }
+            onChange={(e) => {
+              // Allow only digits and clamp to 0–100
+              const value = e.target.value.replace(/[^\d]/g, "");
+              if (
+                value === "" ||
+                (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 100)
+              ) {
+                update("currentAge", value === "" ? "" : +value);
+              }
+            }}
+            onKeyDown={(e) => {
+              // Block ".", "e", "+", "-"
+              if ([".", "e", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             placeholder="e.g. 25"
           />
         </div>
@@ -146,13 +178,25 @@ export function LifetimeForm({ inputs, update }) {
             id="retirementAge"
             className={styles.inputBase}
             type="number"
+            min="0"
+            max="100"
+            step="1"
             value={inputs.retirementAge === 0 ? "" : inputs.retirementAge}
-            onChange={(e) =>
-              update(
-                "retirementAge",
-                e.target.value === "" ? "" : +e.target.value
-              )
-            }
+            onChange={(e) => {
+              // Allow only digits and clamp to 0–100
+              const value = e.target.value.replace(/[^\d]/g, "");
+              if (
+                value === "" ||
+                (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 120)
+              ) {
+                update("retirementAge", value === "" ? "" : +value);
+              }
+            }}
+            onKeyDown={(e) => {
+              if ([".", "e", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             placeholder="e.g. 65"
           />
           {showError && (
