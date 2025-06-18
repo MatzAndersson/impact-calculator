@@ -131,6 +131,14 @@
   pointer-events: none;
 }
 
+.ageInput {
+  min-width: 150px;
+  max-width: 200px;
+  /* width: 100%; ← keeps it responsive in its column */
+  font-size: 1.06rem; /* optional, for balance */
+}
+
+
 @media (max-width: 600px) {
   .formRow {
     display: flex;

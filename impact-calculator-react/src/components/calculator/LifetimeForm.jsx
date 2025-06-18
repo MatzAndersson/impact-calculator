@@ -147,7 +147,7 @@ export function LifetimeForm({ inputs, update }) {
         <div className={styles.formControl}>
           <label htmlFor="currentAge">Current age</label>
           <input
-            className={styles.inputBase}
+            className={`${styles.inputBase} ${styles.ageInput}`}
             type="number"
             min="0"
             max="100"
@@ -176,7 +176,7 @@ export function LifetimeForm({ inputs, update }) {
           <label htmlFor="retirementAge">Retirement age</label>
           <input
             id="retirementAge"
-            className={styles.inputBase}
+            className={`${styles.inputBase} ${styles.ageInput}`}
             type="number"
             min="0"
             max="100"
