@@ -4,13 +4,15 @@ import { ImpactSummary } from "./ImpactSummary";
 import { getCharityImpacts } from "./utils/getCharityImpacts";
 import { CharityCardWidget } from "./CharityCardWidget";
 import { charities } from "./charities";
+import { formatWithCommas } from "./utils/formatWithCommas";
+import { decimalLimiter } from "./utils/decimalLimiter";
 import LogoOFTW from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.svg?react";
 import styles from "./MediumImpactWidget.module.css";
 
 const sr = "sr-only";
 const allocations = { MC: 25, AMF: 25, NI: 25, HKI: 25 };
 export default function MediumImpactWidget({
-  learnMoreUrl = "https://1fortheworld.donational.org/take-the-pledge",
+  learnMoreUrl = "https://1fortheworld.org/",
 }) {
   const [salary, setSalary] = useState("");
   const [currentAge, setCurrentAge] = useState("");
@@ -101,7 +103,7 @@ export default function MediumImpactWidget({
           <div className={styles.inputPairWrapper}>
             <div className={styles.rowLabels}>
               <label htmlFor="currency">Currency</label>
-              <label htmlFor="salary" style={{ marginLeft: "12px" }}>
+              <label htmlFor="salary" style={{ marginLeft: "16px" }}>
                 Annual salary
               </label>
             </div>
@@ -126,14 +128,15 @@ export default function MediumImpactWidget({
                 step="1000"
                 placeholder="e.g. 50,000"
                 value={salary}
-                onChange={(e) => setSalary(e.target.value)}
-                onBlur={() =>
-                  setSalary(
-                    salary
-                      .replace(/[^\d]/g, "")
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  )
-                }
+                onChange={(e) => {
+                  let val = e.target.value.replace(/,/g, "");
+                  val = decimalLimiter(val, 2, 9);
+                  const salaryMax = 100000000;
+                  let num = val === "" ? 0 : +val;
+                  if (num > salaryMax) val = String(salaryMax);
+                  setSalary(val);
+                }}
+                onBlur={() => setSalary(formatWithCommas(salary))}
               />
             </div>
           </div>

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import useLifetimeImpact from "./hooks/useLifetimeImpact";
+import { formatWithCommas } from "./utils/formatWithCommas";
+import { decimalLimiter } from "./utils/decimalLimiter";
 import styles from "./SmallImpactWidget.module.css";
 import LogoOFTW from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.svg?react";
 
@@ -12,7 +14,7 @@ import LogoOFTW from "./assets/OFTW-Primary-Logo-RGB-Orange-4k.svg?react";
  */
 const sr = "sr-only";
 export default function SmallImpactWidget({
-  learnMoreUrl = "https://1fortheworld.donational.org/take-the-pledge",
+  learnMoreUrl = "https://1fortheworld.org/",
 }) {
   const [salary, setSalary] = useState("");
   const [currentAge, setCurrentAge] = useState("");
@@ -62,12 +64,15 @@ export default function SmallImpactWidget({
           step="1000"
           placeholder="e.g. 50,000"
           value={salary}
-          onChange={(e) => setSalary(e.target.value)}
-          onBlur={() =>
-            setSalary(
-              salary.replace(/[^\d]/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            )
-          }
+          onChange={(e) => {
+            let val = e.target.value.replace(/,/g, "");
+            val = decimalLimiter(val, 2, 9);
+            const salaryMax = 100000000;
+            let num = val === "" ? 0 : +val;
+            if (num > salaryMax) val = String(salaryMax);
+            setSalary(val);
+          }}
+          onBlur={() => setSalary(formatWithCommas(salary))}
         />
       </div>
 
@@ -135,7 +140,7 @@ export default function SmallImpactWidget({
       {showResult && (
         <>
           <div className={styles.value}>{livesSaved.toLocaleString()}</div>
-          <div className={styles.label}>Lives saved over your career</div>
+          <div className={styles.label}>Estimated lives saved over your career</div>
         </>
       )}
 
