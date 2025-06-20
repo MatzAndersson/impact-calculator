@@ -34,6 +34,7 @@ export function InlineSplitSliders({
             }
           />
           <div className={styles.sliderValue}>
+            <span className={styles.percentBox}>
       <input
         type="number"
         min={0}
@@ -42,9 +43,10 @@ export function InlineSplitSliders({
         value={allocations[c.id]}
         onChange={(e) => onAllocationChange(c.id, +e.target.value)}
         onFocus={(e) => e.target.select()}
-        className={styles.sliderNumberInput}
+        className={styles.percentInput}
         aria-label={`${c.name} percentage`}
       />
+      </span>
       <span className={styles.percentSymbol}>%</span>
     </div>
         </div>

@@ -40,6 +40,7 @@ export function CharityCard({
                 className={styles.slider}
               />
               <div className={styles.sliderValue}>
+                <span className={styles.percentBox}>
                 <input
                   type="number"
                   min={0}
@@ -50,9 +51,10 @@ export function CharityCard({
                     onAllocationChange(charity.id, +e.target.value)
                   }
                   onFocus={(e) => e.target.select()}
-                  className={styles.sliderNumberInput}
+                  className={styles.percentInput}
                   aria-label="Percentage allocation"
                 />
+                </span>
                 <span className={styles.percentageSymbol}>%</span>
               </div>
             </div>

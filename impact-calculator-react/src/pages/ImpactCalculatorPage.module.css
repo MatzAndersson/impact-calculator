@@ -6,8 +6,6 @@
   background: var(--color-bg-light);
 }
 
-
-
 .icPanel {
   /* replaces .ic-panel */
   background: white;
@@ -24,7 +22,51 @@
   flex-wrap: wrap; /* allow the text to flow to the next line */
   margin-bottom: 0.5rem; /* small breathing room under each line */
   font-family: "Forma DJR Deck", "Manrope", sans-serif;
-  
+}
+
+.percentBox {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid black; /* OFTW Blue */
+  background: #fff;
+  border-radius: 8px;
+  padding:  0px 2px;
+  box-shadow: none;
+  transition: border 0.2s;
+  min-width: 0;
+  height: 24px;
+}
+
+.percentBox:focus-within {
+  border-color: var(--color-secondary, #FB6A37);
+}
+
+.percentInput {
+  border: none;
+  width: 1.95em;
+  max-width: 2.4em;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-secondary, #fb6a37); /* OFTW Orange */
+  background: transparent;
+  outline: none;
+  text-align: right;
+  padding-right: 0;
+  min-width: 0;
+  appearance: textfield;
+}
+
+.percentInput::-webkit-outer-spin-button,
+.percentInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.percentageSymbol {
+  font-weight: 600;
+  color: var(--color-secondary, #FB6A37); /* OFTW Orange */
+  font-size: 1em;
+  user-select: none;
 }
 
 .allocationToggle label input[type="radio"] {
@@ -116,42 +158,6 @@
   width: 100%;
   max-width: 150px;
   margin: 0 10px;
-}
-
-.sliderNumberInput {
-  width: 3ch;
-  border: none;
-  background: transparent;
-  padding: 0;
-  font: inherit;
-  color: var(--color-secondary);
-  text-align: right;
-  cursor: text;
-  font-weight: 700;
-  margin-left: -0rem;
-  text-decoration: underline 
-}
-.sliderNumberInput:focus {
-  outline: none;
-}
-
-.sliderNumberInput,
-.percentageSymbol {
-  color: var(--color-secondary);
-}
-
-.sliderNumberInput::-webkit-outer-spin-button,
-.sliderNumberInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.sliderNumberInput {
-  -moz-appearance: textfield;
-}
-
-.percentageSymbol {
-  color: var(--color-secondary);
-  font-weight: 700px;
 }
 
 

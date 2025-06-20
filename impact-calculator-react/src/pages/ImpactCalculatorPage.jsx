@@ -350,6 +350,7 @@ export default function ImpactCalculatorPage() {
           <div className={pageStyles.rangeWrapper}>
             <span className={pageStyles.rangeLabel}>
               I’d like to donate&nbsp;
+              <span className={pageStyles.percentBox}>
               <input
                 type="number"
                 min={0.1}
@@ -360,8 +361,10 @@ export default function ImpactCalculatorPage() {
                   update("pledgePercent", Number(e.target.value) / 100)
                 }
                 onFocus={(e) => e.target.select()}
-                className={pageStyles.sliderNumberInput}
+                className={pageStyles.percentInput}
+                aria-label="Donation percentage"
               />
+              </span>
               <span className={pageStyles.percentageSymbol}>%</span>
             </span>
 
@@ -388,7 +391,7 @@ export default function ImpactCalculatorPage() {
                 Monthly donation: {formatCurrency(monthlyDonation)}
               </>
             )}
-
+{/*  
             {inputs.mode === "monthly" && (
               <>
                 Monthly donation: {formatCurrency(monthlyDonation)}
@@ -396,7 +399,7 @@ export default function ImpactCalculatorPage() {
                 Annual donation: {formatCurrency(annualDonation)}
               </>
             )}
-
+*/}
             {inputs.mode === "lifetime" && (
               <>
                 Lifetime donation: {formatCurrency(lifetimeDonation)}
