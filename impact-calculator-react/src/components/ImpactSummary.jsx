@@ -175,6 +175,9 @@ const pieData = PIE_ORDER
           
         </a>
       </div>
+      <div className={styles.scrollHint}>
+  Scroll down for a breakdown of your impact by charity
+</div>
     </section>
   );
 }

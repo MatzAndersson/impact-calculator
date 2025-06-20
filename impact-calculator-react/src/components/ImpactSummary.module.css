@@ -131,6 +131,22 @@
 .donateIcon {
   display: inline-block;
 }
+.scrollHint {
+  display: block;
+  margin: 18px auto 0 auto;
+  text-align: center;
+  color: var(--color-secondary, #FB6A37);
+  font-size: 1.08em;
+  font-weight: 600;
+  opacity: 0.86;
+  letter-spacing: 0.01em;
+  animation: scrollHintFade 2.2s infinite alternate;
+}
+
+@keyframes scrollHintFade {
+  0% { opacity: 0.86; }
+  100% { opacity: 0.44; }
+}
 
 @media (max-width: 500px) {
   .kpiStrip {

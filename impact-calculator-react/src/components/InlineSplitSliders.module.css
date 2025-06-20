@@ -1,7 +1,7 @@
 .inlineSliders {
   display: grid;
   /* each column is at least 120px, at most 1fr, and auto-fits as many as will fit */
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 1rem;
   overflow: hidden;
   max-height: 0;
@@ -9,7 +9,7 @@
   transition: max-height 0.4s ease, opacity 0.3s ease;
 }
 .inlineSliders.open {
-  max-height: 600px; /* bump this as needed */
+  max-height: 700px; /* bump this as needed */
   opacity: 1;
 }
 
@@ -123,3 +123,5 @@
 .percentSymbol {
   line-height: 1;
 }
+
+

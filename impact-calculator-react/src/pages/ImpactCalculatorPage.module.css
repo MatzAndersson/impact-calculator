@@ -33,7 +33,7 @@
   padding:  0px 2px;
   box-shadow: none;
   transition: border 0.2s;
-  min-width: 0;
+  min-width: 34px;
   height: 24px;
 }
 
@@ -159,5 +159,7 @@
   max-width: 150px;
   margin: 0 10px;
 }
+
+
 
 
