@@ -145,8 +145,8 @@ export default function ImpactCalculatorPage() {
   const handleGateSuccess = (userEmail) => {
     setEmail(userEmail);
     setShowGate(false);
-    handleCalculate(); 
-    setShowResults(true); 
+    handleCalculate();
+    setShowResults(true);
   };
 
   const handleCalculateClick = () => {
@@ -328,7 +328,6 @@ export default function ImpactCalculatorPage() {
                   setAllocations(
                     CHARITIES.reduce((acc, c) => ({ ...acc, [c.id]: 0 }), {})
                   );
-                 
                 }}
               />{" "}
               Customize split (set your own percentages below)
@@ -351,19 +350,19 @@ export default function ImpactCalculatorPage() {
             <span className={pageStyles.rangeLabel}>
               I’d like to donate&nbsp;
               <span className={pageStyles.percentBox}>
-              <input
-                type="number"
-                min={0.1}
-                max={10}
-                step={0.1}
-                value={(inputs.pledgePercent * 100).toFixed(1)}
-                onChange={(e) =>
-                  update("pledgePercent", Number(e.target.value) / 100)
-                }
-                onFocus={(e) => e.target.select()}
-                className={pageStyles.percentInput}
-                aria-label="Donation percentage"
-              />
+                <input
+                  type="number"
+                  min={0.1}
+                  max={10}
+                  step={0.1}
+                  value={(inputs.pledgePercent * 100).toFixed(1)}
+                  onChange={(e) =>
+                    update("pledgePercent", Number(e.target.value) / 100)
+                  }
+                  onFocus={(e) => e.target.select()}
+                  className={pageStyles.percentInput}
+                  aria-label="Donation percentage"
+                />
               </span>
               <span className={pageStyles.percentageSymbol}>%</span>
             </span>
@@ -391,15 +390,7 @@ export default function ImpactCalculatorPage() {
                 Monthly donation: {formatCurrency(monthlyDonation)}
               </>
             )}
-{/*  
-            {inputs.mode === "monthly" && (
-              <>
-                Monthly donation: {formatCurrency(monthlyDonation)}
-                <br />
-                Annual donation: {formatCurrency(annualDonation)}
-              </>
-            )}
-*/}
+
             {inputs.mode === "lifetime" && (
               <>
                 Lifetime donation: {formatCurrency(lifetimeDonation)}
