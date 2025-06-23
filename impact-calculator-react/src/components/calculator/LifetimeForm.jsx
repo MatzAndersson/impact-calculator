@@ -179,7 +179,7 @@ export function LifetimeForm({ inputs, update }) {
             className={`${styles.inputBase} ${styles.ageInput}`}
             type="number"
             min="0"
-            max="100"
+            max="120"
             step="1"
             value={inputs.retirementAge === 0 ? "" : inputs.retirementAge}
             onChange={(e) => {
