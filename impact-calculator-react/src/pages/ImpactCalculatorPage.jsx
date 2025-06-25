@@ -5,7 +5,6 @@ import useCalculatorInputs from "../hooks/useCalculatorInputs";
 import { EmailGate } from "../components/email-gate/EmailGate";
 import { InputTabs } from "../components/calculator/InputTabs";
 import { AnnualForm } from "../components/calculator/AnnualForm";
-
 import { LifetimeForm } from "../components/calculator/LifetimeForm";
 import { CharityCardGrid } from "../components/cards/CharityCardGrid";
 import { InlineSplitSliders } from "../components/InlineSplitSliders";
@@ -14,6 +13,10 @@ import { CHARITIES } from "../data/charityData";
 import { ImpactSummary } from "../components/ImpactSummary";
 
 import pageStyles from "./ImpactCalculatorPage.module.css";
+
+// Toggle to activate EmailGate.
+// Set to true to re-enable the gate in the future.
+const ENABLE_EMAIL_GATE = false;
 
 function getPledgeUrl(currency) {
   const base = "https://1fortheworld.donational.org/take-the-pledge";
@@ -150,12 +153,17 @@ export default function ImpactCalculatorPage() {
   };
 
   const handleCalculateClick = () => {
-    if (!email) {
-      setShowGate(true);
+    if (ENABLE_EMAIL_GATE) {
+      if (!email) {
+        setShowGate(true);
+      } else {
+        // Already passed the gate
+        handleCalculate();
+        setShowResults(true);
+      }
     } else {
-      // they already passed the gate
+      // Gate disabled, just calculate
       handleCalculate();
-      //todo: window.dataLayer.push({ event: 'calculate_clicked' });
       setShowResults(true);
     }
   };
@@ -256,7 +264,7 @@ export default function ImpactCalculatorPage() {
 
   return (
     <>
-      {showGate && (
+      {ENABLE_EMAIL_GATE && showGate && (
         <div
           style={{
             position: "fixed",
